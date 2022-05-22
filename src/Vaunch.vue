@@ -42,12 +42,14 @@ export default defineComponent({
       // Search through the valid commands to autocomplete this word with
       let match = false;
       if (lastWord.length > 0) {
-        this.commands.available.forEach((command) => {
+        for (const i in this.commands.available) {
+          let command: string = this.commands.available[i];
           if (command.startsWith(lastWord)) {
             match = true;
             this.autocompleteText += command;
+            break;
           }
-        });
+        }
       }
       if (!match) this.autocompleteText += "";
     },

@@ -4,7 +4,7 @@ export const useCommandStore = defineStore({
   id: "command",
   state: () => ({
     available: [
-      "mkdir", "touch"
+      "mkdir", "touch", "total"
     ],
   }),
 });
