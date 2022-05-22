@@ -8,7 +8,7 @@ export default defineComponent({
     };
   },
   props: ["autocomplete"],
-  emits: ["sendInput"],
+  emits: ["sendInput", "command"],
   watch: {
     vaunchInput(val: string) {
       // Emit the current input string to Vaunch
@@ -20,6 +20,10 @@ export default defineComponent({
     complete() {
       this.vaunchInput = this.autocomplete;
     },
+    sendCommand() {
+      this.$emit("command", this.vaunchInput)
+      this.vaunchInput = "";
+    }
   },
 });
 </script>
@@ -68,6 +72,7 @@ export default defineComponent({
       type="text"
       v-model="vaunchInput"
       @keydown.tab.prevent="complete"
+      @keydown.enter.prevent="sendCommand"
     />
     <input class="vaunch-autocomplete" type="text" :value="autocomplete" />
   </div>

@@ -53,6 +53,21 @@ export default defineComponent({
       }
       if (!match) this.autocompleteText += lastWord;
     },
+    executeCommand(commandString:string) {
+      let commandArgs: string[] = commandString.split(" ");
+      let command: string|undefined = commandArgs.shift();
+      switch (command) {
+        case "mkdir":
+          this.commands.mkdir(commandArgs)
+          break;
+        case "rmdir":
+          this.commands.rmdir(commandArgs)
+          break;
+      
+        default:
+          break;
+      }
+    }
   },
 });
 </script>
@@ -63,6 +78,9 @@ export default defineComponent({
 
 <template>
   <main :style="{ 'background-image': 'url(' + config.background + ')' }">
-    <VaunchInput v-on:sendInput="readInput" :autocomplete="autocompleteText" />
+    <VaunchInput 
+      v-on:sendInput="readInput"
+      v-on:command="executeCommand"
+      :autocomplete="autocompleteText" />
   </main>
 </template>

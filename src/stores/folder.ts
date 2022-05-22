@@ -15,5 +15,12 @@ export const useFolderStore = defineStore({
       let newFolder = new Folder(name);
       this.rawFolders.push(newFolder);
     },
+    remove(toDelete:string) {
+      this.rawFolders.forEach((folder, index, object) => {
+        if (folder.name == toDelete) {
+          object.splice(index,1);
+        }
+      })
+    },
   },
 });
