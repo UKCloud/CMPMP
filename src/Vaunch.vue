@@ -51,7 +51,7 @@ export default defineComponent({
           }
         }
       }
-      if (!match) this.autocompleteText += "";
+      if (!match) this.autocompleteText += lastWord;
     },
   },
 });
