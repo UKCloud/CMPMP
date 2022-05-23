@@ -104,3 +104,10 @@ main {
   flex-flow: column;
   
 }
+
+.vaunch-window {
+  border-radius: 5px;
+  background: var(--color-vaunchinput);
+  backdrop-filter: blur(10px);
+  color: var(--color-vaunchinput-text);
+}

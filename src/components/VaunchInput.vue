@@ -34,13 +34,13 @@ export default defineComponent({
   width: 75vw;
   height: 5rem;
 }
+
 /* Common styles for both inputs */
 #vaunch-input-container input {
   position: absolute;
   font-size: 3em;
   width: 100%;
   padding: 0.2em 0.75em;
-  border-radius: 5px;
   border: none;
 }
 
@@ -48,32 +48,31 @@ export default defineComponent({
   outline: none;
 }
 
-.vaunch-input {
-  color: var(--color-vaunchinput-text);
+#vaunch-input {
   background: none;
   z-index: 2;
+  color: inherit;
 }
 
-.vaunch-autocomplete {
+#vaunch-autocomplete {
   z-index: 1;
   position: absolute;
   opacity: 0.8;
 
   color: var(--color-autocomplete);
-  backdrop-filter: blur(10px);
-  background: var(--color-vaunchinput);
+  background: none;
 }
 </style>
 
 <template>
-  <div id="vaunch-input-container">
+  <div id="vaunch-input-container" class="vaunch-window">
     <input
-      class="vaunch-input"
+      id="vaunch-input"
       type="text"
       v-model="vaunchInput"
       @keydown.tab.prevent="complete"
       @keydown.enter.prevent="sendCommand"
     />
-    <input class="vaunch-autocomplete" type="text" :value="autocomplete" />
+    <input id="vaunch-autocomplete" type="text" :value="autocomplete" />
   </div>
 </template>
