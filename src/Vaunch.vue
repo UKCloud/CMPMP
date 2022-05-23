@@ -13,12 +13,12 @@ export default defineComponent({
   },
   setup() {
     const commands = useCommandStore();
-    const config = useConfigStore();
     const folders = useFolderStore();
+    const config = useConfigStore();
 
     return {
       commands,
-      config,
+      config
     };
   },
   data() {
