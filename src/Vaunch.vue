@@ -4,6 +4,8 @@ import VaunchInput from "@/components/VaunchInput.vue";
 
 import { useCommandStore } from "@/stores/command";
 import { useConfigStore } from "@/stores/config";
+import { useFolderStore } from "@/stores/folder";
+
 
 export default defineComponent({
   components: {
@@ -12,6 +14,7 @@ export default defineComponent({
   setup() {
     const commands = useCommandStore();
     const config = useConfigStore();
+    const folders = useFolderStore();
 
     return {
       commands,

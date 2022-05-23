@@ -1,18 +1,19 @@
-import { defineStore } from "pinia";
+import { defineStore, type StoreDefinition } from "pinia";
+import { useStorage } from '@vueuse/core'
 
-import { Folder } from "@/models/Folder"
+import { VaunchFolder } from "@/models/VaunchFolder"
 
-export const useFolderStore = defineStore({
+export const useFolderStore:StoreDefinition = defineStore({
   id: "folder",
   state: () => ({
-    rawFolders: [] as Folder[],
+    rawFolders: useStorage('folders', [] as VaunchFolder[]),
   }),
   getters: {
-    folders: (state) => state.rawFolders,
+    folders: (state: { rawFolders: any; }) => state.rawFolders,
   },
   actions: {
     add(name:string) {
-      let newFolder = new Folder(name);
+      let newFolder = new VaunchFolder(name);
       this.rawFolders.push(newFolder);
     },
     remove(toDelete:string) {
