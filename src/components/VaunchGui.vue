@@ -13,8 +13,16 @@ export default defineComponent({
 });
 </script>
 
+<style scoped>
+#vaunch-folder-container {
+  position: relative;
+  width: 70vw;
+  height: 65vh;
+}
+</style>
+
 <template>
-<div class="vaunch-window">
+<div id="vaunch-folder-container" class="vaunch-window">
   <div v-for="folder in folders.items" :key="folder.name">
     {{ folder.name }}
   </div>

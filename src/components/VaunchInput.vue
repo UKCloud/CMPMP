@@ -70,13 +70,11 @@ export default defineComponent({
 #vaunch-input-container {
   position: relative;
   width: 75vw;
-  height: 5rem;
 }
 
 /* Common styles for both inputs */
 #vaunch-input-container input {
-  position: absolute;
-  font-size: 3em;
+  font-size: 3rem;
   width: 100%;
   padding: 0.2em 0.75em;
   border: none;
@@ -93,8 +91,10 @@ export default defineComponent({
 }
 
 #vaunch-autocomplete {
-  z-index: 1;
   position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
   opacity: 0.8;
 
   color: var(--color-autocomplete);
