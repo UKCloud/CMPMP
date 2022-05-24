@@ -9,7 +9,7 @@ export const useFolderStore:StoreDefinition = defineStore({
     rawFolders: useStorage('folders', [] as VaunchFolder[]),
   }),
   getters: {
-    folders: (state: { rawFolders: any; }) => state.rawFolders,
+    items: (state: { rawFolders: any; }) => state.rawFolders,
   },
   actions: {
     add(name:string) {

@@ -1,16 +1,17 @@
 <script lang="ts">
-import { defineComponent } from "vue";
 import VaunchInput from "@/components/VaunchInput.vue";
+import VaunchGui from "./components/VaunchGui.vue";
 
 import { commands } from "@/stores/command";
 import { useConfigStore } from "@/stores/config";
 import { useFolderStore } from "@/stores/folder";
 
 
-export default defineComponent({
+export default {
   components: {
     VaunchInput,
-  },
+    VaunchGui
+},
   setup() {
     const config = useConfigStore();
     // load folders in
@@ -39,7 +40,7 @@ export default defineComponent({
       })
     }
   },
-});
+};
 </script>
 
 <style>
@@ -49,5 +50,6 @@ export default defineComponent({
 <template>
   <main :style="{ 'background-image': 'url(' + config.background + ')' }">
     <VaunchInput v-on:command="executeCommand" />
+    <VaunchGui />
   </main>
 </template>
