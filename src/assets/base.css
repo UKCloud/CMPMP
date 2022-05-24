@@ -67,6 +67,10 @@
   background: var(--color-highlight); /* Gecko Browsers */
 }
 
+/* ::-webkit-scrollbar {
+  width: 10px;
+} */
+
 *,
 *::before,
 *::after {
