@@ -10,6 +10,7 @@ export const useFolderStore:StoreDefinition = defineStore({
   }),
   getters: {
     items: (state: { rawFolders: any; }) => state.rawFolders,
+    folderNames: (state: { rawFolders: any; }) => state.rawFolders.map((f:any) => f.name)
   },
   actions: {
     add(name:string) {
