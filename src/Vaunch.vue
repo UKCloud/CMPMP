@@ -5,7 +5,6 @@ import VaunchInput from "@/components/VaunchInput.vue";
 import { commands } from "@/stores/command";
 import { useConfigStore } from "@/stores/config";
 import { useFolderStore } from "@/stores/folder";
-import type { VaunchFile } from "./models/VaunchFile";
 
 
 export default defineComponent({
@@ -28,14 +27,16 @@ export default defineComponent({
     };
   },
   methods: {
-    executeCommand(commandArgs:string[]) {
+    executeCommand(commandArgs: string[]) {
+      let operator = commandArgs[0];
+      commandArgs.shift();
+
       // Check if we're running a command, if we find it in commands, execute it
-      for (const command in commands) {
-        let comm:VaunchFile = commands[command];
-        if (commandArgs[0] == comm.fileName) {
-          comm.execute(commandArgs)
+      commands.forEach((command) => {
+        if (command.getNames().includes(operator)) {
+          command.execute(commandArgs)
         }
-      }
+      })
     }
   },
 });
@@ -47,7 +48,6 @@ export default defineComponent({
 
 <template>
   <main :style="{ 'background-image': 'url(' + config.background + ')' }">
-    <VaunchInput
-      v-on:command="executeCommand" />
+    <VaunchInput v-on:command="executeCommand" />
   </main>
 </template>

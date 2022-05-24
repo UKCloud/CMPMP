@@ -38,18 +38,10 @@ export default defineComponent({
       }
 
       // Search through the valid commands to autocomplete this word with
-      let match = false;
-      if (lastWord.length > 0) {
-        for (const command in commands) {
-          let comm:VaunchFile = commands[command];
-          if (comm.fileName.startsWith(lastWord)) {
-            match = true;
-            this.autocomplete += comm.fileName;
-            break;
-          }
-        }
+      // Only do this on the first "word", as commands will always be the first word
+      if (lastWord.length > 0 && input.length == 0) {
+        this.autocomplete += this.getAutocomplete(lastWord, commands);
       }
-      if (!match) this.autocomplete += lastWord;
     },
   },
   methods: {
@@ -59,6 +51,16 @@ export default defineComponent({
     sendCommand() {
       this.$emit("command", this.vaunchInput.split(' '))
       this.vaunchInput = "";
+    },
+    getAutocomplete(input:string, commands:VaunchFile[]):string {
+      for (let command of commands) {
+        for (let ailias of command.getNames()) {
+          if (ailias.startsWith(input)) {
+            return ailias
+          }
+        }
+      }
+      return input
     }
   },
 });
