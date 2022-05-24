@@ -32,6 +32,7 @@ export class VaunchFeh extends VaunchFile {
   constructor() {
     super("feh");
   }
+  aliases: string[] = ["set-bg", "set-background"];
 
   execute(args:string[]): void {
     const config = useConfigStore();
