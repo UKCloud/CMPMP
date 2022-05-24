@@ -1,7 +1,9 @@
-export class VaunchFile {
-  name: string
+export abstract class VaunchFile {
+  fileName: string
 
   constructor(name:string) {
-    this.name = name
+    this.fileName = name
   }
+
+  abstract execute(args:string[]): void
 }

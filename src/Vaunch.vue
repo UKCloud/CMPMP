@@ -2,9 +2,10 @@
 import { defineComponent } from "vue";
 import VaunchInput from "@/components/VaunchInput.vue";
 
-import { useCommandStore } from "@/stores/command";
+import { commands } from "@/stores/command";
 import { useConfigStore } from "@/stores/config";
 import { useFolderStore } from "@/stores/folder";
+import type { VaunchFile } from "./models/VaunchFile";
 
 
 export default defineComponent({
@@ -12,9 +13,9 @@ export default defineComponent({
     VaunchInput,
   },
   setup() {
-    const commands = useCommandStore();
-    const folders = useFolderStore();
     const config = useConfigStore();
+    // load folders in
+    useFolderStore();
 
     return {
       commands,
@@ -27,48 +28,13 @@ export default defineComponent({
     };
   },
   methods: {
-    readInput(input: string[]) {
-      // Clear autocomplete to start with a clean slate
-      this.autocompleteText = "";
-
-      // Get the current word that is being typed 
-      let lastWord: string = input[input.length - 1];
-      // Remove the last word, so it wont be considered in the autocomplete placeholder text
-      input.pop();
-
-      // If on the second+ word, prefix the autocomplete text with the previous words
-      if (input.length > 0) {
-        this.autocompleteText = input.join(" ");
-        this.autocompleteText += " "; // Add extra space for the to-be-completed word
-      }
-
-      // Search through the valid commands to autocomplete this word with
-      let match = false;
-      if (lastWord.length > 0) {
-        for (const i in this.commands.available) {
-          let command: string = this.commands.available[i];
-          if (command.startsWith(lastWord)) {
-            match = true;
-            this.autocompleteText += command;
-            break;
-          }
+    executeCommand(commandArgs:string[]) {
+      // Check if we're running a command, if we find it in commands, execute it
+      for (const command in commands) {
+        let comm:VaunchFile = commands[command];
+        if (commandArgs[0] == comm.fileName) {
+          comm.execute(commandArgs)
         }
-      }
-      if (!match) this.autocompleteText += lastWord;
-    },
-    executeCommand(commandString:string) {
-      let commandArgs: string[] = commandString.split(" ");
-      let command: string|undefined = commandArgs.shift();
-      switch (command) {
-        case "mkdir":
-          this.commands.mkdir(commandArgs)
-          break;
-        case "rmdir":
-          this.commands.rmdir(commandArgs)
-          break;
-      
-        default:
-          break;
       }
     }
   },
@@ -81,9 +47,7 @@ export default defineComponent({
 
 <template>
   <main :style="{ 'background-image': 'url(' + config.background + ')' }">
-    <VaunchInput 
-      v-on:sendInput="readInput"
-      v-on:command="executeCommand"
-      :autocomplete="autocompleteText" />
+    <VaunchInput
+      v-on:command="executeCommand" />
   </main>
 </template>

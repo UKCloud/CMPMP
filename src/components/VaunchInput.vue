@@ -1,27 +1,63 @@
 <script lang="ts">
 import { defineComponent } from "vue";
+import { commands } from "@/stores/command"
+import type { VaunchFile } from "@/models/VaunchFile";
+
+
 export default defineComponent({
   name: "VaunchInput",
+  setup() {
+    return {
+      commands,
+    }
+  },
   data() {
     return {
       vaunchInput: "",
+      autocomplete: "",
     };
   },
-  props: ["autocomplete"],
-  emits: ["sendInput", "command"],
+  // props: ["autocomplete"],
+  emits: ["command"],
   watch: {
     vaunchInput(val: string) {
-      // Emit the current input string to Vaunch
-      let splitCommand = val.split(" ");
-      this.$emit("sendInput", splitCommand);
+
+      let input = val.split(' ');
+      // Clear autocomplete to start with a clean slate
+      this.autocomplete = "";
+
+      // Get the current word that is being typed 
+      let lastWord: string = input[input.length - 1];
+      // Remove the last word, so it wont be considered in the autocomplete placeholder text
+      input.pop();
+
+      // If on the second+ word, prefix the autocomplete text with the previous words
+      if (input.length > 0) {
+        this.autocomplete = input.join(" ");
+        this.autocomplete += " "; // Add extra space for the to-be-completed word
+      }
+
+      // Search through the valid commands to autocomplete this word with
+      let match = false;
+      if (lastWord.length > 0) {
+        for (const command in commands) {
+          let comm:VaunchFile = commands[command];
+          if (comm.fileName.startsWith(lastWord)) {
+            match = true;
+            this.autocomplete += comm.fileName;
+            break;
+          }
+        }
+      }
+      if (!match) this.autocomplete += lastWord;
     },
   },
   methods: {
     complete() {
-      this.vaunchInput = this.autocomplete;
+      this.vaunchInput = this.autocomplete + " ";
     },
     sendCommand() {
-      this.$emit("command", this.vaunchInput)
+      this.$emit("command", this.vaunchInput.split(' '))
       this.vaunchInput = "";
     }
   },
