@@ -23,14 +23,13 @@ export default defineComponent({
 #vaunch-folder-container {
   position: relative;
   display: flex;
-  width: 70vw;
+  width: 95vw;
   height: 65vh;
   flex-direction: row;
   justify-content: center;
   flex-wrap: wrap;
   padding: 1em;
-  font-size: 2rem;
-  align-items: center;
+  align-items: top;
   overflow-y: auto;
 }
 
@@ -38,7 +37,8 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   margin: 0.5rem;
-  width: 30%;
+  min-width: 20%;
+  width: auto;
   height: 45%;
 }
 
@@ -46,6 +46,7 @@ export default defineComponent({
   position: relative;
   width: 100%;
   text-align: center;
+  font-size: 1.2rem;
   background-color: rgba(0, 0, 0, 0.1);
   /* border-radius: 5px; */
   border-radius: 5px 5px 0 0 ;
@@ -58,7 +59,7 @@ export default defineComponent({
     <span class="folder-title">{{ folder.name }}</span>
     <div v-if="folder.getFiles().length > 0">
       <div v-for="file in folder.getFiles()" :key="file.fileName">
-        {{ file.fileName }}
+        {{ file.displayName() }}
       </div>
     </div>
   </div>

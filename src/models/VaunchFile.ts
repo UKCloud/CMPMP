@@ -16,6 +16,8 @@ export abstract class VaunchFile {
 
   abstract execute(args:string[]): void
 
+  abstract displayName(): string
+
   info(): any {
     return {
       fileName: this.fileName,

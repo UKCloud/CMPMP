@@ -10,4 +10,8 @@ export class VaunchLink extends VaunchFile {
   execute(args:string[]): void {
     window.location.href = this.content;
   }
+
+  displayName():string {
+    return this.fileName + ".lnk"
+  }
 }
