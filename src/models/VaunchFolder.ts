@@ -39,8 +39,11 @@ export class VaunchFolder {
   static parse(data:any): VaunchFolder {
     let folder = new VaunchFolder(data.name);
     for (let fileData of data.files) {
-      let file:VaunchFile = new VaunchLink(fileData.name, fileData.content);
-      folder.createFile(file)
+      let file: VaunchFile|undefined = undefined;
+      if (fileData.type == "VaunchLink") {
+        file = new VaunchLink(fileData.fileName, fileData.content);
+      }
+      if (file != undefined) folder.createFile(file)
     }
     return folder;
   }

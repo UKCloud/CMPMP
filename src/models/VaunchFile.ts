@@ -18,9 +18,10 @@ export abstract class VaunchFile {
 
   info(): any {
     return {
-      filename: this.fileName,
+      fileName: this.fileName,
       aliases: this.aliases,
       content: this.content,
+      type: this.constructor.name
     }
   }
 }
