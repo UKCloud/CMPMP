@@ -67,3 +67,14 @@ export class VaunchFeh extends VaunchFile {
     config.background = background;
   }
 }
+
+export class VaunchHideGui extends VaunchFile {
+  constructor() {
+    super("toggle-gui");
+  }
+
+  execute(args:string[]): void {
+    const config = useConfigStore();
+    config.showGUI = !config.showGUI;
+  }
+}

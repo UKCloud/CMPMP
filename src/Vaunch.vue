@@ -4,7 +4,6 @@ import VaunchGui from "./components/VaunchGui.vue";
 
 import { commands } from "@/stores/command";
 import { useConfigStore } from "@/stores/config";
-import { useFolderStore } from "@/stores/folder";
 
 
 export default {
