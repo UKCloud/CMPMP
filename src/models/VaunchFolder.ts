@@ -43,7 +43,7 @@ export class VaunchFolder {
     for (let fileData of data.files) {
       let file: VaunchFile|undefined = undefined;
       if (fileData.type == "VaunchLink") {
-        file = new VaunchLink(fileData.fileName, fileData.content);
+        file = new VaunchLink(fileData.fileName, fileData.content, fileData.icon);
       }
       if (file != undefined) folder.createFile(file)
     }

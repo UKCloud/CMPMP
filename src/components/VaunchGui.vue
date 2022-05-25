@@ -45,19 +45,44 @@ export default defineComponent({
 .folder-title {
   position: relative;
   width: 100%;
-  text-align: center;
+  padding-left: 1em;
   font-size: 1.2rem;
   background-color: rgba(0, 0, 0, 0.1);
 }
+.file-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  padding: 1em;
+}
+
+.file {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  width: auto;
+  min-width: 30%;
+  max-width: 40%;
+  padding: 1em;
+}
+
+.file-name, .folder-name {
+  padding-left: 0.5rem;
+}
+
 </style>
 
 <template>
 <div v-if="folders.items.length > 0 && config.showGUI" id="vaunch-folder-container">
   <div v-for="folder in folders.items" :key="folder.name" class="vaunch-folder vaunch-window">
-    <span class="folder-title">{{ folder.name }}</span>
-    <div v-if="folder.getFiles().length > 0">
-      <div v-for="file in folder.getFiles()" :key="file.fileName">
-        {{ file.displayName() }}
+    <span class="folder-title">
+      <i class="fa-solid fa-folder"></i><span class="folder-name">{{ folder.name }}</span>
+    </span>
+    <div v-if="folder.getFiles().length > 0" class="file-container">
+      <div v-for="file in folder.getFiles()" :key="file.fileName" class="file vaunch-window">
+        <i :class="['fa-solid', 'fa-' + file.icon]"></i>
+        <span class="file-name">{{ file.displayName() }}</span>
       </div>
     </div>
   </div>
