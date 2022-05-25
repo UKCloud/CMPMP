@@ -2,64 +2,97 @@
 import { defineComponent } from "vue";
 import { commands } from "@/stores/command"
 import type { VaunchFile } from "@/models/VaunchFile";
+import type { VaunchFolder } from "@/models/VaunchFolder";
+import { useFolderStore } from "@/stores/folder";
 
 
 export default defineComponent({
   name: "VaunchInput",
   setup() {
+    const folders = useFolderStore()
     return {
       commands,
+      folders,
     }
   },
   data() {
     return {
       vaunchInput: "",
       autocomplete: "",
+      completeType: ""
     };
   },
   // props: ["autocomplete"],
   emits: ["command"],
   watch: {
     vaunchInput(val: string) {
+      // Annoyingly if input overflows autcomplete falls apart, so just disable it...
+      if (val.length > 70) {
+        this.autocomplete = ""
+        return
+      }
 
       let input = val.split(' ');
-      // Clear autocomplete to start with a clean slate
-      this.autocomplete = "";
 
       // Get the current word that is being typed 
-      let lastWord: string = input[input.length - 1];
-
       // Remove the last word, so it wont be considered in the autocomplete placeholder text
-      input.pop();
+      let lastWord: string|undefined = input.pop();;
+
+      
+      // Set autocomplete to go up to the last word (i.e what input is after lastWord was popped of)
+      this.autocomplete = input.join(" ");
 
       // If on the second+ word, prefix the autocomplete text with the previous words
       if (input.length > 0) {
         this.autocomplete += " "; // Add extra space for the to-be-completed word
       }
 
-      // Search through the valid commands to autocomplete this word with
-      // Only do this on the first "word", as commands will always be the first word
-      if (lastWord.length > 0 && input.length == 0) {
-        this.autocomplete += this.getAutocomplete(lastWord, commands);
-      } else this.autocomplete = val;
+      if (lastWord) {
+        // Search through the valid commands to autocomplete this word with
+        // Only do this on the first "word", as commands will always be the first word
+        if (lastWord.length > 0 && input.length == 0) {
+          this.autocomplete += this.getAutocompleteFile(lastWord, commands);
+        } else if (lastWord.length > 0 && input.length >= 0) {
+          // If on the second+ word, check folder names/files to autocomplete
+          if (lastWord.includes("/")) {
+            console.log("findFile");
+          } else {
+            console.log("findFolder");
+            this.autocomplete += this.getAutocompleteFolder(lastWord, this.folders.folderNames);
+            console.log(this.autocomplete)
+          }
+        }
+      }
+
     },
   },
   methods: {
     complete() {
       // Only complete if there is something to complete
       if (this.autocomplete.length > this.vaunchInput.length) {
-        this.vaunchInput = this.autocomplete + " ";
+        this.vaunchInput = this.autocomplete + (this.completeType == "file" ? " ": "");
       }
     },
     sendCommand() {
       this.$emit("command", this.vaunchInput.split(' '))
       this.vaunchInput = "";
     },
-    getAutocomplete(input:string, commands:VaunchFile[]):string {
+    getAutocompleteFolder(input:string, folders:string[]):string {
+      for (let folder of folders) {
+        console.log(folder, input);
+        if (folder.startsWith(input)) {
+          this.completeType = "folder";
+          return folder + "/"
+        }
+      }
+      return input
+    },
+    getAutocompleteFile(input:string, commands:VaunchFile[]):string {
       for (let command of commands) {
         for (let ailias of command.getNames()) {
           if (ailias.startsWith(input)) {
-            return ailias
+            this.completeType = "file";
+            return ailias;
           }
         }
       }

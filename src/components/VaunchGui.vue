@@ -50,6 +50,11 @@ export default defineComponent({
 <div id="vaunch-folder-container" class="vaunch-window">
   <div v-for="folder in folders.items" :key="folder.name" class="vaunch-folder vaunch-window">
     <span class="folder-title">{{ folder.name }}</span>
+    <div v-if="folder.getFiles().length > 0">
+      <div v-for="file in folder.getFiles()" :key="file.fileName">
+        {{ file.fileName }}
+      </div>
+    </div>
   </div>
 </div>
 </template>

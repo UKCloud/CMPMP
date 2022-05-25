@@ -36,6 +36,8 @@ export class VaunchFolder {
     return data
   }
 
+  // Parse a VaunchFolder from serialized JSON data
+  // Also creates VaunchFiles that belong to the folder
   static parse(data:any): VaunchFolder {
     let folder = new VaunchFolder(data.name);
     for (let fileData of data.files) {

@@ -33,8 +33,8 @@ export class VaunchTouch extends VaunchFile {
     let newFileContent:string = args[1];
 
     let filePath = newFileName.split('/');
-    let newFile:VaunchLink = new VaunchLink(filePath[0], newFileContent);
     let folder:VaunchFolder = folders.getFolderByName(filePath[0]);
+    let newFile:VaunchLink = new VaunchLink(filePath[1], newFileContent);
     folder.createFile(newFile);
     console.log(folder.getFiles());
   }
@@ -48,6 +48,8 @@ export class VaunchRmdir extends VaunchFile {
   execute(args:string[]): void {
     const folders = useFolderStore();
     args.forEach(toDelete => {
+      // Strip slashes from foldernames, if running from autocompleted value
+      toDelete = toDelete.replace("/","");
       folders.remove(toDelete);
     })
   }
