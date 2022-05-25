@@ -7,7 +7,9 @@ import { useConfigStore } from "@/stores/config";
 export default defineComponent({
   name: "VaunchGui",
   setup() {
+    // Load folders in to iterate over them and display in GUI if wanted
     const folders = useFolderStore();
+    // Load config store to get Vaunch configuration options
     const config = useConfigStore();
     return {
       folders,

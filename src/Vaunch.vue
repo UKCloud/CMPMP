@@ -13,18 +13,12 @@ export default {
     VaunchGui
 },
   setup() {
+    // Load config store for Vaunch configuration options, e/.g background image
     const config = useConfigStore();
-    // load folders in
-    useFolderStore();
 
     return {
       commands,
       config
-    };
-  },
-  data() {
-    return {
-      autocompleteText: "",
     };
   },
   methods: {

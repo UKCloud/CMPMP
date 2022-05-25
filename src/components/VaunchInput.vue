@@ -59,11 +59,12 @@ export default defineComponent({
         this.autocomplete += this.getAutocompleteFolder(lastWord, this.folders.folderNames);
         let pathSplit = lastWord.split("/")
         if (this.completeType == "" && lastWord.includes("/") && pathSplit[1].length > 0) {
+          // Search for a file, pathSplit[0] is folder, pathSplit[1] is semi-complete filename
           let folder:VaunchFolder = this.folders.getFolderByName(pathSplit[0]);
           this.autocomplete += pathSplit[0] + "/" + this.getAutocompleteFile(pathSplit[1], folder.getFiles());
         }
       }
-      // If no autocomplete was successful, set it to the current value
+      // If no autocomplete was successful, set it autocomplete text to the current value
       if (this.completeType == "") {
         this.autocomplete = val;
       }
