@@ -8,7 +8,7 @@ export abstract class VaunchFile {
   }
 
   getNames():string[] {
-    let allNames:string[] = [...this.aliases, this.fileName]
+    let allNames:string[] = [this.fileName, ...this.aliases]
     return allNames;
   }
 
