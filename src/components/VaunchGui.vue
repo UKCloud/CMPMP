@@ -48,8 +48,6 @@ export default defineComponent({
   text-align: center;
   font-size: 1.2rem;
   background-color: rgba(0, 0, 0, 0.1);
-  /* border-radius: 5px; */
-  border-radius: 5px 5px 0 0 ;
 }
 </style>
 
