@@ -10,7 +10,7 @@ export class VaunchMkdir extends VaunchFile {
   execute(args:string[]): void {
     const folder = useFolderStore();
     args.forEach((newFolder) => {
-      if (!folder.folderNames.includes(newFolder)) {
+      if (newFolder.length > 0 && !folder.folderNames.includes(newFolder)){
         folder.add(newFolder);
       }
     })
