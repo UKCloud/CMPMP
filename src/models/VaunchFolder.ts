@@ -1,4 +1,5 @@
 import { VaunchFile } from "./VaunchFile";
+import { VaunchLink } from "./VaunchLink";
 
 export class VaunchFolder {
   name: string;
@@ -21,7 +22,26 @@ export class VaunchFolder {
     return null;
   }
 
-  getFiles(): IterableIterator<VaunchFile> {
-    return this.files.values()
+  getFiles(): VaunchFile[] {
+    return Array.from(this.files.values())
+  }
+
+  info(): any {
+    let fileInfo:any[] = [];
+    this.getFiles().forEach((file) => fileInfo.push(file.info()))
+    let data = {
+      name: this.name,
+      files: fileInfo
+    }
+    return data
+  }
+
+  static parse(data:any): VaunchFolder {
+    let folder = new VaunchFolder(data.name);
+    for (let fileData of data.files) {
+      let file:VaunchFile = new VaunchLink(fileData.name, fileData.content);
+      folder.createFile(file)
+    }
+    return folder;
   }
 }

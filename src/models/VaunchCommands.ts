@@ -33,7 +33,10 @@ export class VaunchTouch extends VaunchFile {
     let newFileContent:string = args[1];
 
     let filePath = newFileName.split('/');
-    let currentFolder:VaunchFolder = folders.get(filePath[0]);
+    let newFile:VaunchLink = new VaunchLink(filePath[0], newFileContent);
+    let folder:VaunchFolder = folders.getFolderByName(filePath[0]);
+    folder.createFile(newFile);
+    console.log(folder.getFiles());
   }
 }
 

@@ -1,10 +1,12 @@
 export abstract class VaunchFile {
   fileName: string
   aliases: string[];
+  content:string;
 
   constructor(name:string) {
     this.fileName = name
     this.aliases = [];
+    this.content = "";
   }
 
   getNames():string[] {
@@ -13,4 +15,12 @@ export abstract class VaunchFile {
   }
 
   abstract execute(args:string[]): void
+
+  info(): any {
+    return {
+      filename: this.fileName,
+      aliases: this.aliases,
+      content: this.content,
+    }
+  }
 }
