@@ -4,7 +4,16 @@ import { VaunchFile } from "./VaunchFile";
 import type { VaunchFolder } from "./VaunchFolder";
 import { VaunchLink } from "./VaunchLink";
 
-export class VaunchMkdir extends VaunchFile {
+class VaunchCommand extends VaunchFile {
+  execute(args: string[]): void {
+    return
+  }
+  displayName(): string {
+    return this.fileName
+  }
+}
+
+export class VaunchMkdir extends VaunchCommand {
   constructor() {
     super("mkdir");
   }
@@ -21,7 +30,7 @@ export class VaunchMkdir extends VaunchFile {
   }
 }
 
-export class VaunchTouch extends VaunchFile {
+export class VaunchTouch extends VaunchCommand {
   constructor() {
     super("touch");
   }
@@ -40,7 +49,7 @@ export class VaunchTouch extends VaunchFile {
   }
 }
 
-export class VaunchRmdir extends VaunchFile {
+export class VaunchRmdir extends VaunchCommand {
   constructor() {
     super("rmdir");
   }
@@ -55,7 +64,7 @@ export class VaunchRmdir extends VaunchFile {
   }
 }
 
-export class VaunchFeh extends VaunchFile {
+export class VaunchFeh extends VaunchCommand {
   constructor() {
     super("feh");
   }
@@ -68,7 +77,7 @@ export class VaunchFeh extends VaunchFile {
   }
 }
 
-export class VaunchHideGui extends VaunchFile {
+export class VaunchHideGui extends VaunchCommand {
   constructor() {
     super("toggle-gui");
   }
