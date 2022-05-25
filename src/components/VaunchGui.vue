@@ -1,13 +1,17 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { useFolderStore } from "@/stores/folder";
+import { useConfigStore } from "@/stores/config";
+
 
 export default defineComponent({
   name: "VaunchGui",
   setup() {
     const folders = useFolderStore();
+    const config = useConfigStore();
     return {
       folders,
+      config,
     }
   }
 });
@@ -47,7 +51,7 @@ export default defineComponent({
 </style>
 
 <template>
-<div id="vaunch-folder-container" class="vaunch-window">
+<div v-if="folders.items.length > 0 && config.showGUI" id="vaunch-folder-container">
   <div v-for="folder in folders.items" :key="folder.name" class="vaunch-folder vaunch-window">
     <span class="folder-title">{{ folder.name }}</span>
     <div v-if="folder.getFiles().length > 0">

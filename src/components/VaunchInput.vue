@@ -32,12 +32,13 @@ export default defineComponent({
         return
       }
 
+      this.completeType = "";
       let input = val.split(' ');
 
       // Get the current word that is being typed 
       // Remove the last word, so it wont be considered in the autocomplete placeholder text
-      let lastWord: string|undefined = input.pop();;
-
+      let lastWord: string = input[input.length - 1]
+      input.pop();
       
       // Set autocomplete to go up to the last word (i.e what input is after lastWord was popped of)
       this.autocomplete = input.join(" ");
@@ -47,21 +48,20 @@ export default defineComponent({
         this.autocomplete += " "; // Add extra space for the to-be-completed word
       }
 
-      if (lastWord) {
-        // Search through the valid commands to autocomplete this word with
-        // Only do this on the first "word", as commands will always be the first word
-        if (lastWord.length > 0 && input.length == 0) {
-          this.autocomplete += this.getAutocompleteFile(lastWord, commands);
-        } else if (lastWord.length > 0 && input.length >= 0) {
-          // If on the second+ word, check folder names/files to autocomplete
-          if (lastWord.includes("/")) {
-            console.log("findFile");
-          } else {
-            console.log("findFolder");
-            this.autocomplete += this.getAutocompleteFolder(lastWord, this.folders.folderNames);
-            console.log(this.autocomplete)
-          }
-        }
+      // Search through the valid commands to autocomplete this word with
+      // Only do this on the first "word", as commands will always be the first word
+      if (lastWord.length > 0 && input.length == 0) {
+        this.autocomplete += this.getAutocompleteFile(lastWord, commands);
+      }
+      // If command autocomplete did not find anything, search for folders/files
+      if (lastWord.length > 0 && this.completeType == "") {
+        // If on the second+ word, check folder names/files to autocomplete
+        this.autocomplete += this.getAutocompleteFolder(lastWord, this.folders.folderNames);
+        
+      }
+      // If no autocomplete was successful, set it to the current value
+      if (this.completeType == "") {
+        this.autocomplete = val;
       }
 
     },
@@ -79,13 +79,12 @@ export default defineComponent({
     },
     getAutocompleteFolder(input:string, folders:string[]):string {
       for (let folder of folders) {
-        console.log(folder, input);
         if (folder.startsWith(input)) {
           this.completeType = "folder";
           return folder + "/"
         }
       }
-      return input
+      return ""
     },
     getAutocompleteFile(input:string, commands:VaunchFile[]):string {
       for (let command of commands) {
@@ -96,7 +95,7 @@ export default defineComponent({
           }
         }
       }
-      return input
+      return ""
     }
   },
 });
