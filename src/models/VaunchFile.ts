@@ -16,6 +16,10 @@ export abstract class VaunchFile {
     return allNames;
   }
 
+  getContent():string {
+    return this.content
+  }
+
   setIcon(newIcon:string) {
     this.icon = newIcon;
   }

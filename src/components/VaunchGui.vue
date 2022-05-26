@@ -2,20 +2,21 @@
 import { defineComponent } from "vue";
 import { useFolderStore } from "@/stores/folder";
 import { useConfigStore } from "@/stores/config";
-
+import VaunchTooltip from "./VaunchTooltip.vue";
 
 export default defineComponent({
-  name: "VaunchGui",
-  setup() {
-    // Load folders in to iterate over them and display in GUI if wanted
-    const folders = useFolderStore();
-    // Load config store to get Vaunch configuration options
-    const config = useConfigStore();
-    return {
-      folders,
-      config,
-    }
-  }
+    name: "VaunchGui",
+    setup() {
+        // Load folders in to iterate over them and display in GUI if wanted
+        const folders = useFolderStore();
+        // Load config store to get Vaunch configuration options
+        const config = useConfigStore();
+        return {
+            folders,
+            config,
+        };
+    },
+    components: { VaunchTooltip }
 });
 </script>
 
@@ -65,6 +66,14 @@ export default defineComponent({
   min-width: 30%;
   max-width: 40%;
   padding: 1em;
+  box-shadow: none;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.file:hover {
+  cursor: pointer;
+  background-color: var(--color-vaunch-window-highlight);
+  transition: background-color 0.15s ease-in-out;
 }
 
 .file-name, .folder-name {
@@ -80,9 +89,10 @@ export default defineComponent({
       <i class="fa-solid fa-folder"></i><span class="folder-name">{{ folder.name }}</span>
     </span>
     <div v-if="folder.getFiles().length > 0" class="file-container">
-      <div v-for="file in folder.getFiles()" :key="file.fileName" class="file vaunch-window">
+      <div v-for="file in folder.getFiles()" :key="file.fileName" class="file vaunch-window" @click="file.execute()" :id="folder.name+'-'+file.fileName">
         <i :class="['fa-solid', 'fa-' + file.icon]"></i>
         <span class="file-name">{{ file.displayName() }}</span>
+        <VaunchTooltip :tip-for="folder.name+'-'+file.fileName" :tip-content="file.getContent()"/>
       </div>
     </div>
   </div>

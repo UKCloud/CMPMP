@@ -7,6 +7,7 @@ import { useConfigStore } from "@/stores/config";
 
 
 export default {
+  name: "Vaunch",
   components: {
     VaunchInput,
     VaunchGui

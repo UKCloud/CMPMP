@@ -33,10 +33,12 @@
   --color-heading: var(--vt-c-text-light-1);
   --color-text: var(--vt-c-text-light-1);
 
-  --color-vaunchinput: var(--vt-c-text-dark-2);
+  --color-vaunch-window: rgba(235, 235, 235, 0.64);
   --color-vaunchinput-text: var(--vt-c-black-soft);
   --color-highlight: #6ac2ce;
   --color-autocomplete: var(--vt-c-text-light-2);
+  --color-vaunch-window-highlight: rgba(214, 214, 214, 0.64);
+
 
   --section-gap: 160px;
 }
@@ -53,9 +55,10 @@
     --color-heading: var(--vt-c-text-dark-1);
     --color-text: var(--vt-c-text-dark-2);
 
-    --color-vaunchinput: var(--vt-c-divider-dark-2);
+    --color-vaunch-window: rgba(84, 84, 84, 0.64);
     --color-vaunchinput-text: var(--vt-c-white-soft);
     --color-highlight: #7a3f3f;
+    --color-vaunch-window-highlight: rgba(129, 129, 129, 0.64);
     --color-autocomplete: var(--vt-c-text-dark-2);
   }
 }
@@ -111,7 +114,7 @@ main {
 
 .vaunch-window {
   border-radius: 5px;
-  background: var(--color-vaunchinput);
+  background: var(--color-vaunch-window);
   backdrop-filter: blur(10px);
   color: var(--color-vaunchinput-text);
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
