@@ -1,58 +1,39 @@
 <script lang="ts">
-import { defineComponent } from "vue";
 import VaunchInput from "@/components/VaunchInput.vue";
+import VaunchGui from "./components/VaunchGui.vue";
 
-import { useCommandStore } from "@/stores/command";
+import { commands } from "@/stores/command";
 import { useConfigStore } from "@/stores/config";
 
-export default defineComponent({
+
+export default {
   components: {
     VaunchInput,
-  },
+    VaunchGui
+},
   setup() {
-    const commands = useCommandStore();
+    // Load config store for Vaunch configuration options, e/.g background image
     const config = useConfigStore();
 
     return {
       commands,
-      config,
-    };
-  },
-  data() {
-    return {
-      autocompleteText: "",
+      config
     };
   },
   methods: {
-    readInput(input: string[]) {
-      // Clear autocomplete to start with a clean slate
-      this.autocompleteText = "";
+    executeCommand(commandArgs: string[]) {
+      let operator = commandArgs[0];
+      commandArgs.shift();
 
-      // Get the current word that is being typed 
-      let lastWord: string = input[input.length - 1];
-      // Remove the last word, so it wont be considered in the autocomplete placeholder text
-      input.pop();
-
-      // If on the second+ word, prefix the autocomplete text with the previous words
-      if (input.length > 0) {
-        this.autocompleteText = input.join(" ");
-        this.autocompleteText += " "; // Add extra space for the to-be-completed word
-      }
-
-      // Search through the valid commands to autocomplete this word with
-      let match = false;
-      if (lastWord.length > 0) {
-        this.commands.available.forEach((command) => {
-          if (command.startsWith(lastWord)) {
-            match = true;
-            this.autocompleteText += command;
-          }
-        });
-      }
-      if (!match) this.autocompleteText += "";
-    },
+      // Check if we're running a command, if we find it in commands, execute it
+      commands.forEach((command) => {
+        if (command.getNames().includes(operator)) {
+          command.execute(commandArgs)
+        }
+      })
+    }
   },
-});
+};
 </script>
 
 <style>
@@ -61,6 +42,7 @@ export default defineComponent({
 
 <template>
   <main :style="{ 'background-image': 'url(' + config.background + ')' }">
-    <VaunchInput v-on:sendInput="readInput" :autocomplete="autocompleteText" />
+    <VaunchInput v-on:command="executeCommand" />
+    <VaunchGui />
   </main>
 </template>

@@ -33,7 +33,7 @@
   --color-heading: var(--vt-c-text-light-1);
   --color-text: var(--vt-c-text-light-1);
 
-  --color-vaunchinput: var(--vt-c-divider-light-2);
+  --color-vaunchinput: var(--vt-c-text-dark-2);
   --color-vaunchinput-text: var(--vt-c-black-soft);
   --color-highlight: #6ac2ce;
   --color-autocomplete: var(--vt-c-text-light-2);
@@ -67,6 +67,10 @@
   background: var(--color-highlight); /* Gecko Browsers */
 }
 
+/* ::-webkit-scrollbar {
+  width: 10px;
+} */
+
 *,
 *::before,
 *::after {
@@ -99,8 +103,16 @@ main {
   /* Horizontal ailgnment */
   align-items: center;
   /* Vertical alignment */
-  justify-content: center;
+  justify-content: space-around;
   height: 100vh;
   flex-flow: column;
   
+}
+
+.vaunch-window {
+  border-radius: 5px;
+  background: var(--color-vaunchinput);
+  backdrop-filter: blur(10px);
+  color: var(--color-vaunchinput-text);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }

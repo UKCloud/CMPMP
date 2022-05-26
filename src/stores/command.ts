@@ -1,10 +1,9 @@
-import { defineStore } from "pinia";
+import { VaunchFeh, VaunchHideGui, VaunchMkdir, VaunchRmdir, VaunchTouch } from "@/models/VaunchCommands";
 
-export const useCommandStore = defineStore({
-  id: "command",
-  state: () => ({
-    available: [
-      "mkdir", "touch"
-    ],
-  }),
-});
+export const commands = [
+  new VaunchMkdir(),
+  new VaunchRmdir(),
+  new VaunchFeh(),
+  new VaunchTouch(),
+  new VaunchHideGui()
+]
