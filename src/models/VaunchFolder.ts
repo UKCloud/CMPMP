@@ -14,12 +14,12 @@ export class VaunchFolder {
     this.files.set(newFile.fileName, newFile);
   }
 
-  getFile(fileName:string): VaunchFile|null {
+  getFile(fileName:string): VaunchFile|undefined {
     let file = this.files.get(fileName)
     if (file instanceof VaunchFile) {
       return file;
     }
-    return null;
+    return undefined;
   }
 
   getFiles(): VaunchFile[] {

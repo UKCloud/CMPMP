@@ -89,10 +89,10 @@ export default defineComponent({
       <i class="fa-solid fa-folder"></i><span class="folder-name">{{ folder.name }}</span>
     </span>
     <div v-if="folder.getFiles().length > 0" class="file-container">
-      <div v-for="file in folder.getFiles()" :key="file.fileName" class="file vaunch-window" @click="file.execute()" :id="folder.name+'-'+file.fileName">
+      <div v-for="file in folder.getFiles()" :key="file.fileName" class="file vaunch-window" @click="file.execute()" :id="folder.name+'-'+file.prettyName()">
         <i :class="['fa-solid', 'fa-' + file.icon]"></i>
         <span class="file-name">{{ file.displayName() }}</span>
-        <VaunchTooltip :tip-for="folder.name+'-'+file.fileName" :tip-content="file.getContent()"/>
+        <VaunchTooltip :tip-for="folder.name+'-'+file.prettyName()" :tip-content="file.getContent()"/>
       </div>
     </div>
   </div>

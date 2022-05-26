@@ -3,6 +3,9 @@ import { VaunchFile } from "./VaunchFile";
 export class VaunchLink extends VaunchFile {
 
   constructor(name:string, content:string, icon:string = "file") {
+    if (!name.endsWith('.lnk')) {
+      name = name+".lnk"
+    }
     super(name, icon);
     this.content = content;
   }
@@ -15,7 +18,6 @@ export class VaunchLink extends VaunchFile {
 
   private createUrl(urlString:string): string|undefined {
     try {
-      console.log(urlString);
       urlString = this.prependHttps(urlString);
       return new URL(urlString).href;
     } catch (e) {
@@ -41,6 +43,10 @@ export class VaunchLink extends VaunchFile {
   }
 
   displayName():string {
-    return this.fileName + ".lnk"
+    return this.fileName
+  }
+
+  prettyName():string {
+    return this.fileName.split('.')[0]
   }
 }

@@ -8,7 +8,7 @@ class VaunchCommand extends VaunchFile {
   execute(args: string[]): void {
     return
   }
-  displayName(): string {
+  getName(): string {
     return this.fileName
   }
 }
@@ -45,7 +45,6 @@ export class VaunchTouch extends VaunchCommand {
     let folder:VaunchFolder = folders.getFolderByName(filePath[0]);
     let newFile:VaunchLink = new VaunchLink(filePath[1], newFileContent);
     folder.createFile(newFile);
-    console.log(folder.getFiles());
   }
 }
 

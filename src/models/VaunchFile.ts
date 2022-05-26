@@ -26,7 +26,7 @@ export abstract class VaunchFile {
 
   abstract execute(args:string[]): void
 
-  abstract displayName(): string
+  abstract getName(): string
 
   info(): any {
     return {

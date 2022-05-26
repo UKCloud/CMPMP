@@ -4,6 +4,9 @@ import VaunchGui from "./components/VaunchGui.vue";
 
 import { commands } from "@/stores/command";
 import { useConfigStore } from "@/stores/config";
+import { useFolderStore } from "@/stores/folder";
+import type { VaunchFolder } from "./models/VaunchFolder";
+import type { VaunchFile } from "./models/VaunchFile";
 
 
 export default {
@@ -18,7 +21,7 @@ export default {
 
     return {
       commands,
-      config
+      config,
     };
   },
   methods: {
@@ -30,8 +33,23 @@ export default {
       commands.forEach((command) => {
         if (command.getNames().includes(operator)) {
           command.execute(commandArgs)
+          return
         }
-      })
+      });
+
+      // If no command was found, let's check if we're running a file
+      if (operator.includes("/")) {
+        const folders = useFolderStore()
+        let path:string[] = operator.split("/");
+        let folder: VaunchFolder = folders.getFolderByName(path[0])
+        if (folder) {
+          let file: VaunchFile|undefined = folder.getFile(path[1])
+          if (file) {
+            file.execute(commandArgs)
+            return
+          }
+        }
+      }
     }
   },
 };
