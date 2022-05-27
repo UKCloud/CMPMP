@@ -7,6 +7,10 @@ export const useConfigStore:StoreDefinition = defineStore({
   state: () => useStorage('config', {
       background: defaultBg,
       showGUI: true,
-      titleCase: true
+      titleCase: true,
+      color: {
+        window: 'var(--color-vaunch-window)',
+        text: 'var(--color-vaunch-text)'
+      }
   }),
 });

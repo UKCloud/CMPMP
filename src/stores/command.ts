@@ -1,11 +1,12 @@
-import { VaunchFeh, VaunchToggleGui, VaunchMkdir, VaunchRm, VaunchRmdir, VaunchTouch, VaunchToggleCase } from "@/models/VaunchCommands";
+import * as setCommands from "@/models/VaunchCommands";
 
 export const commands = [
-  new VaunchMkdir(),
-  new VaunchRmdir(),
-  new VaunchFeh(),
-  new VaunchTouch(),
-  new VaunchToggleGui(),
-  new VaunchToggleCase(),
-  new VaunchRm()
+  new setCommands.VaunchMkdir(),
+  new setCommands.VaunchRmdir(),
+  new setCommands.VaunchFeh(),
+  new setCommands.VaunchTouch(),
+  new setCommands.VaunchToggleGui(),
+  new setCommands.VaunchToggleCase(),
+  new setCommands.VaunchRm(),
+  new setCommands.VaunchSetColor()
 ]

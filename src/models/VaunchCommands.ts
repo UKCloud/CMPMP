@@ -120,3 +120,57 @@ export class VaunchToggleCase extends VaunchCommand {
     config.titleCase = !config.titleCase;
   }
 }
+
+export class VaunchSetColor extends VaunchCommand {
+  constructor() {
+    super("set-color");
+  }
+  aliases: string[] = ["set-colour"];
+
+  private getRgbColor(newColor:string):string {
+    let fakeDiv = document.createElement("div");
+
+    fakeDiv.style.color = newColor;
+    document.body.appendChild(fakeDiv);
+    // get RBG value of div from color passed. works with any valid CSS color,
+    // even names such as green, orange, etc...
+    let rgbColor:string = window.getComputedStyle(fakeDiv).getPropertyValue("color");
+    // remove the fake div, no longer needed
+    document.body.removeChild(fakeDiv);
+    return rgbColor
+  }
+
+  private calcWindowColor(newColor:string):string {
+    let rgbColor:string = this.getRgbColor(newColor);
+    // Convert rgb to rgba for background transparency
+    let rgbaColor = rgbColor.replace(/(?:rgb)+/g, 'rgba');
+    return rgbaColor.replace(/(?:\))+/g, ', 0.64)');
+  }
+
+  private calcTextColor(windowColor:string):string {
+    let rgb = windowColor.substr(4, windowColor.length - 5);
+    let colorArray = rgb.split(','),
+        r = parseInt(colorArray[0]),
+        g = parseInt(colorArray[1]),
+        b = parseInt(colorArray[2]);
+        
+    let contrast = (r * 299 + g * 587 + b * 114) / 1000
+    console.log(contrast);
+    return contrast < 255/2 ? 'white' : 'black'
+  }
+
+  execute(args:string[]): void {
+    const config = useConfigStore();
+    let newWindowColor = args[0];
+    let newTextColor = args[1];
+    if (newWindowColor == "default") {
+      config.color.window = 'var(--color-vaunch-window)';
+      config.color.text = 'var(--color-vaunch-text)';
+    } else {
+      config.color.window = this.calcWindowColor(newWindowColor);
+      if (newTextColor) {
+        config.color.text = newTextColor;
+      } else config.color.text = this.calcTextColor(newWindowColor);
+    }
+  }
+}

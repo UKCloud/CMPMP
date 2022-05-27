@@ -57,6 +57,13 @@ export default {
 
 <style>
 @import "@/assets/base.css";
+
+/* Set vaunch-wide window color, defaults to --color-vaunch-window */
+.vaunch-window {
+  background: v-bind('config.color.window');
+  color:  v-bind('config.color.text');
+}
+
 </style>
 
 <template>

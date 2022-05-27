@@ -20,7 +20,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style>
 #vaunch-folder-container {
   position: relative;
   display: flex;
@@ -61,7 +61,6 @@ export default defineComponent({
 .folder-name {
   padding-left: 0.5rem;
 }
-
 </style>
 
 <template>
