@@ -9,7 +9,7 @@ export default defineComponent({
     name: "VaunchGui",
     setup() {
         // Load folders in to iterate over them and display in GUI if wanted
-        const folders:Array<VaunchFolder> = useFolderStore().items 
+        const folders = useFolderStore()
         // Load config store to get Vaunch configuration options
         const config = useConfigStore();
         return {
@@ -85,8 +85,8 @@ export default defineComponent({
 </style>
 
 <template>
-<div v-if="folders.length > 0 && config.showGUI" id="vaunch-folder-container">
-  <div v-for="folder in folders" :key="folder.name" class="vaunch-folder vaunch-window">
+<div v-if="folders.items.length > 0 && config.showGUI" id="vaunch-folder-container">
+  <div v-for="folder in folders.items" :key="folder.name" class="vaunch-folder vaunch-window">
     <span class="folder-title">
       <i class="fa-solid fa-folder"></i><span class="folder-name">{{ folder.name }}</span>
     </span>
