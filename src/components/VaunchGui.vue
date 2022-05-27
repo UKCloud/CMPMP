@@ -2,7 +2,7 @@
 import { defineComponent } from "vue";
 import { useFolderStore } from "@/stores/folder";
 import { useConfigStore } from "@/stores/config";
-import VaunchTooltip from "./VaunchTooltip.vue";
+import VaunchGuiFile from "./VaunchGuiFile.vue";
 
 export default defineComponent({
     name: "VaunchGui",
@@ -16,7 +16,7 @@ export default defineComponent({
             config,
         };
     },
-    components: { VaunchTooltip }
+    components: { VaunchGuiFile }
 });
 </script>
 
@@ -53,30 +53,12 @@ export default defineComponent({
 }
 .file-container {
   display: flex;
-  align-items: center;
   justify-content: center;
   padding: 1em;
   flex-wrap: wrap;
 }
 
-.file {
-  align-items: center;
-  justify-content: space-around;
-  width: auto;
-  max-width: 40%;
-  padding: 1em;
-  margin: 0.5em;
-  box-shadow: none;
-  transition: background-color 0.15s ease-in-out;
-}
-
-.file:hover {
-  cursor: pointer;
-  background-color: var(--color-vaunch-window-highlight);
-  transition: background-color 0.15s ease-in-out;
-}
-
-.folder-name, .file-name {
+.folder-name {
   padding-left: 0.5rem;
 }
 
@@ -91,12 +73,7 @@ export default defineComponent({
       <span v-if="!config.titleCase" class="folder-name">{{ folder.name }}</span>
     </span>
     <div v-if="folder.getFiles().length > 0" class="file-container">
-      <div v-for="file in folder.getFiles()" :key="file.fileName" class="file vaunch-window" @click="file.execute([])" :id="folder.name+'-'+file.getBaseName()">
-        <i :class="['fa-' + file.iconClass, 'fa-' + file.icon]"></i>
-        <span v-if="config.titleCase" class="file-name">{{ file.titleCase() }}</span>
-        <span v-if="!config.titleCase" class="file-name">{{ file.fileName }}</span>
-        <VaunchTooltip :tip-for="folder.name+'-'+file.getBaseName()" :tip-content="file.getDescription()"/>
-      </div>
+      <VaunchGuiFile v-for="file in folder.getFiles()" :file="file" :parent-folder-name="folder.name" />
     </div>
   </div>
 </div>

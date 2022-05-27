@@ -22,7 +22,6 @@ export default defineComponent({
       completeType: ""
     };
   },
-  // props: ["autocomplete"],
   emits: ["command"],
   watch: {
     vaunchInput(val: string) {
