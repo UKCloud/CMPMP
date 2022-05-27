@@ -16,10 +16,6 @@ export abstract class VaunchFile {
     return allNames;
   }
 
-  getContent():string {
-    return this.content
-  }
-
   setIcon(newIcon:string) {
     this.icon = newIcon;
   }
@@ -28,6 +24,10 @@ export abstract class VaunchFile {
 
   getBaseName(): string {
     return this.fileName.split('.')[0]
+  }
+
+  getDescription(): string {
+    return this.content;
   }
 
   info(): any {

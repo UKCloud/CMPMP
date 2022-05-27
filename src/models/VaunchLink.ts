@@ -25,13 +25,17 @@ export class VaunchLink extends VaunchFile {
     }
   }
 
-  getContent(): string {
+  getCorrectURL(): string {
     let linkUrl:string|undefined = this.createUrl(this.content);
     if (linkUrl) {
       return linkUrl
     } else {
       return this.content;
     }
+  }
+
+  getDescription(): string {
+    return "Naviagte to: " + this.getCorrectURL();
   }
 
   execute(): void {

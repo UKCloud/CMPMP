@@ -18,8 +18,16 @@ export default defineComponent({
       followCursor: true,
       plugins: [followCursor],
       arrow: false,
-      placement: 'right-end'
+      placement: 'right-end',
+      theme: 'vaunch'
     });
   }
 });
 </script>
+
+<style>
+.tippy-box[data-theme~='vaunch'] {
+  background-color: var(--color-tooltip-bg);
+  color: var(--color-vaunch-text);
+}
+</style>
