@@ -23,7 +23,6 @@ export const useFolderStore:StoreDefinition = defineStore({
             return map;
           },
           write (v: Map<string, VaunchFolder>) {
-            console.log("writing...");
             let storeData:any[] = []; 
             for (let folder of v) {
               storeData.push(folder[1].info())

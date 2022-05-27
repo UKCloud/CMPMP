@@ -1,10 +1,11 @@
-import { VaunchFeh, VaunchHideGui, VaunchMkdir, VaunchRm, VaunchRmdir, VaunchTouch } from "@/models/VaunchCommands";
+import { VaunchFeh, VaunchToggleGui, VaunchMkdir, VaunchRm, VaunchRmdir, VaunchTouch, VaunchToggleCase } from "@/models/VaunchCommands";
 
 export const commands = [
   new VaunchMkdir(),
   new VaunchRmdir(),
   new VaunchFeh(),
   new VaunchTouch(),
-  new VaunchHideGui(),
+  new VaunchToggleGui(),
+  new VaunchToggleCase(),
   new VaunchRm()
 ]

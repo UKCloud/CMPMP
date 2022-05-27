@@ -11,6 +11,10 @@ export abstract class VaunchFile {
     this.icon = icon;
   }
 
+  titleCase(): string {
+    return this.getBaseName().charAt(0).toUpperCase() + this.getBaseName().slice(1)
+  }
+
   getNames():string[] {
     let allNames:string[] = [this.fileName, ...this.aliases]
     return allNames;

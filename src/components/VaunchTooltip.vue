@@ -11,8 +11,6 @@ export default defineComponent({
     tipContent: String
   },
   mounted() {
-    console.log(this.tipFor);
-
     tippy('#'+ this.tipFor, {
       content: this.tipContent,
       followCursor: true,
@@ -21,7 +19,7 @@ export default defineComponent({
       placement: 'right-end',
       theme: 'vaunch'
     });
-  }
+  },
 });
 </script>
 
@@ -31,3 +29,6 @@ export default defineComponent({
   color: var(--color-vaunch-text);
 }
 </style>
+
+<template>
+</template>

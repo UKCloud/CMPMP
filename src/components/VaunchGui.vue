@@ -3,7 +3,6 @@ import { defineComponent } from "vue";
 import { useFolderStore } from "@/stores/folder";
 import { useConfigStore } from "@/stores/config";
 import VaunchTooltip from "./VaunchTooltip.vue";
-import type { VaunchFolder } from "@/models/VaunchFolder";
 
 export default defineComponent({
     name: "VaunchGui",
@@ -88,12 +87,15 @@ export default defineComponent({
 <div v-if="folders.items.length > 0 && config.showGUI" id="vaunch-folder-container">
   <div v-for="folder in folders.items" :key="folder.name" class="vaunch-folder vaunch-window">
     <span class="folder-title">
-      <i class="fa-solid fa-folder"></i><span class="folder-name">{{ folder.name }}</span>
+      <i class="fa-solid fa-folder"></i>
+      <span v-if="config.titleCase" class="folder-name">{{ folder.titleCase() }}</span>
+      <span v-if="!config.titleCase" class="folder-name">{{ folder.name }}</span>
     </span>
     <div v-if="folder.getFiles().length > 0" class="file-container">
       <div v-for="file in folder.getFiles()" :key="file.fileName" class="file vaunch-window" @click="file.execute([])" :id="folder.name+'-'+file.getBaseName()">
         <i :class="['fa-solid', 'fa-' + file.icon]"></i>
-        <span class="file-name">{{ file.fileName }}</span>
+        <span v-if="config.titleCase" class="file-name">{{ file.titleCase() }}</span>
+        <span v-if="!config.titleCase" class="file-name">{{ file.fileName }}</span>
         <VaunchTooltip :tip-for="folder.name+'-'+file.getBaseName()" :tip-content="file.getDescription()"/>
       </div>
     </div>

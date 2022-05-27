@@ -99,7 +99,7 @@ export class VaunchFeh extends VaunchCommand {
   }
 }
 
-export class VaunchHideGui extends VaunchCommand {
+export class VaunchToggleGui extends VaunchCommand {
   constructor() {
     super("toggle-gui");
   }
@@ -107,5 +107,16 @@ export class VaunchHideGui extends VaunchCommand {
   execute(args:string[]): void {
     const config = useConfigStore();
     config.showGUI = !config.showGUI;
+  }
+}
+
+export class VaunchToggleCase extends VaunchCommand {
+  constructor() {
+    super("toggle-case");
+  }
+
+  execute(args:string[]): void {
+    const config = useConfigStore();
+    config.titleCase = !config.titleCase;
   }
 }

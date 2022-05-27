@@ -14,6 +14,10 @@ export class VaunchFolder {
     this.files.set(newFile.fileName, newFile);
   }
 
+  titleCase(): string {
+    return this.name.charAt(0).toUpperCase() + this.name.slice(1)
+  }
+
   getFile(fileName:string): VaunchFile|undefined {
     let file = this.files.get(fileName)
     if (file instanceof VaunchFile) {
