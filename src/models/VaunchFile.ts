@@ -3,12 +3,14 @@ export abstract class VaunchFile {
   aliases: string[];
   content:string;
   icon:string;
+  iconClass:string;
 
-  constructor(name:string, icon:string = "file") {
+  constructor(name:string, icon:string = "file", iconClass:string = "solid") {
     this.fileName = name
     this.aliases = [];
     this.content = "";
     this.icon = icon;
+    this.iconClass = iconClass;
   }
 
   titleCase(): string {
@@ -20,8 +22,9 @@ export abstract class VaunchFile {
     return allNames;
   }
 
-  setIcon(newIcon:string) {
+  setIcon(newIcon:string, iconClass:string = "solid") {
     this.icon = newIcon;
+    this.iconClass = iconClass;
   }
 
   abstract execute(args:string[]): void
@@ -40,6 +43,7 @@ export abstract class VaunchFile {
       aliases: this.aliases,
       content: this.content,
       icon: this.icon,
+      iconClass: this.iconClass,
       type: this.constructor.name
     }
   }

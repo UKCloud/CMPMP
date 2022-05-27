@@ -63,7 +63,6 @@ export default defineComponent({
   align-items: center;
   justify-content: space-around;
   width: auto;
-  min-width: 25%;
   max-width: 40%;
   padding: 1em;
   margin: 0.5em;
@@ -93,7 +92,7 @@ export default defineComponent({
     </span>
     <div v-if="folder.getFiles().length > 0" class="file-container">
       <div v-for="file in folder.getFiles()" :key="file.fileName" class="file vaunch-window" @click="file.execute([])" :id="folder.name+'-'+file.getBaseName()">
-        <i :class="['fa-solid', 'fa-' + file.icon]"></i>
+        <i :class="['fa-' + file.iconClass, 'fa-' + file.icon]"></i>
         <span v-if="config.titleCase" class="file-name">{{ file.titleCase() }}</span>
         <span v-if="!config.titleCase" class="file-name">{{ file.fileName }}</span>
         <VaunchTooltip :tip-for="folder.name+'-'+file.getBaseName()" :tip-content="file.getDescription()"/>

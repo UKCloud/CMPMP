@@ -46,7 +46,7 @@ export class VaunchTouch extends VaunchCommand {
     if (folder) {
       let newFile:VaunchLink = new VaunchLink(filePath[1], newFileContent);
       // If args[2] exists, set the icon to the value
-      if (args[2]) newFile.setIcon(args[2]);
+      if (args[2]) newFile.setIcon(args[2], args[3]);
       folder.createFile(newFile);
     }
   }

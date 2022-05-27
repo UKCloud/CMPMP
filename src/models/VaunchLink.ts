@@ -2,11 +2,12 @@ import { VaunchFile } from "./VaunchFile";
 
 export class VaunchLink extends VaunchFile {
 
-  constructor(name:string, content:string, icon:string = "file") {
+  constructor(name:string, content:string, icon:string = "file",
+   iconClass:string = "solid") {
     if (!name.endsWith('.lnk')) {
       name = name+".lnk"
     }
-    super(name, icon);
+    super(name, icon, iconClass);
     this.content = content;
   }
 
