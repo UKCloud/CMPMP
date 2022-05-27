@@ -2,7 +2,6 @@ import { defineStore, type StoreDefinition } from "pinia";
 import { useStorage } from '@vueuse/core'
 
 import { VaunchFolder } from "@/models/VaunchFolder"
-import type { VaunchFile } from "@/models/VaunchFile";
 
 export const useFolderStore:StoreDefinition = defineStore({
   id: "folder",
