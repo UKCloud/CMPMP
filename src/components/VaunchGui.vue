@@ -40,6 +40,7 @@ export default defineComponent({
   flex-direction: column;
   margin: 0.5rem;
   min-width: 20%;
+  max-width: 30%;
   width: auto;
   height: 45%;
 }
@@ -53,20 +54,20 @@ export default defineComponent({
 }
 .file-container {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-around;
+  align-items: center;
+  justify-content: center;
   padding: 1em;
+  flex-wrap: wrap;
 }
 
 .file {
-  display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: space-around;
   width: auto;
-  min-width: 30%;
+  min-width: 25%;
   max-width: 40%;
   padding: 1em;
+  margin: 0.5em;
   box-shadow: none;
   transition: background-color 0.15s ease-in-out;
 }
@@ -77,7 +78,7 @@ export default defineComponent({
   transition: background-color 0.15s ease-in-out;
 }
 
-.file-name, .folder-name {
+.folder-name, .file-name {
   padding-left: 0.5rem;
 }
 
