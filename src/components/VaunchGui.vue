@@ -3,12 +3,13 @@ import { defineComponent } from "vue";
 import { useFolderStore } from "@/stores/folder";
 import { useConfigStore } from "@/stores/config";
 import VaunchTooltip from "./VaunchTooltip.vue";
+import type { VaunchFolder } from "@/models/VaunchFolder";
 
 export default defineComponent({
     name: "VaunchGui",
     setup() {
         // Load folders in to iterate over them and display in GUI if wanted
-        const folders = useFolderStore();
+        const folders:Array<VaunchFolder> = useFolderStore().items 
         // Load config store to get Vaunch configuration options
         const config = useConfigStore();
         return {
@@ -83,16 +84,16 @@ export default defineComponent({
 </style>
 
 <template>
-<div v-if="folders.items.length > 0 && config.showGUI" id="vaunch-folder-container">
-  <div v-for="folder in folders.items" :key="folder.name" class="vaunch-folder vaunch-window">
+<div v-if="folders.length > 0 && config.showGUI" id="vaunch-folder-container">
+  <div v-for="folder in folders" :key="folder.name" class="vaunch-folder vaunch-window">
     <span class="folder-title">
       <i class="fa-solid fa-folder"></i><span class="folder-name">{{ folder.name }}</span>
     </span>
     <div v-if="folder.getFiles().length > 0" class="file-container">
-      <div v-for="file in folder.getFiles()" :key="file.fileName" class="file vaunch-window" @click="file.execute()" :id="folder.name+'-'+file.prettyName()">
+      <div v-for="file in folder.getFiles()" :key="file.fileName" class="file vaunch-window" @click="file.execute([])" :id="folder.name+'-'+file.getBaseName()">
         <i :class="['fa-solid', 'fa-' + file.icon]"></i>
-        <span class="file-name">{{ file.displayName() }}</span>
-        <VaunchTooltip :tip-for="folder.name+'-'+file.prettyName()" :tip-content="file.getContent()"/>
+        <span class="file-name">{{ file.fileName }}</span>
+        <VaunchTooltip :tip-for="folder.name+'-'+file.getBaseName()" :tip-content="file.getContent()"/>
       </div>
     </div>
   </div>

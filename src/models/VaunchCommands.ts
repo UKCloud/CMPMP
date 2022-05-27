@@ -8,8 +8,8 @@ class VaunchCommand extends VaunchFile {
   execute(args: string[]): void {
     return
   }
-  getName(): string {
-    return this.fileName
+  getBaseName(): string {
+    return this.fileName;
   }
 }
 

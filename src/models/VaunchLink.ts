@@ -41,12 +41,4 @@ export class VaunchLink extends VaunchFile {
       window.location.href = linkUrl;
     }
   }
-
-  displayName():string {
-    return this.fileName
-  }
-
-  prettyName():string {
-    return this.fileName.split('.')[0]
-  }
 }

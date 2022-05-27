@@ -26,7 +26,9 @@ export abstract class VaunchFile {
 
   abstract execute(args:string[]): void
 
-  abstract getName(): string
+  getBaseName(): string {
+    return this.fileName.split('.')[0]
+  }
 
   info(): any {
     return {
