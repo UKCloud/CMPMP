@@ -44,6 +44,8 @@ export class VaunchTouch extends VaunchCommand {
     let filePath = newFileName.split('/');
     let folder:VaunchFolder = folders.getFolderByName(filePath[0]);
     let newFile:VaunchLink = new VaunchLink(filePath[1], newFileContent);
+    // If args[2] exists, set the icon to the value
+    if (args[2]) newFile.setIcon(args[2]);
     folder.createFile(newFile);
   }
 }
@@ -53,6 +55,8 @@ export class VaunchRmdir extends VaunchCommand {
     super("rmdir");
   }
 
+  aliases: string[] = ["remove-folder", "delete-folder"];
+
   execute(args:string[]): void {
     const folders = useFolderStore();
     args.forEach(toDelete => {
@@ -60,6 +64,23 @@ export class VaunchRmdir extends VaunchCommand {
       toDelete = toDelete.replace("/","");
       folders.remove(toDelete);
     })
+  }
+}
+
+export class VaunchRm extends VaunchCommand {
+  constructor() {
+    super("rm");
+  }
+  aliases: string[] = ["remove-file", "delete-file"];
+
+  execute(args:string[]): void {
+    const folders = useFolderStore();
+    let newFileName:string = args[0];
+    let newFileContent:string = args[1];
+
+    let filePath = newFileName.split('/');
+    let folder:VaunchFolder = folders.getFolderByName(filePath[0]);
+    folder.removeFile(filePath[1])
   }
 }
 

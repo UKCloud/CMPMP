@@ -26,6 +26,10 @@ export class VaunchFolder {
     return Array.from(this.files.values())
   }
 
+  removeFile(toDelete:string): boolean {
+    return this.files.delete(toDelete)
+  }
+
   info(): any {
     let fileInfo:any[] = [];
     this.getFiles().forEach((file) => fileInfo.push(file.info()))
