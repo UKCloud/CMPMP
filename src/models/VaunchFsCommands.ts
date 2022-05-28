@@ -45,10 +45,12 @@ export class VaunchTouch extends VaunchCommand {
       if (fileName.endsWith('.qry')) {
         let filePrefix:string = args[1];
         let fileContent:string = args[2];
-        newFile = new VaunchQuery(fileName, filePrefix, fileContent);
-        // Icon name/class is the fourth/fith arg provided for VaunchLink
-        iconName = args[3];
-        iconClass = args[4];
+        if (filePrefix && fileContent) {
+          newFile = new VaunchQuery(fileName, filePrefix, fileContent);
+          // Icon name/class is the fourth/fith arg provided for VaunchLink
+          iconName = args[3];
+          iconClass = args[4];
+        }
       } else {
         let fileContent:string = args[1];
         newFile = new VaunchLink(fileName, fileContent);
