@@ -49,4 +49,15 @@ export class VaunchLink extends VaunchFile {
       } else window.location.href = linkUrl;
     }
   }
+
+  info(): any {
+    return {
+      fileName: this.fileName,
+      aliases: this.aliases,
+      content: this.content,
+      icon: this.icon,
+      iconClass: this.iconClass,
+      type: this.constructor.name
+    }
+  }
 }

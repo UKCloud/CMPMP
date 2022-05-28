@@ -37,14 +37,5 @@ export abstract class VaunchFile {
     return this.content;
   }
 
-  info(): any {
-    return {
-      fileName: this.fileName,
-      aliases: this.aliases,
-      content: this.content,
-      icon: this.icon,
-      iconClass: this.iconClass,
-      type: this.constructor.name
-    }
-  }
+  abstract info(): any;
 }

@@ -1,5 +1,6 @@
 import { VaunchFile } from "./VaunchFile";
 import { VaunchLink } from "./VaunchLink";
+import { VaunchQuery } from "./VaunchQuery";
 
 export class VaunchFolder {
   name: string;
@@ -52,6 +53,8 @@ export class VaunchFolder {
       let file: VaunchFile|undefined = undefined;
       if (fileData.type == "VaunchLink") {
         file = new VaunchLink(fileData.fileName, fileData.content, fileData.icon, fileData.iconClass);
+      } else if (fileData.type == "VaunchQuery") {
+        file = new VaunchQuery(fileData.fileName, fileData.prefix, fileData.content, fileData.icon, fileData.iconClass);
       }
       if (file != undefined) folder.createFile(file)
     }

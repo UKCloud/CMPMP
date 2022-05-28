@@ -3,6 +3,7 @@ import { useFolderStore } from "@/stores/folder";
 import { VaunchFile } from "./VaunchFile";
 import type { VaunchFolder } from "./VaunchFolder";
 import { VaunchLink } from "./VaunchLink";
+import { VaunchQuery } from "./VaunchQuery";
 
 class VaunchCommand extends VaunchFile {
   execute(args: string[]): void {
@@ -10,6 +11,13 @@ class VaunchCommand extends VaunchFile {
   }
   getBaseName(): string {
     return this.fileName;
+  }
+
+  info() {
+    return {
+      fileName: this.fileName,
+      aliases: this.aliases,
+    }
   }
 }
 
@@ -39,15 +47,37 @@ export class VaunchTouch extends VaunchCommand {
   execute(args:string[]): void {
     const folders = useFolderStore();
     let newFileName:string = args[0];
-    let newFileContent:string = args[1];
 
     let filePath = newFileName.split('/');
-    let folder:VaunchFolder = folders.getFolderByName(filePath[0]);
+    let folderName:string = filePath[0];
+    let fileName:string = filePath[1];
+
+    let folder:VaunchFolder = folders.getFolderByName(folderName);
     if (folder) {
-      let newFile:VaunchLink = new VaunchLink(filePath[1], newFileContent);
-      // If args[2] exists, set the icon to the value
-      if (args[2]) newFile.setIcon(args[2], args[3]);
-      folder.createFile(newFile);
+      let newFile:VaunchFile|undefined;
+      let iconName:string|undefined;
+      let iconClass:string|undefined;
+
+      if (fileName.endsWith('.qry')) {
+        let filePrefix:string = args[1];
+        let fileContent:string = args[2];
+        newFile = new VaunchQuery(fileName, filePrefix, fileContent);
+        // Icon name/class is the fourth/fith arg provided for VaunchLink
+        iconName = args[3];
+        iconClass = args[4];
+      } else {
+        let fileContent:string = args[1];
+        newFile = new VaunchLink(fileName, fileContent);
+        // Icon name/class is the third/fourth arg provided for VaunchLink
+        iconName = args[2];
+        iconClass = args[3];
+      }
+      
+      if (newFile) {
+        // Set the file icon if a custom icon was provided
+        if (iconName) newFile.setIcon(iconName, iconClass);
+        folder.createFile(newFile);
+      }
     }
   }
 }
@@ -149,7 +179,6 @@ export class VaunchSetColor extends VaunchCommand {
 
   private calcTextColor(windowColor:string):string {
     // let rgb = windowColor.substr(4, windowColor.length - 5);
-    console.log(windowColor);
     let rgb:RegExpMatchArray|null = windowColor.match(/^rgba\((\d+),\s?(\d+),\s?(\d+),\s?\d+(\.\d+)?\)$/);
     if (rgb != null) {
       let contrast = (parseInt(rgb[1]) * 299 +
