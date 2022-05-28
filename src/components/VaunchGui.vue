@@ -63,7 +63,7 @@ export default defineComponent({
   justify-content: center;
   padding: 1em;
   flex-wrap: wrap;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .folder-name {

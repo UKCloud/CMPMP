@@ -109,6 +109,14 @@ main {
   flex-flow: column;
 }
 
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-thumb {
+  background: v-bind('config.color.window'); 
+  border-radius: 2px;
+}
+
 </style>
 
 <template>
