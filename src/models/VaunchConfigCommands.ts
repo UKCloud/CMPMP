@@ -143,6 +143,6 @@ export class VaunchSetColor extends VaunchCommand {
       hsl[1] = Math.round(hsl[1] / 0.2)
       hsl[2] = Math.round(hsl[2] * 0.5)
     }
-    return `hsl(${hsl[0]},${hsl[1]}%,${hsl[2]}%)`;
+    return `hsla(${hsl[0]},${hsl[1]}%,${hsl[2]}%, 0.75)`;
   }
 }
