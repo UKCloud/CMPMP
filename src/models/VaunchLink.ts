@@ -1,6 +1,6 @@
-import { VaunchFile } from "./VaunchFile";
+import { VaunchUrlFile } from "./VaunchUrlFile";
 
-export class VaunchLink extends VaunchFile {
+export class VaunchLink extends VaunchUrlFile {
 
   constructor(name:string, content:string, icon:string = "file",
    iconClass:string = "solid") {
@@ -9,30 +9,6 @@ export class VaunchLink extends VaunchFile {
     }
     super(name, icon, iconClass);
     this.content = content;
-  }
-
-  private prependHttps(urlString:string):string {
-    let httpsTest:RegExp = /^https?:\/\//g;
-    if (!httpsTest.test(urlString)) urlString = "https://" + urlString;
-    return urlString;
-  }
-
-  private createUrl(urlString:string): string|undefined {
-    try {
-      urlString = this.prependHttps(urlString);
-      return new URL(urlString).href;
-    } catch (e) {
-      return undefined
-    }
-  }
-
-  getCorrectURL(): string {
-    let linkUrl:string|undefined = this.createUrl(this.content);
-    if (linkUrl) {
-      return linkUrl
-    } else {
-      return this.content;
-    }
   }
 
   getDescription(): string {
