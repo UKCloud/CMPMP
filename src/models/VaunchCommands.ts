@@ -181,7 +181,27 @@ export class VaunchSetColor extends VaunchCommand {
   constructor() {
     super("set-color");
   }
-  aliases: string[] = ["set-colour"];
+  aliases: string[] = ["set-colour", "colo"];
+
+  private rgbToHsl(r:number, g:number, b:number){
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    const l = Math.max(r, g, b);
+    const s = l - Math.min(r, g, b);
+    const h = s
+      ? l === r
+      ? (g - b) / s
+      : l === g
+      ? 2 + (b - r) / s
+      : 4 + (r - g) / s
+      : 0;
+    return [
+      Math.round(60 * h < 0 ? 60 * h + 360 : 60 * h),
+      Math.round(100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0)),
+      Math.round((100 * (2 * l - s)) / 2),
+    ];
+}
 
   private getRgbColor(newColor:string):string {
     let fakeDiv = document.createElement("div");
@@ -203,34 +223,51 @@ export class VaunchSetColor extends VaunchCommand {
     return rgbaColor.replace(/(?:\))+/g, ', 0.64)');
   }
 
+  private getRgbValue(rgbcolor:string):number[] {
+    let rgb:RegExpMatchArray|null = rgbcolor.match(/^rgba?\((\d+),\s?(\d+),\s?(\d+)(,\s?\d+(\.\d+)?)?\)$/);
+    if (rgb) {
+      return [parseInt(rgb[1]), parseInt(rgb[2]), parseInt(rgb[3])]
+    } else return [0,0,0]
+  }
+
   private calcTextColor(windowColor:string):string {
     // let rgb = windowColor.substr(4, windowColor.length - 5);
-    let rgb:RegExpMatchArray|null = windowColor.match(/^rgba\((\d+),\s?(\d+),\s?(\d+),\s?\d+(\.\d+)?\)$/);
-    if (rgb != null) {
-      let contrast = (parseInt(rgb[1]) * 299 +
-        parseInt(rgb[2]) * 587 +
-        parseInt(rgb[3]) * 114) / 1000;
-      return contrast < 255/2 ? 'white' : 'black'
-    }
-    return "black"
+    let rgb:number[] = this.getRgbValue(windowColor);
+    let contrast = (rgb[0]) * 299 + rgb[1] * 587 + rgb[2] * 114 / 1000;
+    return contrast < 255/2 ? 'white' : 'black'
   }
 
   execute(args:string[]): void {
     const config = useConfigStore();
     let newWindowColor = args[0];
     let newTextColor = args[1];
+    let newHighlightColor = args[2];
     // If first arg is 'default' set back to default variables
     if (newWindowColor == "default") {
       config.color.window = 'var(--color-vaunch-window)';
       config.color.text = 'var(--color-vaunch-text)';
+      config.color.highlight = 'var(--color-highlight)';
     } else {
       // Set the new window color
       config.color.window = this.calcWindowColor(newWindowColor);
+
       // If a second color is provided, set the text color to that
       // else calculate the text color based on the window color
       if (newTextColor) {
         config.color.text = newTextColor;
+        // Calculate the 'best' highlight color for this text color
+        config.color.autocomplete = this.calcAutocompleteColor(newTextColor)
       } else config.color.text = this.calcTextColor(config.color.window);
+      if (newHighlightColor) {
+        config.color.highlight = newHighlightColor;
+      }
     }
+  }
+  calcAutocompleteColor(newTextColor: string): any {
+    let rgb = this.getRgbColor(newTextColor);
+    let rgbRaw = this.getRgbValue(rgb);
+    let hsl = this.rgbToHsl(rgbRaw[0], rgbRaw[1], rgbRaw[2]);
+    hsl[1] > 50 ? hsl[1] = hsl[1] * 0.5 : hsl[1] = Math.round(hsl[1] / 0.5)
+    return `hsl(${hsl[0]},${hsl[1]}%,${hsl[2]}%)`;
   }
 }

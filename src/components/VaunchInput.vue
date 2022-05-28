@@ -142,7 +142,7 @@ export default defineComponent({
   z-index: 1;
   opacity: 0.8;
 
-  color: var(--color-autocomplete);
+  /* color: var(--color-autocomplete); */
   background: none;
 }
 </style>

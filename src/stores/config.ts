@@ -10,7 +10,9 @@ export const useConfigStore:StoreDefinition = defineStore({
       titleCase: true,
       color: {
         window: 'var(--color-vaunch-window)',
-        text: 'var(--color-vaunch-text)'
+        text: 'var(--color-vaunch-text)',
+        autocomplete: 'var(--color-autocomplete)',
+        highlight: 'var(--color-highlight)',
       }
   }),
 });

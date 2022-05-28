@@ -69,6 +69,14 @@ export default defineComponent({
   color:  v-bind('config.color.text');
 }
 
+#vaunch-autocomplete {
+  color: v-bind('config.color.autocomplete');
+}
+
+::selection {
+  background: v-bind('config.color.highlight'); /* WebKit/Blink Browsers */
+}
+
 </style>
 
 <template>
