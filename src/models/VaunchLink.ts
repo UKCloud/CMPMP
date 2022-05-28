@@ -39,11 +39,14 @@ export class VaunchLink extends VaunchFile {
     return "Naviagte to: " + this.getCorrectURL();
   }
 
-  execute(): void {
+  execute(args:string[]): void {
     // Ensure file content is "linkable"
     let linkUrl:string|undefined = this.createUrl(this.content);
     if (linkUrl) {
-      window.location.href = linkUrl;
+      // Navigate to page, in new tab if "_blank" is an argument
+      if (args[0] == "_blank") {
+        window.open(linkUrl,'_blank');
+      } else window.location.href = linkUrl;
     }
   }
 }
