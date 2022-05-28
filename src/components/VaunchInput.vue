@@ -73,6 +73,10 @@ export default defineComponent({
     },
   },
   methods: {
+    setInput(input:string) {
+      this.vaunchInput = input;
+      (this.$refs.inputBox as any).focus()
+    },
     complete() {
       // Only complete if there is something to complete
       if (this.autocomplete.length > this.vaunchInput.length) {
@@ -151,6 +155,7 @@ export default defineComponent({
       v-model="vaunchInput"
       @keydown.tab.prevent="complete"
       @keydown.enter.prevent="sendCommand"
+      ref="inputBox"
     />
     <input id="vaunch-autocomplete" type="text" :value="autocomplete" />
   </div>

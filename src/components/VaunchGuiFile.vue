@@ -18,7 +18,16 @@ export default defineComponent({
     file: {type: extend(VaunchFile)},
     parentFolderName: {type: String, required: true}
   },
-  components: { VaunchTooltip }
+  methods: {
+    execute(file:VaunchFile, args:string[]) {
+      let response = file.execute(args);
+      if (response) {
+        this.$emit('set-input', response)
+      }
+    }
+  },
+  components: { VaunchTooltip },
+  emits: ['set-input']
 })
 </script>
 
@@ -46,9 +55,9 @@ export default defineComponent({
 
 <template>
 <div :key="file.fileName" class="file vaunch-window" 
-@click.exact="file.execute([])"
-@click.ctrl="file.execute(['_blank'])"
-@click.middle="file.execute(['_blank'])"
+@click.exact="execute(file, [])"
+@click.ctrl="execute(file, ['_blank'])"
+@click.middle="execute(file, ['_blank'])"
 :id="parentFolderName+'-'+file.getIdSafeName()">
   <i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'file-icon']"></i>
   <span v-if="config.titleCase" class="file-name">{{ file.titleCase() }}</span>

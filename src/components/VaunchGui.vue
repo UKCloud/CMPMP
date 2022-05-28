@@ -16,7 +16,13 @@ export default defineComponent({
             config,
         };
     },
-    components: { VaunchGuiFile }
+    methods: {
+      passInput(input:string) {
+        this.$emit('set-input', input)
+      }
+    },
+    components: { VaunchGuiFile },
+    emits: ['set-input']
 });
 </script>
 
@@ -72,7 +78,7 @@ export default defineComponent({
       <span v-if="!config.titleCase" class="folder-name">{{ folder.name }}</span>
     </span>
     <div v-if="folder.getFiles().length > 0" class="file-container">
-      <VaunchGuiFile v-for="file in folder.getFiles()" :file="file" :parent-folder-name="folder.name" />
+      <VaunchGuiFile v-on:set-input="passInput" v-for="file in folder.getFiles()" :file="file" :parent-folder-name="folder.name" />
     </div>
   </div>
 </div>

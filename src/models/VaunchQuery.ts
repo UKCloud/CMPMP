@@ -28,7 +28,7 @@ export class VaunchQuery extends VaunchUrlFile {
 
   execute(args: string[]): void|string {
     if (args.length == 0) {
-      return this.prefix
+      return `${this.prefix}: `
     }
 
     let newLocation:string;

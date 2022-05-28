@@ -7,9 +7,10 @@ import { useConfigStore } from "@/stores/config";
 import { useFolderStore } from "@/stores/folder";
 import type { VaunchFolder } from "./models/VaunchFolder";
 import type { VaunchFile } from "./models/VaunchFile";
+import { defineComponent } from "vue";
 
 
-export default {
+export default defineComponent({
   name: "Vaunch",
   components: {
     VaunchInput,
@@ -50,9 +51,13 @@ export default {
           }
         }
       }
+    },
+    passInput(input:string) {
+      console.log("in Vaunch", input);
+      (this.$refs['vaunchInput'] as typeof VaunchInput).setInput(input);
     }
   },
-};
+});
 </script>
 
 <style>
@@ -68,7 +73,7 @@ export default {
 
 <template>
   <main :style="{ 'background-image': 'url(' + config.background + ')' }">
-    <VaunchInput v-on:command="executeCommand" />
-    <VaunchGui />
+    <VaunchInput v-on:command="executeCommand" ref="vaunchInput"/>
+    <VaunchGui v-on:set-input="passInput"/>
   </main>
 </template>

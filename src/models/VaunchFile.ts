@@ -27,7 +27,7 @@ export abstract class VaunchFile {
     this.iconClass = iconClass;
   }
 
-  abstract execute(args:string[]): void
+  abstract execute(args:string[]): string|void
 
   getBaseName(): string {
     return this.fileName.split('.')[0]
