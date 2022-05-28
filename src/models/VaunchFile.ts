@@ -33,6 +33,10 @@ export abstract class VaunchFile {
     return this.fileName.split('.')[0]
   }
 
+  getIdSafeName():string {
+    return this.fileName.replace('.','-')
+  }
+
   getDescription(): string {
     return this.content;
   }
