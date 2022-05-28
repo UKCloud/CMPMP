@@ -16,7 +16,10 @@ export abstract class VaunchFile {
   }
 
   titleCase(): string {
-    return this.getBaseName().charAt(0).toUpperCase() + this.getBaseName().slice(1)
+    let prettyString = this.getBaseName().replace(/_/g, ' ');
+    return prettyString.toLowerCase().split(' ').map(function(word) {
+      return (word.charAt(0).toUpperCase() + word.slice(1));
+    }).join(' ');
   }
 
   getNames():string[] {
