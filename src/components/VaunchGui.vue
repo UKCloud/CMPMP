@@ -40,6 +40,7 @@ export default defineComponent({
   overflow-y: auto;
 
   mask-image: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255, 1) 5%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255, 1) 5%);
   mask-repeat: no-repeat, no-repeat;
 }
 .vaunch-folder {
