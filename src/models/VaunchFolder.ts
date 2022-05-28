@@ -52,9 +52,9 @@ export class VaunchFolder {
     for (let fileData of data.files) {
       let file: VaunchFile|undefined = undefined;
       if (fileData.type == "VaunchLink") {
-        file = new VaunchLink(fileData.fileName, fileData.content, fileData.icon, fileData.iconClass);
+        file = new VaunchLink(fileData.fileName, fileData.content, fileData.icon, fileData.iconClass, fileData.hits);
       } else if (fileData.type == "VaunchQuery") {
-        file = new VaunchQuery(fileData.fileName, fileData.prefix, fileData.content, fileData.icon, fileData.iconClass);
+        file = new VaunchQuery(fileData.fileName, fileData.prefix, fileData.content, fileData.icon, fileData.iconClass, fileData.hits);
       }
       if (file != undefined) folder.createFile(file)
     }

@@ -5,11 +5,11 @@ export class VaunchQuery extends VaunchUrlFile {
   prefix:string
 
   constructor(name: string, prefix:string, content: string, icon: string = "magnifying-glass",
-    iconClass: string = "solid") {
+    iconClass: string = "solid", hits:number = 0) {
     if (!name.endsWith('.qry')) {
       name = name + ".qry"
     }
-    super(name, icon, iconClass);
+    super(name, icon, iconClass, hits);
     this.prefix = prefix.replace(':','');
     this.content = content;
   }
@@ -27,6 +27,7 @@ export class VaunchQuery extends VaunchUrlFile {
   }
 
   execute(args: string[]): void|string {
+    this.hits++;
     // If no args are provided or ctrl clicking on the file, return
     // the file's prefix
     if (args.length == 0 || args[0] == "_blank" || args[0] == "" ) {
@@ -63,7 +64,8 @@ export class VaunchQuery extends VaunchUrlFile {
       content: this.content,
       icon: this.icon,
       iconClass: this.iconClass,
-      type: this.constructor.name
+      type: this.constructor.name,
+      hits: this.hits
     }
   }
 

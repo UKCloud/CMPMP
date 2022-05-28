@@ -4,13 +4,15 @@ export abstract class VaunchFile {
   content:string;
   icon:string;
   iconClass:string;
+  hits:number;
 
-  constructor(name:string, icon:string = "file", iconClass:string = "solid") {
+  constructor(name:string, icon:string = "file", iconClass:string = "solid", hits:number = 0) {
     this.fileName = name
     this.aliases = [];
     this.content = "";
     this.icon = icon;
     this.iconClass = iconClass;
+    this.hits = hits
   }
 
   titleCase(): string {

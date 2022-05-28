@@ -3,11 +3,11 @@ import { VaunchUrlFile } from "./VaunchUrlFile";
 export class VaunchLink extends VaunchUrlFile {
 
   constructor(name:string, content:string, icon:string = "file",
-   iconClass:string = "solid") {
+   iconClass:string = "solid", hits:number = 0) {
     if (!name.endsWith('.lnk')) {
       name = name+".lnk"
     }
-    super(name, icon, iconClass);
+    super(name, icon, iconClass, hits);
     this.content = content;
   }
 
@@ -16,6 +16,7 @@ export class VaunchLink extends VaunchUrlFile {
   }
 
   execute(args:string[]): void {
+    this.hits++;
     // Ensure file content is "linkable"
     let linkUrl:URL|undefined = this.createUrl();
     if (linkUrl) {
@@ -33,7 +34,8 @@ export class VaunchLink extends VaunchUrlFile {
       content: this.content,
       icon: this.icon,
       iconClass: this.iconClass,
-      type: this.constructor.name
+      type: this.constructor.name,
+      hits: this.hits
     }
   }
 
