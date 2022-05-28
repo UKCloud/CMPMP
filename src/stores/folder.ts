@@ -2,6 +2,7 @@ import { defineStore, type StoreDefinition } from "pinia";
 import { useStorage } from '@vueuse/core'
 
 import { VaunchFolder } from "@/models/VaunchFolder"
+import type { VaunchFile } from "@/models/VaunchFile";
 
 export const useFolderStore:StoreDefinition = defineStore({
   id: "folder",
@@ -37,6 +38,9 @@ export const useFolderStore:StoreDefinition = defineStore({
     folderNames: (state: { rawFolders: Map<string, VaunchFolder>; }) => Array.from(state.rawFolders.keys()),
     getFolderByName: (state: { rawFolders: any; }) => {
       return (folderName:string) => state.rawFolders.get(folderName)
+    },
+    getFileByPath: (state: { rawFolders: any; }) => {
+      return (path:string) => (state.rawFolders.get(path.split('/')[0]) as VaunchFolder)?.getFile(path.split('/')[1]);
     }
   },
   actions: {

@@ -13,6 +13,7 @@ export const useConfigStore:StoreDefinition = defineStore({
         text: 'var(--color-vaunch-text)',
         autocomplete: 'var(--color-autocomplete)',
         highlight: 'var(--color-highlight)',
-      }
+      },
+      defaultFile: ""
   }),
 });

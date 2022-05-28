@@ -19,7 +19,6 @@ export default defineComponent({
   setup() {
     // Load config store for Vaunch configuration options, e/.g background image
     const config = useConfigStore();
-
     return {
       commands,
       config,
@@ -31,12 +30,12 @@ export default defineComponent({
       commandArgs.shift();
 
       // Check if we're running a command, if we find it in commands, execute it
-      commands.forEach((command) => {
+       for (let command of commands) {
         if (command.getNames().includes(operator)) {
           command.execute(commandArgs)
           return
         }
-      });
+      };
 
       // If no command was found, could it be a qry file?
       if (operator.includes(':')) {
@@ -63,14 +62,24 @@ export default defineComponent({
       // If no command was found, let's check if we're running a file
       if (operator.includes("/")) {
         const folders = useFolderStore()
-        let path:string[] = operator.split("/");
-        let folder: VaunchFolder = folders.getFolderByName(path[0])
-        if (folder) {
-          let file: VaunchFile|undefined = folder.getFile(path[1])
-          if (file) {
-            file.execute(commandArgs);
-            return
-          }
+        let file:VaunchFile = folders.getFileByPath(operator)
+        if (file) {
+          file.execute(commandArgs);
+          return
+        }
+      }
+
+      // Failing everything else, pass the input to the default file
+      // Push the first word back into commandArgs, as there is no operator
+      let defaultFile = this.config.defaultFile;
+      if (defaultFile) {
+        commandArgs.unshift(operator)
+        const folders = useFolderStore()
+  
+        let file:VaunchFile = folders.getFileByPath(defaultFile)
+        if (file) {
+          file.execute(commandArgs);
+          return
         }
       }
     },

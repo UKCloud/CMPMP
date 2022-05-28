@@ -39,6 +39,18 @@ export class VaunchToggleCase extends VaunchCommand {
   }
 }
 
+export class VaunchSetDefaultSearch extends VaunchCommand {
+  constructor() {
+    super("set-search");
+  }
+
+  execute(args:string[]): void {
+    const config = useConfigStore();
+    console.log(args[0]);
+    config.defaultFile = args[0];
+  }
+}
+
 export class VaunchSetColor extends VaunchCommand {
   constructor() {
     super("set-color");
