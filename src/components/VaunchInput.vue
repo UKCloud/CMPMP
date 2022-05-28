@@ -149,6 +149,12 @@ export default defineComponent({
   /* color: var(--color-autocomplete); */
   background: none;
 }
+
+@media (max-width: 768px) {
+  #vaunch-input-container {
+    width: 95vw;
+  }
+}
 </style>
 
 <template>
