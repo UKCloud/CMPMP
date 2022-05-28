@@ -116,6 +116,12 @@ main {
   background: v-bind('config.color.window'); 
   border-radius: 2px;
 }
+@-moz-document url-prefix() {
+  main {
+    scrollbar-color: v-bind('config.color.window') v-bind('config.color.text');
+    scrollbar-width: thin;
+  }
+}
 
 </style>
 
