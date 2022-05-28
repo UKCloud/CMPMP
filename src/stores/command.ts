@@ -8,5 +8,6 @@ export const commands = [
   new setCommands.VaunchToggleGui(),
   new setCommands.VaunchToggleCase(),
   new setCommands.VaunchRm(),
-  new setCommands.VaunchSetColor()
+  new setCommands.VaunchSetColor(),
+  new setCommands.VaunchSetIcon()
 ]

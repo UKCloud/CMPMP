@@ -22,7 +22,7 @@ export abstract class VaunchFile {
     return allNames;
   }
 
-  setIcon(newIcon:string, iconClass:string = "solid") {
+  setIcon(newIcon:string = this.icon, iconClass:string = "solid") {
     this.icon = newIcon;
     this.iconClass = iconClass;
   }
