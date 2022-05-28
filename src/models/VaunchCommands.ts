@@ -250,17 +250,23 @@ export class VaunchSetColor extends VaunchCommand {
       config.color.autocomplete = 'var(--color-autocomplete)';
     } else {
       // Set the new window color
-      config.color.window = this.calcWindowColor(newWindowColor);
+      if (newWindowColor != "*") {
+        config.color.window = this.calcWindowColor(newWindowColor);
+      }
 
       // If a second color is provided, set the text color to that
       // else calculate the text color based on the window color
       if (newTextColor) {
-        config.color.text = newTextColor;
+        if (newTextColor != "*") {
+          config.color.text = newTextColor;
+        }
         // Calculate the 'best' highlight color for this text color
         config.color.autocomplete = this.calcAutocompleteColor(newTextColor)
       } else config.color.text = this.calcTextColor(config.color.window);
       if (newHighlightColor) {
-        config.color.highlight = newHighlightColor;
+        if (newHighlightColor != "*") {
+          config.color.highlight = newHighlightColor;
+        }
       }
     }
   }
@@ -268,7 +274,13 @@ export class VaunchSetColor extends VaunchCommand {
     let rgb = this.getRgbColor(newTextColor);
     let rgbRaw = this.getRgbValue(rgb);
     let hsl = this.rgbToHsl(rgbRaw[0], rgbRaw[1], rgbRaw[2]);
-    hsl[1] > 50 ? hsl[1] = hsl[1] * 0.5 : hsl[1] = Math.round(hsl[1] / 0.5)
+
+    if (hsl[1] > 50) {
+      hsl[1] = hsl[1] * 0.5;
+    } else {
+      hsl[1] = Math.round(hsl[1] / 0.2)
+      hsl[2] = Math.round(hsl[2] * 0.5)
+    }
     return `hsl(${hsl[0]},${hsl[1]}%,${hsl[2]}%)`;
   }
 }
