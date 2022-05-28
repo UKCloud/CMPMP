@@ -14,6 +14,10 @@ export class VaunchQuery extends VaunchUrlFile {
     this.content = content;
   }
 
+  getDescription(): string {
+    return "Search: " + this.createUrl()?.hostname;
+  }
+
   getNames():string[] {
     let nameAndPrefix:string[] = [this.fileName, this.prefix]
     return nameAndPrefix;

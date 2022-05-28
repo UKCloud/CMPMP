@@ -8,19 +8,19 @@ export abstract class VaunchUrlFile extends VaunchFile {
     return urlString;
   }
 
-  protected createUrl(urlString:string): string|undefined {
+  protected createUrl(): URL|undefined {
     try {
-      urlString = this.prependHttps(urlString);
-      return new URL(urlString).href;
+      let urlString:string = this.prependHttps(this.content);
+      return new URL(urlString);
     } catch (e) {
       return undefined
     }
   }
 
   getCorrectURL(): string {
-    let linkUrl:string|undefined = this.createUrl(this.content);
+    let linkUrl:URL|undefined = this.createUrl();
     if (linkUrl) {
-      return linkUrl
+      return linkUrl.href
     } else {
       return this.content;
     }
