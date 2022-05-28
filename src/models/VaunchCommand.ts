@@ -14,4 +14,9 @@ export class VaunchCommand extends VaunchFile {
       aliases: this.aliases,
     }
   }
+
+  edit(args:string[]): void {
+    // Commands cannot be edited
+    return;
+  }
 }

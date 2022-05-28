@@ -42,4 +42,6 @@ export abstract class VaunchFile {
   }
 
   abstract info(): any;
+  
+  abstract edit(args:string[]): void;
 }

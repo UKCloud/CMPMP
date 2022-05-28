@@ -36,4 +36,10 @@ export class VaunchLink extends VaunchUrlFile {
       type: this.constructor.name
     }
   }
+
+  edit(args: string[]): void {
+    if (args[0]) {
+      this.content = args[0]
+    }
+  }
 }

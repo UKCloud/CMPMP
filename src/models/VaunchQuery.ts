@@ -17,7 +17,7 @@ export class VaunchQuery extends VaunchUrlFile {
   getDescription(): string {
     let host:string|undefined = this.createUrl()?.origin
     if (host) {
-      return `${this.prefix}: ${this.content.replace(host, '')}`;
+      return `Search: ${this.prefix}: ${this.content}`;
     } else return `${this.prefix}: ${host}`;
   }
 
@@ -67,4 +67,12 @@ export class VaunchQuery extends VaunchUrlFile {
     }
   }
 
+  edit(args: string[]): void {
+    if (args[0] && args[0] != "*") {
+      this.prefix = args[0]
+    }
+    if (args[1]  && args[1] != "*") {
+      this.content = args[1]
+    }
+  }
 }

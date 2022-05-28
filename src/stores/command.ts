@@ -7,6 +7,7 @@ export const commands = [
   new fsCommands.VaunchRm(),
   new fsCommands.VaunchTouch(),
   new fsCommands.VaunchSetIcon(),
+  new fsCommands.VaunchEditFile(),
   new configCommands.VaunchFeh(),
   new configCommands.VaunchToggleGui(),
   new configCommands.VaunchToggleCase(),

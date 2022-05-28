@@ -13,7 +13,6 @@ export default defineComponent({
       config
     }
   },
-  // props: ["file", "parentFolderName"],
   props: {
     file: {type: extend(VaunchUrlFile)},
     parentFolderName: {type: String, required: true}

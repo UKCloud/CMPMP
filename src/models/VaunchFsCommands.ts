@@ -68,6 +68,32 @@ export class VaunchTouch extends VaunchCommand {
   }
 }
 
+export class VaunchEditFile extends VaunchCommand {
+  constructor() {
+    super("edit");
+  }
+
+  aliases: string[] = ["edit-file"];
+
+  execute(args:string[]): void {
+    const folders = useFolderStore();
+    let fullPath:string = args[0];
+    // Remove the first arg, the filepath
+    args.shift()
+
+    let filePath = fullPath.split('/');
+    let folderName:string = filePath[0];
+    let fileName:string = filePath[1];
+    let folder:VaunchFolder = folders.getFolderByName(folderName);
+
+    let file = folder.getFile(fileName);
+    if (file) {
+      // Send remaining args to the file to edit
+      file.edit(args)
+    }
+  }
+}
+
 export class VaunchSetIcon extends VaunchCommand {
   constructor() {
     super("set-icon");
@@ -75,12 +101,13 @@ export class VaunchSetIcon extends VaunchCommand {
 
   execute(args:string[]): void {
     const folders = useFolderStore();
-    let deletePath:string = args[0];
+    let fullPath:string = args[0];
 
-    let filePath = deletePath.split('/');
+    let filePath = fullPath.split('/');
     let folderName:string = filePath[0];
     let fileName:string = filePath[1];
     let folder:VaunchFolder = folders.getFolderByName(folderName);
+    
     let file = folder.getFile(fileName);
     if (file) {
       let newIcon:string = args[1]
@@ -115,9 +142,9 @@ export class VaunchRm extends VaunchCommand {
 
   execute(args:string[]): void {
     const folders = useFolderStore();
-    let deletePath:string = args[0];
+    let fullPath:string = args[0];
 
-    let filePath = deletePath.split('/');
+    let filePath = fullPath.split('/');
     let folderName:string = filePath[0];
     let fileToDelete:string = filePath[1];
     let folder:VaunchFolder = folders.getFolderByName(folderName);
