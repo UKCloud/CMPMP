@@ -63,7 +63,7 @@ export class VaunchSetColor extends VaunchCommand {
       Math.round(100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0)),
       Math.round((100 * (2 * l - s)) / 2),
     ];
-}
+  }
 
   private getRgbColor(newColor:string):string {
     let fakeDiv = document.createElement("div");
@@ -99,6 +99,20 @@ export class VaunchSetColor extends VaunchCommand {
     return contrast < 255/2 ? 'white' : 'black'
   }
 
+  private calcAutocompleteColor(newTextColor: string): any {
+    let rgb = this.getRgbColor(newTextColor);
+    let rgbRaw = this.getRgbValue(rgb);
+    let hsl = this.rgbToHsl(rgbRaw[0], rgbRaw[1], rgbRaw[2]);
+
+    if (hsl[1] > 50) {
+      hsl[1] = hsl[1] * 0.5;
+    } else {
+      hsl[1] = Math.round(hsl[1] / 0.2)
+      hsl[2] = Math.round(hsl[2] * 0.5)
+    }
+    return `hsla(${hsl[0]},${hsl[1]}%,${hsl[2]}%, 0.75)`;
+  }
+
   execute(args:string[]): void {
     const config = useConfigStore();
     let newWindowColor = args[0];
@@ -131,18 +145,5 @@ export class VaunchSetColor extends VaunchCommand {
         }
       }
     }
-  }
-  calcAutocompleteColor(newTextColor: string): any {
-    let rgb = this.getRgbColor(newTextColor);
-    let rgbRaw = this.getRgbValue(rgb);
-    let hsl = this.rgbToHsl(rgbRaw[0], rgbRaw[1], rgbRaw[2]);
-
-    if (hsl[1] > 50) {
-      hsl[1] = hsl[1] * 0.5;
-    } else {
-      hsl[1] = Math.round(hsl[1] / 0.2)
-      hsl[2] = Math.round(hsl[2] * 0.5)
-    }
-    return `hsla(${hsl[0]},${hsl[1]}%,${hsl[2]}%, 0.75)`;
   }
 }
