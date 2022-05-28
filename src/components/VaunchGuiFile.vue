@@ -45,7 +45,11 @@ export default defineComponent({
 </style>
 
 <template>
-<div :key="file.fileName" class="file vaunch-window" @click.exact="file.execute([])" @click.ctrl="file.execute(['_blank'])" :id="parentFolderName+'-'+file.getIdSafeName()">
+<div :key="file.fileName" class="file vaunch-window" 
+@click.exact="file.execute([])"
+@click.ctrl="file.execute(['_blank'])"
+@click.middle="file.execute(['_blank'])"
+:id="parentFolderName+'-'+file.getIdSafeName()">
   <i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'file-icon']"></i>
   <span v-if="config.titleCase" class="file-name">{{ file.titleCase() }}</span>
   <span v-if="!config.titleCase" class="file-name">{{ file.fileName }}</span>
