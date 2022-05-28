@@ -1,13 +1,14 @@
-import * as setCommands from "@/models/VaunchCommands";
+import * as fsCommands from "@/models/VaunchFsCommands";
+import * as configCommands from "@/models/VaunchConfigCommands";
 
 export const commands = [
-  new setCommands.VaunchMkdir(),
-  new setCommands.VaunchRmdir(),
-  new setCommands.VaunchFeh(),
-  new setCommands.VaunchTouch(),
-  new setCommands.VaunchToggleGui(),
-  new setCommands.VaunchToggleCase(),
-  new setCommands.VaunchRm(),
-  new setCommands.VaunchSetColor(),
-  new setCommands.VaunchSetIcon()
+  new fsCommands.VaunchMkdir(),
+  new fsCommands.VaunchRmdir(),
+  new fsCommands.VaunchRm(),
+  new fsCommands.VaunchTouch(),
+  new fsCommands.VaunchSetIcon(),
+  new configCommands.VaunchFeh(),
+  new configCommands.VaunchToggleGui(),
+  new configCommands.VaunchToggleCase(),
+  new configCommands.VaunchSetColor()
 ]
