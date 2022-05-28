@@ -98,6 +98,17 @@ export default defineComponent({
   background: v-bind('config.color.highlight'); /* WebKit/Blink Browsers */
 }
 
+main {
+  display: flex;
+  /* Horizontal ailgnment */
+  align-items: center;
+  
+  /* Vertical alignment */
+  justify-content: space-between;
+  height: 100vh;
+  flex-flow: column;
+}
+
 </style>
 
 <template>

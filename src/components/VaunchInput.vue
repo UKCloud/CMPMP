@@ -113,6 +113,10 @@ export default defineComponent({
 
 <style scoped>
 #vaunch-input-container {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: space-around;
   position: relative;
   width: 75vw;
 }
@@ -148,7 +152,8 @@ export default defineComponent({
 </style>
 
 <template>
-  <div id="vaunch-input-container" class="vaunch-window">
+<div id="vaunch-input-container">
+  <div class="vaunch-window">
     <input
       id="vaunch-input"
       type="text"
@@ -159,4 +164,5 @@ export default defineComponent({
     />
     <input id="vaunch-autocomplete" type="text" :value="autocomplete" />
   </div>
+</div>
 </template>

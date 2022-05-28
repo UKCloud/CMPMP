@@ -30,7 +30,7 @@ export default defineComponent({
 #vaunch-folder-container {
   position: relative;
   display: flex;
-  width: 95vw;
+  width: 100vw;
   height: 65vh;
   flex-direction: row;
   justify-content: center;
@@ -57,15 +57,33 @@ export default defineComponent({
   font-size: 1.2rem;
   background-color: rgba(0, 0, 0, 0.1);
 }
+
 .file-container {
   display: flex;
   justify-content: center;
   padding: 1em;
   flex-wrap: wrap;
+  overflow-y: scroll;
 }
 
 .folder-name {
   padding-left: 0.5rem;
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (max-width: 768px) {
+  .vaunch-folder {
+    max-width: 40%;
+    min-width: 40%;
+  }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (max-width: 576px) {
+  .vaunch-folder {
+    min-width: 100%;
+    max-width: 100%;
+  }
 }
 </style>
 

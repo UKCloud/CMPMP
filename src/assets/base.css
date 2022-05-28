@@ -99,16 +99,6 @@ body, html, #app {
   height: 100vh;
 }
 
-main {
-  display: flex;
-  /* Horizontal ailgnment */
-  align-items: center;
-  /* Vertical alignment */
-  justify-content: space-around;
-  height: 100vh;
-  flex-flow: column;
-}
-
 .vaunch-window {
   border-radius: 5px;
   background: var(--color-vaunch-window);

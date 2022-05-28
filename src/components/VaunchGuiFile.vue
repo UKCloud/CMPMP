@@ -32,11 +32,15 @@ export default defineComponent({
 
 <style scoped>
 .file {
+  display: flex;
+  align-items: center;
   width: auto;
-  max-width: 40%;
+  max-width: 100%;
   padding: 1em;
   margin: 0.5em;
   box-shadow: none;
+  overflow-wrap: break-word;
+  border: solid thin rgba(100, 100, 100, 0.1);
 }
 
 .file:hover {
@@ -56,9 +60,9 @@ export default defineComponent({
 @click.ctrl="execute(file, ['_blank'])"
 @click.middle="execute(file, ['_blank'])"
 :id="parentFolderName+'-'+file.getIdSafeName()">
-  <i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'file-icon']"></i>
-  <span v-if="config.titleCase" class="file-name">{{ file.titleCase() }}</span>
-  <span v-if="!config.titleCase" class="file-name">{{ file.fileName }}</span>
+    <i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'file-icon']"></i>
+    <span v-if="config.titleCase" class="file-name">{{ file.titleCase() }}</span>
+    <span v-if="!config.titleCase" class="file-name">{{ file.fileName }}</span>
   <VaunchTooltip :tip-for="parentFolderName+'-'+file.getIdSafeName()" :tip-content="file.getDescription()"/>
 </div>
 </template>
