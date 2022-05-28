@@ -2,8 +2,8 @@
 import { defineComponent } from "vue";
 import { useConfigStore } from "@/stores/config";
 import VaunchTooltip from "./VaunchTooltip.vue";
-import { VaunchFile } from "@/models/VaunchFile";
 import { extend } from "@vue/shared";
+import { VaunchUrlFile } from "@/models/VaunchUrlFile";
 
 export default defineComponent({
   name: "VaunchGuiFile",
@@ -15,11 +15,11 @@ export default defineComponent({
   },
   // props: ["file", "parentFolderName"],
   props: {
-    file: {type: extend(VaunchFile)},
+    file: {type: extend(VaunchUrlFile)},
     parentFolderName: {type: String, required: true}
   },
   methods: {
-    execute(file:VaunchFile, args:string[]) {
+    execute(file:VaunchUrlFile, args:string[]) {
       let response = file.execute(args);
       if (response) {
         this.$emit('set-input', response)

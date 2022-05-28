@@ -27,7 +27,9 @@ export class VaunchQuery extends VaunchUrlFile {
   }
 
   execute(args: string[]): void|string {
-    if (args.length == 0) {
+    // If no args are provided or ctrl clicking on the file, return
+    // the file's prefix
+    if (args.length == 0 || args[0] == "_blank") {
       return `${this.prefix}: `
     }
 
