@@ -38,6 +38,28 @@ export default defineComponent({
         }
       });
 
+      // If no command was found, could it be a qry file?
+      if (operator.includes(':')) {
+        let queryPrefixSplit = operator.split(':');
+        let queryPrefix = queryPrefixSplit[0]
+        // If the first parmeter was supplied in the same 'word' as the prefix, unshift
+        // it onto the commandArgs. This deals with a multi ${} file, executed like:
+        // prefix:firstArg secondArg
+        if (queryPrefixSplit[1]) commandArgs.unshift(queryPrefixSplit[1])
+
+        const folders = useFolderStore();
+        for (let folder of (folders.items as VaunchFolder[])) {
+          for (let file of folder.getFiles()) {
+            if (file.constructor.name == "VaunchQuery") {
+              if (file.getNames().includes(queryPrefix)) {
+                file.execute(commandArgs);
+                return
+              }
+            }
+          }
+        }
+      }
+
       // If no command was found, let's check if we're running a file
       if (operator.includes("/")) {
         const folders = useFolderStore()
@@ -46,14 +68,13 @@ export default defineComponent({
         if (folder) {
           let file: VaunchFile|undefined = folder.getFile(path[1])
           if (file) {
-            file.execute(commandArgs)
+            file.execute(commandArgs);
             return
           }
         }
       }
     },
     passInput(input:string) {
-      console.log("in Vaunch", input);
       (this.$refs['vaunchInput'] as typeof VaunchInput).setInput(input);
     }
   },
