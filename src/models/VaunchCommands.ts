@@ -4,6 +4,7 @@ import { VaunchFile } from "./VaunchFile";
 import type { VaunchFolder } from "./VaunchFolder";
 import { VaunchLink } from "./VaunchLink";
 import { VaunchQuery } from "./VaunchQuery";
+import defaultBg from "@/assets/img/default.png";
 
 class VaunchCommand extends VaunchFile {
   execute(args: string[]): void {
@@ -124,7 +125,9 @@ export class VaunchFeh extends VaunchCommand {
 
   execute(args:string[]): void {
     const config = useConfigStore();
-    let background:string = args[0]
+    let background:string = args[0];
+    // If arg is 'default' set the background back to default
+    if (background == "default") background = defaultBg;
     config.background = background;
   }
 }
