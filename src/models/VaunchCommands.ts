@@ -247,6 +247,7 @@ export class VaunchSetColor extends VaunchCommand {
       config.color.window = 'var(--color-vaunch-window)';
       config.color.text = 'var(--color-vaunch-text)';
       config.color.highlight = 'var(--color-highlight)';
+      config.color.autocomplete = 'var(--color-autocomplete)';
     } else {
       // Set the new window color
       config.color.window = this.calcWindowColor(newWindowColor);
