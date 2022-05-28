@@ -38,8 +38,10 @@ export default defineComponent({
   padding: 1em;
   align-items: top;
   overflow-y: auto;
-}
 
+  mask-image: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255, 1) 5%);
+  mask-repeat: no-repeat, no-repeat;
+}
 .vaunch-folder {
   display: flex;
   flex-direction: column;
