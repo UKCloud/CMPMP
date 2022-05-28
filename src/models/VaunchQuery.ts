@@ -19,8 +19,11 @@ export class VaunchQuery extends VaunchUrlFile {
     return nameAndPrefix;
   }
 
-  execute(args: string[]): void {
-    console.log(args);
+  execute(args: string[]): void|string {
+    if (args.length == 0) {
+      return this.prefix
+    }
+
     let newLocation:string;
     // If file content contains multiple replacable sections
     // each arg will be used to replace each section
