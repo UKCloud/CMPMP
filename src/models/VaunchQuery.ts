@@ -15,7 +15,10 @@ export class VaunchQuery extends VaunchUrlFile {
   }
 
   getDescription(): string {
-    return "Search: " + this.createUrl()?.hostname;
+    let host:string|undefined = this.createUrl()?.origin
+    if (host) {
+      return `${this.prefix}: ${host}\nPath: ${this.content.replace(host, '')}`;
+    } else return `${this.prefix}: ${host}`;
   }
 
   getNames():string[] {
@@ -44,9 +47,9 @@ export class VaunchQuery extends VaunchUrlFile {
     }
 
     // Ensure the final file content is "linkable"
-    let linkUrl:string|undefined = this.createUrl(newLocation);
+    let linkUrl:URL|undefined = this.createUrl(newLocation);
     if (linkUrl) {
-      window.location.href = linkUrl;
+      window.location.href = linkUrl.href;
     }
   }
 

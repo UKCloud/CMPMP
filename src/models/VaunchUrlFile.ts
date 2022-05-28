@@ -8,9 +8,9 @@ export abstract class VaunchUrlFile extends VaunchFile {
     return urlString;
   }
 
-  protected createUrl(): URL|undefined {
+  protected createUrl(url:string = this.content): URL|undefined {
     try {
-      let urlString:string = this.prependHttps(this.content);
+      let urlString:string = this.prependHttps(url);
       return new URL(urlString);
     } catch (e) {
       return undefined
