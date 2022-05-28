@@ -38,13 +38,11 @@ export default defineComponent({
   padding: 1em;
   margin: 0.5em;
   box-shadow: none;
-  transition: background-color 0.15s ease-in-out;
 }
 
 .file:hover {
   cursor: pointer;
-  background-color: var(--color-vaunch-window-highlight);
-  transition: background-color 0.15s ease-in-out;
+  filter: contrast(0.8);
 }
 
 .file-name {

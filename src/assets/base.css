@@ -37,7 +37,6 @@
   --color-vaunch-text: var(--vt-c-black-soft);
   --color-highlight: #6ac2ce;
   --color-autocomplete: var(--vt-c-text-light-2);
-  --color-vaunch-window-highlight: rgba(214, 214, 214, 0.64);
 
   --color-tooltip-bg: var(--vt-c-white-mute);
 
@@ -61,7 +60,6 @@
     --color-vaunch-text: var(--vt-c-white-soft);
     --color-highlight: #7a3f3f;
     --color-autocomplete: var(--vt-c-text-dark-2);
-    --color-vaunch-window-highlight: rgba(129, 129, 129, 0.64);
 
     --color-tooltip-bg: var(--vt-c-black-mute);
   }
