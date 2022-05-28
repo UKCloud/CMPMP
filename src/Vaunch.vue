@@ -113,12 +113,12 @@ main {
   width: 3px;
 }
 ::-webkit-scrollbar-thumb {
-  background: v-bind('config.color.window'); 
+  background: v-bind('config.color.text'); 
   border-radius: 2px;
 }
 @-moz-document url-prefix() {
   main {
-    scrollbar-color: v-bind('config.color.window') v-bind('config.color.text');
+    scrollbar-color: v-bind('config.color.text') v-bind('config.color.window');
     scrollbar-width: thin;
   }
 }
