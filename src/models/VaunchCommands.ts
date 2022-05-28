@@ -148,29 +148,34 @@ export class VaunchSetColor extends VaunchCommand {
   }
 
   private calcTextColor(windowColor:string):string {
-    let rgb = windowColor.substr(4, windowColor.length - 5);
-    let colorArray = rgb.split(','),
-        r = parseInt(colorArray[0]),
-        g = parseInt(colorArray[1]),
-        b = parseInt(colorArray[2]);
-        
-    let contrast = (r * 299 + g * 587 + b * 114) / 1000
-    console.log(contrast);
-    return contrast < 255/2 ? 'white' : 'black'
+    // let rgb = windowColor.substr(4, windowColor.length - 5);
+    console.log(windowColor);
+    let rgb:RegExpMatchArray|null = windowColor.match(/^rgba\((\d+),\s?(\d+),\s?(\d+),\s?\d+(\.\d+)?\)$/);
+    if (rgb != null) {
+      let contrast = (parseInt(rgb[1]) * 299 +
+        parseInt(rgb[2]) * 587 +
+        parseInt(rgb[3]) * 114) / 1000;
+      return contrast < 255/2 ? 'white' : 'black'
+    }
+    return "black"
   }
 
   execute(args:string[]): void {
     const config = useConfigStore();
     let newWindowColor = args[0];
     let newTextColor = args[1];
+    // If first arg is 'default' set back to default variables
     if (newWindowColor == "default") {
       config.color.window = 'var(--color-vaunch-window)';
       config.color.text = 'var(--color-vaunch-text)';
     } else {
+      // Set the new window color
       config.color.window = this.calcWindowColor(newWindowColor);
+      // If a second color is provided, set the text color to that
+      // else calculate the text color based on the window color
       if (newTextColor) {
         config.color.text = newTextColor;
-      } else config.color.text = this.calcTextColor(newWindowColor);
+      } else config.color.text = this.calcTextColor(config.color.window);
     }
   }
 }
