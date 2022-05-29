@@ -136,40 +136,6 @@ export default defineComponent({
   filter: contrast(1);
 }
 
-main {
-  display: flex;
-  /* Horizontal ailgnment */
-  align-items: center;
-  
-  /* Vertical alignment */
-  justify-content: space-between;
-  height: 100vh;
-  flex-flow: column;
-}
-
-#bottom-half {
-  height: 65vh;
-  display: flex;
-  flex-direction:column;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#vaunch-folder-container {
-  position: relative;
-  display: flex;
-  width: 100vw;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 1em;
-  align-items: top;
-  overflow-y: scroll !important;
-  mask-image: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255, 1) 3%);
-  -webkit-mask-image: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255, 1) 3%);
-  mask-repeat: no-repeat, no-repeat;
-}
-
 /* Scrollbar themeing */
 ::-webkit-scrollbar {
   width: 3px;
@@ -183,14 +149,6 @@ main {
     scrollbar-color: v-bind('config.color.text') v-bind('config.color.window');
     scrollbar-width: thin;
   }
-}
-
-.file-container {
-  display: flex;
-  justify-content: start;
-  padding: 0.5em;
-  flex-wrap: wrap;
-  overflow-y: auto;
 }
 </style>
 
