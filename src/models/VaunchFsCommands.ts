@@ -102,17 +102,24 @@ export class VaunchSetIcon extends VaunchCommand {
   execute(args:string[]): void {
     const folders = useFolderStore();
     let fullPath:string = args[0];
+    let newIcon:string = args[1]
+    let newIconclass:string = args[2]
+    let splitPath = fullPath.split('/');
 
-    let filePath = fullPath.split('/');
-    let folderName:string = filePath[0];
-    let fileName:string = filePath[1];
+    let folderName:string = splitPath[0];
+    let fileName:string = splitPath[1];
     let folder:VaunchFolder = folders.getFolderByName(folderName);
-    
-    let file = folder.getFile(fileName);
-    if (file) {
-      let newIcon:string = args[1]
-      let newIconclass:string = args[2]
-      file.setIcon(newIcon, newIconclass)
+
+    if (folder && fileName) {
+      let file = folder.getFile(fileName);
+      if (file) {
+        file.setIcon(newIcon, newIconclass);
+        window.location.reload();
+      }
+    } else if (folder) {
+      // Assume we're attempting to set the folder's icon
+      folder.setIcon(newIcon, newIconclass);
+      window.location.reload();
     }
   }
 }

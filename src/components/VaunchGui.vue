@@ -96,7 +96,7 @@ export default defineComponent({
 <div v-if="folders.items.length > 0 && config.showGUI" id="vaunch-folder-container">
   <div v-for="folder in folders.items" :key="folder.name" class="vaunch-folder vaunch-window">
     <span class="folder-title">
-      <i class="fa-solid fa-folder"></i>
+      <i :class="['fa-'+folder.iconClass, 'fa-'+folder.icon]"></i>
       <span v-if="config.titleCase" class="folder-name">{{ folder.titleCase() }}</span>
       <span v-if="!config.titleCase" class="folder-name">{{ folder.name }}</span>
     </span>

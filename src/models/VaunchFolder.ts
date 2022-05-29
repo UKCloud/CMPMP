@@ -5,10 +5,14 @@ import { VaunchQuery } from "./VaunchQuery";
 export class VaunchFolder {
   name: string;
   files: Map<string, VaunchFile>
+  icon:string;
+  iconClass:string;
 
-  constructor(name: string) {
+  constructor(name: string, icon:string="folder", iconClass:string="solid") {
     this.name = name;
     this.files = new Map<string, VaunchFile>();
+    this.icon = icon
+    this.iconClass = iconClass
   }
 
   public createFile(newFile:VaunchFile): void {
@@ -35,11 +39,18 @@ export class VaunchFolder {
     return this.files.delete(toDelete)
   }
 
+  setIcon(icon:string, iconClass:string):void {
+    this.icon = icon
+    this.iconClass = iconClass
+  }
+
   info(): any {
     let fileInfo:any[] = [];
     this.getFiles().forEach((file) => fileInfo.push(file.info()))
     let data = {
       name: this.name,
+      icon: this.icon,
+      iconClass: this.iconClass,
       files: fileInfo
     }
     return data
@@ -48,7 +59,7 @@ export class VaunchFolder {
   // Parse a VaunchFolder from serialized JSON data
   // Also creates VaunchFiles that belong to the folder
   static parse(data:any): VaunchFolder {
-    let folder = new VaunchFolder(data.name);
+    let folder = new VaunchFolder(data.name, data.icon, data.iconClass);
     for (let fileData of data.files) {
       let file: VaunchFile|undefined = undefined;
       if (fileData.type == "VaunchLink") {
