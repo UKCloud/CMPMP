@@ -92,17 +92,17 @@ export default defineComponent({
 
 <style>
 @import "@/assets/base.css";
-
-/* Set vaunch-wide window color, defaults to --color-vaunch-window */
+/* Set vaunch-wide colors, defaults to --color-vaunch-window */
 .vaunch-window {
+  border-radius: 5px;
   background: v-bind('config.color.window');
   color:  v-bind('config.color.text');
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
-
 #vaunch-autocomplete {
   color: v-bind('config.color.autocomplete');
 }
-
 ::selection {
   background: v-bind('config.color.highlight'); /* WebKit/Blink Browsers */
 }
@@ -118,6 +118,7 @@ main {
   flex-flow: column;
 }
 
+/* Scrollbar themeing */
 ::-webkit-scrollbar {
   width: 3px;
 }

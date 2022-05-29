@@ -51,6 +51,7 @@ export default defineComponent({
   max-width: 30%;
   width: auto;
   height: 45%;
+  backdrop-filter: unset !important;
 }
 
 .folder-title {
