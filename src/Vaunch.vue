@@ -9,12 +9,14 @@ import type { VaunchFolder } from "./models/VaunchFolder";
 import type { VaunchFile } from "./models/VaunchFile";
 import { defineComponent } from "vue";
 import { useFuzzyStore } from "./stores/fuzzy";
+import VaunchFuzzy from "./components/VaunchFuzzy.vue";
 
 export default defineComponent({
   name: "Vaunch",
   components: {
     VaunchInput,
-    VaunchGuiFolder
+    VaunchGuiFolder,
+    VaunchFuzzy
 },
   setup() {
     // Load config store for Vaunch configuration options, e/.g background image
@@ -101,7 +103,6 @@ export default defineComponent({
         const folders = useFolderStore();
         let matches:VaunchFile[] = folders.findLinkFiles(input);
         this.fuzzyFiles.setFuzzy(this.sortByHits(matches))
-        console.log(this.fuzzyFiles.items.length);
       } else this.fuzzyFiles.clear();
     },
     sortByHits(files:VaunchFile[]) {
@@ -180,11 +181,12 @@ main {
   }
 }
 
-#fuzzy-container {
-  padding: 1em;
-  width: 65vw;
-  height: 50vh;
-  margin-bottom: 2em;
+.file-container {
+  display: flex;
+  justify-content: center;
+  padding: 0.5em;
+  flex-wrap: wrap;
+  overflow-y: auto;
 }
 </style>
 
@@ -196,9 +198,7 @@ main {
     ref="vaunchInput"/>
 
     <div id="bottom-half">
-      <div v-if="fuzzyFiles.items.length > 0" id="fuzzy-container" class="vaunch-window">
-        Hello!
-      </div>
+      <VaunchFuzzy v-if="fuzzyFiles.items.length > 0" :fuzzy-matches="fuzzyFiles.items" />
       <div v-if="folders.items.length > 0 && config.showGUI" id="vaunch-folder-container">
           <VaunchGuiFolder v-for="folder in folders.items" v-on:set-input="passInput" :folder="folder"/>
       </div>

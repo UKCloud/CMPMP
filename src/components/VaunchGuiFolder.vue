@@ -1,6 +1,5 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import { useFolderStore } from "@/stores/folder";
 import { useConfigStore } from "@/stores/config";
 import { extend } from "@vue/shared";
 
@@ -50,15 +49,7 @@ export default defineComponent({
   border-radius: 5px 5px 0 0;
 }
 
-.file-container {
-  display: flex;
-  justify-content: center;
-  padding: 0.5em;
-  flex-wrap: wrap;
-  overflow-y: auto;
-}
-
-.folder-name {
+.folder-title span {
   padding-left: 0.5rem;
 }
 
@@ -83,8 +74,8 @@ export default defineComponent({
   <div class="vaunch-folder vaunch-window">
     <span class="folder-title">
       <i :class="['fa-'+folder.iconClass, 'fa-'+folder.icon]"></i>
-      <span v-if="config.titleCase" class="folder-name">{{ folder.titleCase() }}</span>
-      <span v-if="!config.titleCase" class="folder-name">{{ folder.name }}</span>
+      <span v-if="config.titleCase">{{ folder.titleCase() }}</span>
+      <span v-if="!config.titleCase">{{ folder.name }}</span>
     </span>
     <div v-if="folder.getFiles().length > 0" class="file-container">
       <VaunchGuiFile v-on:set-input="passInput" v-for="file in folder.getFiles()" :file="file" :parent-folder-name="folder.name" />
