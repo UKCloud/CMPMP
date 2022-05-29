@@ -1,18 +1,22 @@
+import type { VaunchFolder } from "./VaunchFolder";
 import { VaunchUrlFile } from "./VaunchUrlFile";
 
 export class VaunchLink extends VaunchUrlFile {
 
-  constructor(name:string, content:string, icon:string = "file",
-   iconClass:string = "solid", hits:number = 0) {
+  parent:VaunchFolder;
+
+  constructor(name:string, content:string, parent:VaunchFolder, icon:string = "file",
+   iconClass:string = "solid", hits:number = 0,) {
     if (!name.endsWith('.lnk')) {
       name = name+".lnk"
     }
-    super(name, icon, iconClass, hits);
+    super(name, parent, icon, iconClass, hits);
     this.content = content;
+    this.parent = parent;
   }
 
   getDescription(): string {
-    return "Navigate to: " + this.getCorrectURL();
+    return "Naviagte to: " + this.getCorrectURL();
   }
 
   execute(args:string[]): void {

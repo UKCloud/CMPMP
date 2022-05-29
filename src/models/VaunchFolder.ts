@@ -15,7 +15,7 @@ export class VaunchFolder {
     this.iconClass = iconClass
   }
 
-  public createFile(newFile:VaunchFile): void {
+  public addFile(newFile:VaunchFile): void {
     this.files.set(newFile.fileName, newFile);
   }
 
@@ -73,11 +73,11 @@ export class VaunchFolder {
     for (let fileData of data.files) {
       let file: VaunchFile|undefined = undefined;
       if (fileData.type == "VaunchLink") {
-        file = new VaunchLink(fileData.fileName, fileData.content, fileData.icon, fileData.iconClass, fileData.hits);
+        file = new VaunchLink(fileData.fileName, fileData.content, folder, fileData.icon, fileData.iconClass, fileData.hits);
       } else if (fileData.type == "VaunchQuery") {
-        file = new VaunchQuery(fileData.fileName, fileData.prefix, fileData.content, fileData.icon, fileData.iconClass, fileData.hits);
+        file = new VaunchQuery(fileData.fileName, fileData.prefix, fileData.content, folder, fileData.icon, fileData.iconClass, fileData.hits);
       }
-      if (file != undefined) folder.createFile(file)
+      if (file != undefined) folder.addFile(file)
     }
     return folder;
   }

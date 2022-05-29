@@ -1,15 +1,16 @@
+import type { VaunchFolder } from "./VaunchFolder";
 import { VaunchUrlFile } from "./VaunchUrlFile";
 
 export class VaunchQuery extends VaunchUrlFile {
 
   prefix:string
 
-  constructor(name: string, prefix:string, content: string, icon: string = "magnifying-glass",
+  constructor(name: string, prefix:string, content: string, parent:VaunchFolder, icon: string = "magnifying-glass",
     iconClass: string = "solid", hits:number = 0) {
     if (!name.endsWith('.qry')) {
       name = name + ".qry"
     }
-    super(name, icon, iconClass, hits);
+    super(name, parent, icon, iconClass, hits);
     this.prefix = prefix.replace(':','');
     this.content = content;
   }

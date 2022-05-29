@@ -1,6 +1,14 @@
 import { VaunchFile } from "./VaunchFile";
+import type { VaunchFolder } from "./VaunchFolder";
 
 export abstract class VaunchUrlFile extends VaunchFile {
+
+  parent:VaunchFolder;
+
+  constructor(name:string, parent:VaunchFolder, icon:string, iconClass:string, hits:number = 0) {
+    super(name, icon, iconClass, hits);
+    this.parent = parent;
+  }
 
   protected prependHttps(urlString:string):string {
     let httpsTest:RegExp = /^https?:\/\//g;
@@ -15,6 +23,13 @@ export abstract class VaunchUrlFile extends VaunchFile {
     } catch (e) {
       return undefined
     }
+  }
+
+  protected getParentName(titleCase:boolean=false):string {
+    if (titleCase) {
+      return this.parent.titleCase();
+    }
+    return this.parent.name;
   }
 
   getCorrectURL(): string {

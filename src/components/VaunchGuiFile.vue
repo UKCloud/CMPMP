@@ -15,7 +15,8 @@ export default defineComponent({
   },
   props: {
     file: {type: extend(VaunchUrlFile)},
-    parentFolderName: {type: String, required: true}
+    parentFolderName: {type: String, required: true},
+    showHits: {type: Boolean, default: false}
   },
   methods: {
     execute(file:VaunchUrlFile, args:string[]) {
@@ -33,7 +34,7 @@ export default defineComponent({
 <style scoped>
 .file {
   display: flex;
-  align-items: center;
+  justify-content: space-between;
   width: auto;
   min-width: 20%;
   max-width: 100%;
@@ -54,6 +55,16 @@ export default defineComponent({
   padding-left: 0.5rem;
 }
 
+.file-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.file-inner * {
+  border: solid thin black
+}
+
 </style>
 
 <template>
@@ -62,9 +73,12 @@ export default defineComponent({
 @click.ctrl="execute(file, ['_blank'])"
 @click.middle="execute(file, ['_blank'])"
 :id="parentFolderName+'-'+file.getIdSafeName()">
+  <div>
     <i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'file-icon']"></i>
     <span v-if="config.titleCase" class="file-name">{{ file.titleCase() }}</span>
     <span v-if="!config.titleCase" class="file-name">{{ file.fileName }}</span>
+  </div>
+  <span v-if="showHits">Hits: {{ file.hits }}</span>
   <VaunchTooltip :tip-for="parentFolderName+'-'+file.getIdSafeName()" :tip-file="file"/>
 </div>
 </template>

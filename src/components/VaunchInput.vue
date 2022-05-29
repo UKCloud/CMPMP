@@ -178,10 +178,10 @@ export default defineComponent({
       v-model="vaunchInput"
       @keydown.tab.prevent="complete"
       @keydown.enter.prevent="sendCommand"
-      @keydown.tab.exact="incrementFuzzy"
-      @keydown.up.exact="incrementFuzzy"
-      @keydown.tab.shift.exact="decrementFuzzy"
-      @keydown.down.exact="decrementFuzzy"
+      @keydown.tab.exact.prevent="incrementFuzzy"
+      @keydown.tab.shift.exact.prevent="decrementFuzzy"
+      @keydown.down.exact.prevent="incrementFuzzy"
+      @keydown.up.exact.prevent="decrementFuzzy"
       ref="inputBox"
     />
     <input id="vaunch-autocomplete" type="text" :value="autocomplete" />

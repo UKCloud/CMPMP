@@ -20,19 +20,10 @@ export default defineComponent({
 #fuzzy-container {
   display: flex;
   flex-direction: column;
-  /* padding: 1em; */
   width: 65vw;
-  height: 50vh;
-  margin-bottom: 2em;
-}
-.vaunch-folder {
-
-  margin: 0.75rem;
-  min-width: 20vw;
-  max-width: 30vw;
-  width: auto;
-  height: 27.5vh;
-  backdrop-filter: unset !important;
+  min-height: 35vh;
+  max-height: 40vh;
+  margin-bottom: 1em;
 }
 
 #fuzzy-title {
@@ -50,6 +41,8 @@ export default defineComponent({
 
 #fuzzy-file-container {
   justify-content: left;
+  justify-items: left;
+  flex-direction: column;
 }
 
 .highlight {
@@ -65,7 +58,10 @@ export default defineComponent({
       <span class="folder-name">Fuzzy Search</span>
     </span>
     <div class="file-container" id="fuzzy-file-container">
-      <VaunchGuiFile :class="{highlight: file === fuzzyMatches[currentIndex]}" v-on:set-input="passInput" v-for="file in fuzzyMatches" :file="file" :parent-folder-name="'fuzzy'" />
+      <VaunchGuiFile :class="{highlight: file === fuzzyMatches[currentIndex]}"
+      v-on:set-input="passInput" v-for="file in fuzzyMatches"
+      :file="file" :parent-folder-name="'fuzzy'"
+      :show-hits="true"/>
     </div>
   </div>
 </template>
