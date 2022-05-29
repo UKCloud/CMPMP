@@ -9,10 +9,25 @@ export default defineComponent({
     VaunchGuiFile
   },
   methods: {
-  passInput(input:string) {
-    this.$emit('set-input', input)
+    passInput(input:string) {
+      this.$emit('set-input', input)
+    },
   },
-},
+  watch: { 
+    currentIndex: function(newIndex) {
+      let fileElement = (this.$refs.files as typeof VaunchGuiFile[])
+      let elem:HTMLElement = (fileElement[newIndex].$el as HTMLElement);
+      let parent:HTMLElement|null = elem.parentElement;
+      if (parent) {
+        // topPos = elem.offsetTop + parent.scrollTop - elem.offsetTop;
+        let topPos = elem.offsetTop - parent.offsetTop;
+        parent.scroll({
+          top: topPos,
+          behavior: 'smooth'
+        });
+      }
+    }
+  }
 })
 </script>
 
@@ -21,8 +36,7 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   width: 65vw;
-  min-height: 35vh;
-  max-height: 40vh;
+  max-height: 35vh;
   margin-bottom: 1em;
 }
 
@@ -42,11 +56,29 @@ export default defineComponent({
 #fuzzy-file-container {
   justify-content: left;
   justify-items: left;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+#fuzzy-file-container .file {
+  width: 100%;
 }
 
 .highlight {
   filter: contrast(1.5);
+}
+
+@media (max-width: 768px) {
+  #fuzzy-container {
+    width: 80vw;
+  }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (max-width: 576px) {
+  #fuzzy-container {
+    width: 95vw;
+  }
 }
 
 </style>
@@ -57,8 +89,8 @@ export default defineComponent({
       <i class="fa-solid fa-magnifying-glass"></i>
       <span class="folder-name">Fuzzy Search</span>
     </span>
-    <div class="file-container" id="fuzzy-file-container">
-      <VaunchGuiFile :class="{highlight: file === fuzzyMatches[currentIndex]}"
+    <div class="file-container" id="fuzzy-file-container" ref="fuzzyFileContainer">
+      <VaunchGuiFile ref="files" :class="{highlight: file === fuzzyMatches[currentIndex]}"
       v-on:set-input="passInput" v-for="file in fuzzyMatches"
       :file="file" :parent-folder-name="'fuzzy'"
       :is-fuzzy="true"/>
