@@ -47,8 +47,20 @@ export class VaunchSetDefaultSearch extends VaunchCommand {
 
   execute(args:string[]): void {
     const config = useConfigStore();
-    console.log(args[0]);
-    config.defaultFile = args[0];
+    if (args[0] = "none") {
+      config.defaultFile = "";
+    } else config.defaultFile = args[0];
+  }
+}
+
+export class VaunchSetFuzzy extends VaunchCommand {
+  constructor() {
+    super("toggle-fuzzy");
+  }
+
+  execute(args:string[]): void {
+    const config = useConfigStore();
+    config.fuzzy = !config.fuzzy;
   }
 }
 

@@ -51,5 +51,12 @@ export const useFolderStore:StoreDefinition = defineStore({
     remove(toDelete:string) {
       this.rawFolders.delete(toDelete)
     },
+    findLinkFiles(search:string) {
+      let matchingFiles:VaunchFile[] = [];
+      for (let folder of this.rawFolders.values()) {
+        matchingFiles.push(...folder.searchFile(search, ["VaunchLink"]))
+      }
+      return matchingFiles;
+    }
   },
 });

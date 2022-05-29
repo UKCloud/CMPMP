@@ -19,9 +19,11 @@ export default defineComponent({
   setup() {
     // Load config store for Vaunch configuration options, e/.g background image
     const config = useConfigStore();
+    const fuzzyFiles: VaunchFile[] = [];
     return {
       commands,
       config,
+      fuzzyFiles: fuzzyFiles
     };
   },
   methods: {
@@ -36,6 +38,8 @@ export default defineComponent({
         }
       };
 
+      // From here on, the folder store is needed
+      const folders = useFolderStore()
       // If no command was found, could it be a qry file?
       let file = this.findQryFile(operator)
       if (file) {
@@ -48,11 +52,15 @@ export default defineComponent({
 
       // If no command was found, let's check if we're running a file
       if (operator.includes("/")) {
-        const folders = useFolderStore()
         let file:VaunchFile = folders.getFileByPath(operator)
         if (file) {
           return file.execute(commandArgs);
         }
+      }
+
+      // If a fuzzy file has been chosen, let's execute that
+      if (this.fuzzyFiles.length > 0) {
+        this.fuzzyFiles[0].execute(commandArgs)
       }
 
       // Failing everything else, pass the input to the default file
@@ -60,7 +68,6 @@ export default defineComponent({
       let defaultFile = this.config.defaultFile;
       if (defaultFile) {
         commandArgs.unshift(operator)
-        const folders = useFolderStore()
   
         let file:VaunchFile = folders.getFileByPath(defaultFile)
         if (file) {
@@ -84,6 +91,18 @@ export default defineComponent({
         }
       }
       return undefined
+    },
+    fuzzy(input:string) {
+      if (input.length > 0) {
+        // If fuzzy is enabled, search for files matching
+        const folders = useFolderStore();
+        let matches:VaunchFile[] = folders.findLinkFiles(input);
+        this.fuzzyFiles = this.sortByHits(matches)
+        console.log(this.fuzzyFiles[0].fileName);
+      } else this.fuzzyFiles = [];
+    },
+    sortByHits(files:VaunchFile[]) {
+      return files.sort((a, b) => (a.hits < b.hits) ? 1 : -1)
     },
     passInput(input:string) {
       (this.$refs['vaunchInput'] as typeof VaunchInput).setInput(input);
@@ -139,7 +158,10 @@ main {
 
 <template>
   <main :style="{ 'background-image': 'url(' + config.background + ')' }">
-    <VaunchInput v-on:command="executeCommand" ref="vaunchInput"/>
+    <VaunchInput
+    v-on:command="executeCommand"
+    v-on:fuzzy="fuzzy"
+    ref="vaunchInput"/>
     <VaunchGui v-on:set-input="passInput"/>
   </main>
 </template>

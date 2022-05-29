@@ -35,6 +35,16 @@ export class VaunchFolder {
     return Array.from(this.files.values())
   }
 
+  searchFile(search:string, types:string[]): VaunchFile[] {
+    let matches:VaunchFile[] = [];
+    for (const [fileName, file] of this.files.entries()) {
+      if (fileName.includes(search) && types.includes(file.constructor.name)) {
+        matches.push(file)
+      }
+    }
+    return matches;
+  }
+
   removeFile(toDelete:string): boolean {
     return this.files.delete(toDelete)
   }

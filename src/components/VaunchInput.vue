@@ -4,6 +4,7 @@ import { commands } from "@/stores/command"
 import type { VaunchFile } from "@/models/VaunchFile";
 import type { VaunchFolder } from "@/models/VaunchFolder";
 import { useFolderStore } from "@/stores/folder";
+import { useConfigStore } from "@/stores/config";
 
 
 export default defineComponent({
@@ -22,11 +23,17 @@ export default defineComponent({
       completeType: ""
     };
   },
-  emits: ["command"],
+  emits: ["command", "fuzzy"],
   watch: {
     vaunchInput(val: string) {
-      // Annoyingly if input overflows autcomplete falls apart, so just disable it...
-      if (val.length > 70) {
+      // Emit out what we're typing if fuzzy is enabled
+      const config = useConfigStore();
+      if (config.fuzzy) {
+        this.$emit('fuzzy', val)
+      }
+
+      // Annoyingly if input overflows autcomplete falls apart, so just disable it after a while...
+      if (val.length > 50) {
         this.autocomplete = ""
         return
       }
@@ -69,7 +76,6 @@ export default defineComponent({
       if (this.completeType == "") {
         this.autocomplete = val;
       }
-
     },
   },
   methods: {
