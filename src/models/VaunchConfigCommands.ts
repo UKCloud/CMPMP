@@ -1,6 +1,7 @@
 import { useConfigStore } from "@/stores/config";
 import { VaunchCommand } from "./VaunchCommand";
 import defaultBg from "@/assets/img/default.png";
+import { defaultconfig } from "@/stores/config";
 
 export class VaunchFeh extends VaunchCommand {
   constructor() {
@@ -132,10 +133,7 @@ export class VaunchSetColor extends VaunchCommand {
     let newHighlightColor = args[2];
     // If first arg is 'default' set back to default variables
     if (newWindowColor == "default") {
-      config.color.window = 'var(--color-vaunch-window)';
-      config.color.text = 'var(--color-vaunch-text)';
-      config.color.highlight = 'var(--color-highlight)';
-      config.color.autocomplete = 'var(--color-autocomplete)';
+      config.color = defaultconfig.color;
     } else {
       // Set the new window color
       if (newWindowColor != "*") {
