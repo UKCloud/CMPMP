@@ -32,31 +32,18 @@ export default defineComponent({
       // Check if we're running a command, if we find it in commands, execute it
        for (let command of commands) {
         if (command.getNames().includes(operator)) {
-          command.execute(commandArgs)
-          return
+          return command.execute(commandArgs)
         }
       };
 
       // If no command was found, could it be a qry file?
-      if (operator.includes(':')) {
-        let queryPrefixSplit = operator.split(':');
-        let queryPrefix = queryPrefixSplit[0]
+      let file = this.findQryFile(operator)
+      if (file) {
         // If the first parmeter was supplied in the same 'word' as the prefix, unshift
-        // it onto the commandArgs. This deals with a multi ${} file, executed like:
+        // it into the commandArgs. This deals with a multi ${} file, executed like:
         // prefix:firstArg secondArg
-        if (queryPrefixSplit[1]) commandArgs.unshift(queryPrefixSplit[1])
-
-        const folders = useFolderStore();
-        for (let folder of (folders.items as VaunchFolder[])) {
-          for (let file of folder.getFiles()) {
-            if (file.constructor.name == "VaunchQuery") {
-              if (file.getNames().includes(queryPrefix)) {
-                file.execute(commandArgs);
-                return
-              }
-            }
-          }
-        }
+        if (operator.split(':')[1]) commandArgs.unshift(operator.split(':')[1])
+        return file.execute(commandArgs);
       }
 
       // If no command was found, let's check if we're running a file
@@ -64,8 +51,7 @@ export default defineComponent({
         const folders = useFolderStore()
         let file:VaunchFile = folders.getFileByPath(operator)
         if (file) {
-          file.execute(commandArgs);
-          return
+          return file.execute(commandArgs);
         }
       }
 
@@ -78,10 +64,26 @@ export default defineComponent({
   
         let file:VaunchFile = folders.getFileByPath(defaultFile)
         if (file) {
-          file.execute(commandArgs);
-          return
+          return file.execute(commandArgs);
         }
       }
+    },
+    findQryFile(operator:string):VaunchFile|undefined {
+      if (operator.includes(':')) {
+        let queryPrefix = operator.split(':')[0]
+
+        const folders = useFolderStore();
+        for (let folder of (folders.items as VaunchFolder[])) {
+          for (let file of folder.getFiles()) {
+            if (file.constructor.name == "VaunchQuery") {
+              if (file.getNames().includes(queryPrefix)) {
+                return file;
+              }
+            }
+          }
+        }
+      }
+      return undefined
     },
     passInput(input:string) {
       (this.$refs['vaunchInput'] as typeof VaunchInput).setInput(input);

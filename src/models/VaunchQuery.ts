@@ -45,7 +45,8 @@ export class VaunchQuery extends VaunchUrlFile {
         }
     } else {
       // Else, replace all ${} instances with the single provided arg
-      let encodedargs = encodeURIComponent(args[0]).replace(/%20/g, "+");
+      let combinedArgs = args.join(' ')
+      let encodedargs = encodeURIComponent(combinedArgs).replace(/%20/g, "+");
       newLocation = this.content.replace(/\${}/g, encodedargs)
     }
 
