@@ -47,10 +47,10 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   margin: 0.75rem;
-  min-width: 20%;
-  max-width: 30%;
+  min-width: 20vw;
+  max-width: 30vw;
   width: auto;
-  height: 45%;
+  height: 27.5vh;
   backdrop-filter: unset !important;
 }
 
