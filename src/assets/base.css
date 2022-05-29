@@ -125,6 +125,18 @@ main {
   mask-repeat: no-repeat, no-repeat;
 }
 
+.folder-title {
+  position: relative;
+  width: 100%;
+  padding-left: 1em;
+  font-size: 1.2rem;
+  border-radius: 5px 5px 0 0;
+}
+
+.folder-title span {
+  padding-left: 0.5rem;
+}
+
 .file-container {
   display: flex;
   justify-content: start;

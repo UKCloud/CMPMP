@@ -60,7 +60,7 @@ export default defineComponent({
 
 <template>
   <div id="fuzzy-container" class="vaunch-window">
-    <span id="fuzzy-title">
+    <span class="folder-title">
       <i class="fa-solid fa-magnifying-glass"></i>
       <span class="folder-name">Fuzzy Search</span>
     </span>

@@ -40,18 +40,6 @@ export default defineComponent({
   backdrop-filter: unset !important;
 }
 
-.folder-title {
-  position: relative;
-  width: 100%;
-  padding-left: 1em;
-  font-size: 1.2rem;
-  border-radius: 5px 5px 0 0;
-}
-
-.folder-title span {
-  padding-left: 0.5rem;
-}
-
 /* Medium devices (tablets, 768px and up) */
 @media (max-width: 768px) {
   .vaunch-folder {
