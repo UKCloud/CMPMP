@@ -35,6 +35,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   width: auto;
+  min-width: 20%;
   max-width: 100%;
   padding: 1em;
   margin: 0.5em;

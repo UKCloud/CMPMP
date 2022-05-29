@@ -131,6 +131,10 @@ export default defineComponent({
 ::selection {
   background: v-bind('config.color.highlight'); /* WebKit/Blink Browsers */
 }
+.folder-title {
+  background: v-bind('config.color.window');
+  filter: contrast(1);
+}
 
 main {
   display: flex;
@@ -183,7 +187,7 @@ main {
 
 .file-container {
   display: flex;
-  justify-content: center;
+  justify-content: start;
   padding: 0.5em;
   flex-wrap: wrap;
   overflow-y: auto;
