@@ -8,7 +8,7 @@ import { useFolderStore } from "@/stores/folder";
 import type { VaunchFolder } from "./models/VaunchFolder";
 import type { VaunchFile } from "./models/VaunchFile";
 import { defineComponent } from "vue";
-
+import { useFuzzyStore } from "./stores/fuzzy";
 
 export default defineComponent({
   name: "Vaunch",
@@ -21,7 +21,7 @@ export default defineComponent({
     const config = useConfigStore();
     // Load folders in to iterate over them and display in GUI if wanted
     const folders = useFolderStore()
-    const fuzzyFiles: VaunchFile[] = [];
+    const fuzzyFiles = useFuzzyStore();
     return {
       commands,
       config,
@@ -62,8 +62,8 @@ export default defineComponent({
       }
 
       // If a fuzzy file has been chosen, let's execute that
-      if (this.fuzzyFiles.length > 0) {
-        this.fuzzyFiles[0].execute(commandArgs)
+      if (this.fuzzyFiles.items.length > 0) {
+        this.fuzzyFiles.items[0].execute(commandArgs)
       }
 
       // Failing everything else, pass the input to the default file
@@ -100,8 +100,9 @@ export default defineComponent({
         // If fuzzy is enabled, search for files matching
         const folders = useFolderStore();
         let matches:VaunchFile[] = folders.findLinkFiles(input);
-        this.fuzzyFiles = this.sortByHits(matches)
-      } else this.fuzzyFiles = [];
+        this.fuzzyFiles.setFuzzy(this.sortByHits(matches))
+        console.log(this.fuzzyFiles.items.length);
+      } else this.fuzzyFiles.clear();
     },
     sortByHits(files:VaunchFile[]) {
       return files.sort((a, b) => (a.hits < b.hits) ? 1 : -1)
@@ -141,17 +142,24 @@ main {
   flex-flow: column;
 }
 
+#bottom-half {
+  height: 65vh;
+  display: flex;
+  flex-direction:column;
+  justify-content: space-between;
+  align-items: center;
+}
+
 #vaunch-folder-container {
   position: relative;
   display: flex;
   width: 100vw;
-  height: 65vh;
   flex-direction: row;
   justify-content: center;
   flex-wrap: wrap;
   padding: 1em;
   align-items: top;
-  overflow-y: auto;
+  overflow-y: scroll !important;
   mask-image: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255, 1) 3%);
   -webkit-mask-image: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255, 1) 3%);
   mask-repeat: no-repeat, no-repeat;
@@ -172,6 +180,12 @@ main {
   }
 }
 
+#fuzzy-container {
+  padding: 1em;
+  width: 65vw;
+  height: 50vh;
+  margin-bottom: 2em;
+}
 </style>
 
 <template>
@@ -181,8 +195,13 @@ main {
     v-on:fuzzy="fuzzy"
     ref="vaunchInput"/>
 
-    <div v-if="folders.items.length > 0 && config.showGUI" id="vaunch-folder-container">
-        <VaunchGuiFolder v-for="folder in folders.items" v-on:set-input="passInput" :folder="folder"/>
+    <div id="bottom-half">
+      <div v-if="fuzzyFiles.items.length > 0" id="fuzzy-container" class="vaunch-window">
+        Hello!
+      </div>
+      <div v-if="folders.items.length > 0 && config.showGUI" id="vaunch-folder-container">
+          <VaunchGuiFolder v-for="folder in folders.items" v-on:set-input="passInput" :folder="folder"/>
+      </div>
     </div>
 
   </main>
