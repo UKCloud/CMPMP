@@ -12,7 +12,7 @@ export class VaunchLink extends VaunchUrlFile {
   }
 
   getDescription(): string {
-    return "Naviagte to: " + this.getCorrectURL();
+    return "Navigate to: " + this.getCorrectURL();
   }
 
   execute(args:string[]): void {
