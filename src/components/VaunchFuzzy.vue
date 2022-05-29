@@ -61,7 +61,7 @@ export default defineComponent({
       <VaunchGuiFile :class="{highlight: file === fuzzyMatches[currentIndex]}"
       v-on:set-input="passInput" v-for="file in fuzzyMatches"
       :file="file" :parent-folder-name="'fuzzy'"
-      :show-hits="true"/>
+      :is-fuzzy="true"/>
     </div>
   </div>
 </template>

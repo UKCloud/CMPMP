@@ -16,7 +16,7 @@ export default defineComponent({
   props: {
     file: {type: extend(VaunchUrlFile)},
     parentFolderName: {type: String, required: true},
-    showHits: {type: Boolean, default: false}
+    isFuzzy: {type: Boolean, default: false}
   },
   methods: {
     execute(file:VaunchUrlFile, args:string[]) {
@@ -51,7 +51,7 @@ export default defineComponent({
   filter: contrast(1.5);
 }
 
-.file-name {
+.filename {
   padding-left: 0.5rem;
 }
 
@@ -75,10 +75,11 @@ export default defineComponent({
 :id="parentFolderName+'-'+file.getIdSafeName()">
   <div>
     <i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'file-icon']"></i>
-    <span v-if="config.titleCase" class="file-name">{{ file.titleCase() }}</span>
-    <span v-if="!config.titleCase" class="file-name">{{ file.fileName }}</span>
+    <span v-if="isFuzzy" class="filename">{{ file.getParentName(config.titleCase) }}: </span>
+    <span v-if="config.titleCase" :class="{filename: !isFuzzy}">{{ file.titleCase() }}</span>
+    <span v-if="!config.titleCase" :class="{filename: !isFuzzy}">{{ file.fileName }}</span>
   </div>
-  <span v-if="showHits">Hits: {{ file.hits }}</span>
+  <span v-if="isFuzzy">Hits: {{ file.hits }}</span>
   <VaunchTooltip :tip-for="parentFolderName+'-'+file.getIdSafeName()" :tip-file="file"/>
 </div>
 </template>
