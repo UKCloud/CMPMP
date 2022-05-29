@@ -6,7 +6,8 @@ export const useFuzzyStore = defineStore('storeId', {
   state: () => {
     return {
       // all these properties will have their type inferred automatically
-      items: ([] as VaunchFile[])
+      items: ([] as VaunchFile[]),
+      index: 0
     }
   },
   actions: {
