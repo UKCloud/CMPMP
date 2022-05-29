@@ -4,7 +4,7 @@ import VaunchGuiFile from "./VaunchGuiFile.vue";
 
 export default defineComponent({
   name: "VaunchFuzzy",
-  props: ['fuzzyMatches'],
+  props: ['fuzzyMatches','currentIndex'],
   components: {
     VaunchGuiFile
   },
@@ -53,7 +53,7 @@ export default defineComponent({
 }
 
 .highlight {
-  filter: contrast(0.8);
+  filter: contrast(1.5);
 }
 
 </style>
@@ -65,7 +65,7 @@ export default defineComponent({
       <span class="folder-name">Fuzzy Search</span>
     </span>
     <div class="file-container" id="fuzzy-file-container">
-      <VaunchGuiFile :class="{highlight: file === fuzzyMatches[0]}" v-on:set-input="passInput" v-for="file in fuzzyMatches" :file="file" :parent-folder-name="'fuzzy'" />
+      <VaunchGuiFile :class="{highlight: file === fuzzyMatches[currentIndex]}" v-on:set-input="passInput" v-for="file in fuzzyMatches" :file="file" :parent-folder-name="'fuzzy'" />
     </div>
   </div>
 </template>

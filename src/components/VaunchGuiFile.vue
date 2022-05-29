@@ -47,7 +47,7 @@ export default defineComponent({
 
 .file:hover {
   cursor: pointer;
-  filter: contrast(0.8);
+  filter: contrast(1.5);
 }
 
 .file-name {

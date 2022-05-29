@@ -23,7 +23,7 @@ export default defineComponent({
       completeType: ""
     };
   },
-  emits: ["command", "fuzzy"],
+  emits: ["command", "fuzzy", "fuzzyIncrement"],
   watch: {
     vaunchInput(val: string) {
       // Emit out what we're typing if fuzzy is enabled
@@ -112,7 +112,13 @@ export default defineComponent({
         }
       }
       return ""
-    }
+    },
+    incrementFuzzy() {
+      this.$emit('fuzzyIncrement', true)
+    },
+    decrementFuzzy() {
+      this.$emit('fuzzyIncrement', false)
+    },
   },
 });
 </script>
@@ -172,6 +178,8 @@ export default defineComponent({
       v-model="vaunchInput"
       @keydown.tab.prevent="complete"
       @keydown.enter.prevent="sendCommand"
+      @keydown.tab.exact="incrementFuzzy"
+      @keydown.tab.shift.exact="decrementFuzzy"
       ref="inputBox"
     />
     <input id="vaunch-autocomplete" type="text" :value="autocomplete" />

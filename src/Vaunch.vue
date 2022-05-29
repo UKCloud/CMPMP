@@ -24,11 +24,13 @@ export default defineComponent({
     // Load folders in to iterate over them and display in GUI if wanted
     const folders = useFolderStore()
     const fuzzyFiles = useFuzzyStore();
+    const currentFuzzyIndex:number = 0;
     return {
       commands,
       config,
       fuzzyFiles,
       folders,
+      currentFuzzyIndex
     };
   },
   methods: {
@@ -65,7 +67,7 @@ export default defineComponent({
 
       // If a fuzzy file has been chosen, let's execute that
       if (this.fuzzyFiles.items.length > 0) {
-        this.fuzzyFiles.items[0].execute(commandArgs)
+        this.fuzzyFiles.items[this.currentFuzzyIndex].execute(commandArgs)
       }
 
       // Failing everything else, pass the input to the default file
@@ -104,12 +106,28 @@ export default defineComponent({
         let matches:VaunchFile[] = folders.findLinkFiles(input);
         this.fuzzyFiles.setFuzzy(this.sortByHits(matches))
       } else this.fuzzyFiles.clear();
+      this.currentFuzzyIndex = 0;
     },
     sortByHits(files:VaunchFile[]) {
       return files.sort((a, b) => (a.hits < b.hits) ? 1 : -1)
     },
     passInput(input:string) {
       (this.$refs['vaunchInput'] as typeof VaunchInput).setInput(input);
+    },
+    updateFuzzyIndex(increment:boolean) {
+      if (increment) {
+        // If incrementing, check if index is in range
+        // If not, loop back to index 0
+        if (this.currentFuzzyIndex + 1 < this.fuzzyFiles.items.length) {
+          this.currentFuzzyIndex++;
+        } else this.currentFuzzyIndex = 0;
+      } else {
+        // If decrementing, check if index is in range
+        // If not, loop to max index
+        if (this.currentFuzzyIndex - 1 != -1) {
+          this.currentFuzzyIndex--;
+        } else this.currentFuzzyIndex = this.fuzzyFiles.items.length;
+      }
     }
   },
 });
@@ -157,10 +175,11 @@ export default defineComponent({
     <VaunchInput
     v-on:command="executeCommand"
     v-on:fuzzy="fuzzy"
+    v-on:fuzzy-increment="updateFuzzyIndex"
     ref="vaunchInput"/>
 
     <div id="bottom-half">
-      <VaunchFuzzy v-if="fuzzyFiles.items.length > 0" :fuzzy-matches="fuzzyFiles.items" />
+      <VaunchFuzzy v-if="fuzzyFiles.items.length > 0" :fuzzy-matches="fuzzyFiles.items" :current-index="currentFuzzyIndex"/>
       <div v-if="folders.items.length > 0 && config.showGUI" id="vaunch-folder-container">
           <VaunchGuiFolder v-for="folder in folders.items" v-on:set-input="passInput" :folder="folder"/>
       </div>
