@@ -24,7 +24,6 @@ export const useConfigStore:StoreDefinition = defineStore({
     serializer: {
       read (v:any) {
         let data = JSON.parse(v);
-        console.log(data);
         let config = {
           background: data.background ? data.background : defaultconfig.background,
           showGUI: data.showGUI != undefined ? data.showGUI : defaultconfig.showGUI,
