@@ -26,7 +26,7 @@ export default defineComponent({
 
         popper.appendChild(box);
 
-        box.classList.add('vaunch-tippy','vaunch-window');
+        box.classList.add('tippy-box', 'vaunch-tippy','vaunch-window');
         box.textContent = instance.props.content;
 
         const config = useConfigStore();
