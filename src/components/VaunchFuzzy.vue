@@ -19,7 +19,6 @@ export default defineComponent({
       let elem:HTMLElement = (fileElement[newIndex].$el as HTMLElement);
       let parent:HTMLElement|null = elem.parentElement;
       if (parent) {
-        // topPos = elem.offsetTop + parent.scrollTop - elem.offsetTop;
         let topPos = elem.offsetTop - parent.offsetTop;
         parent.scroll({
           top: topPos,
