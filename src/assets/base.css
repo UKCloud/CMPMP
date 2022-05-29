@@ -152,3 +152,22 @@ main {
   justify-content: space-between;
   align-items: center;
 }
+
+/* Contains both the commands and folder containers */
+#commands-folders-container {
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+#commands-container {
+  position: relative;
+  display: flex;
+  width: 40vw;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 1em;
+  align-items: center;
+}

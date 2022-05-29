@@ -10,13 +10,15 @@ import type { VaunchFile } from "./models/VaunchFile";
 import { defineComponent } from "vue";
 import { useFuzzyStore } from "./stores/fuzzy";
 import VaunchFuzzy from "./components/VaunchFuzzy.vue";
+import VaunchGuiCommands from "./components/VaunchGuiCommands.vue";
 
 export default defineComponent({
   name: "Vaunch",
   components: {
     VaunchInput,
     VaunchGuiFolder,
-    VaunchFuzzy
+    VaunchFuzzy,
+    VaunchGuiCommands
 },
   setup() {
     // Load config store for Vaunch configuration options, e/.g background image
@@ -151,6 +153,9 @@ export default defineComponent({
   background: v-bind('config.color.window');
   filter: contrast(1);
 }
+.commandInput {
+  border-bottom: solid thin v-bind('config.color.text') !important;
+}
 
 /* Scrollbar themeing */
 ::-webkit-scrollbar {
@@ -178,9 +183,16 @@ export default defineComponent({
 
     <div id="bottom-half">
       <VaunchFuzzy v-if="fuzzyFiles.items.length > 0" :fuzzy-matches="fuzzyFiles.items" :current-index="fuzzyFiles.index"/>
-      <div v-if="folders.items.length > 0 && config.showGUI" id="vaunch-folder-container">
-          <VaunchGuiFolder v-for="folder in folders.items" v-on:set-input="passInput" :folder="folder"/>
+
+      <div v-if="config.showGUI" id="commands-folders-container">
+        <div id="commands-container">
+          <VaunchGuiCommands />
+        </div>
+        <div v-if="folders.items.length > 0 && config.showGUI" id="vaunch-folder-container">
+            <VaunchGuiFolder v-for="folder in folders.items" v-on:set-input="passInput" :folder="folder"/>
+        </div>
       </div>
+
     </div>
 
   </main>
