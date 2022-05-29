@@ -63,6 +63,6 @@ export default defineComponent({
     <i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'file-icon']"></i>
     <span v-if="config.titleCase" class="file-name">{{ file.titleCase() }}</span>
     <span v-if="!config.titleCase" class="file-name">{{ file.fileName }}</span>
-  <VaunchTooltip :tip-for="parentFolderName+'-'+file.getIdSafeName()" :tip-content="file.getDescription()"/>
+  <VaunchTooltip :tip-for="parentFolderName+'-'+file.getIdSafeName()" :tip-file="file"/>
 </div>
 </template>

@@ -1,19 +1,21 @@
 <script lang="ts">
 import { defineComponent } from "vue";
+import { extend } from "@vue/shared";
 
 import tippy, {followCursor} from 'tippy.js/headless';
 import 'tippy.js/dist/tippy.css';
 import { useConfigStore } from "@/stores/config";
+import { VaunchFile } from "@/models/VaunchFile";
 
 export default defineComponent({
   name: "VaunchTooltip",
   props: {
     tipFor: String,
-    tipContent: String,
+    tipFile: extend(VaunchFile),
   },
   mounted() {
     tippy('#'+ this.tipFor, {
-      content: this.tipContent,
+      content: this.tipFile,
       followCursor: true,
       plugins: [followCursor],
       arrow: false,
@@ -27,13 +29,13 @@ export default defineComponent({
         popper.appendChild(box);
 
         box.classList.add('tippy-box', 'vaunch-tippy','vaunch-window');
-        box.textContent = instance.props.content;
+        box.textContent = instance.props.content.getDescription();
 
         const config = useConfigStore();
         function onUpdate(prevProps:any, nextProps:any) {
           // DOM diffing
-          if (prevProps.content !== nextProps.content) {
-            box.textContent = nextProps.content;
+          if (prevProps.content !== nextProps.content.getDescription()) {
+            box.textContent = nextProps.content.getDescription();
           }
           // Color diffing
           if (box.style.background != config.color.window ||
