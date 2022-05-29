@@ -56,7 +56,7 @@ export default defineComponent({
 
 <template>
 <div :key="file.fileName" class="file vaunch-window" 
-@click.exact=""
+@click.exact="execute(file, ['_blank'])"
 @click.ctrl="execute(file, ['_blank'])"
 @click.middle="execute(file, ['_blank'])"
 :id="parentFolderName+'-'+file.getIdSafeName()">
