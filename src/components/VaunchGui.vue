@@ -46,7 +46,7 @@ export default defineComponent({
 .vaunch-folder {
   display: flex;
   flex-direction: column;
-  margin: 0 1rem;
+  margin: 0.75rem;
   min-width: 20%;
   max-width: 30%;
   width: auto;

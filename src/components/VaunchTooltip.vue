@@ -58,6 +58,7 @@ export default defineComponent({
 <style>
 .vaunch-tippy {
   padding: 0.5em;
+  border: solid thin rgba(100, 100, 100, 0.1);
 }
 </style>
 
