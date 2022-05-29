@@ -1,6 +1,6 @@
 <script lang="ts">
 import VaunchInput from "@/components/VaunchInput.vue";
-import VaunchGui from "./components/VaunchGui.vue";
+import VaunchGuiFolder from "./components/VaunchGuiFolder.vue";
 
 import { commands } from "@/stores/command";
 import { useConfigStore } from "@/stores/config";
@@ -14,16 +14,19 @@ export default defineComponent({
   name: "Vaunch",
   components: {
     VaunchInput,
-    VaunchGui
+    VaunchGuiFolder
 },
   setup() {
     // Load config store for Vaunch configuration options, e/.g background image
     const config = useConfigStore();
+    // Load folders in to iterate over them and display in GUI if wanted
+    const folders = useFolderStore()
     const fuzzyFiles: VaunchFile[] = [];
     return {
       commands,
       config,
-      fuzzyFiles: fuzzyFiles
+      fuzzyFiles,
+      folders,
     };
   },
   methods: {
@@ -98,7 +101,6 @@ export default defineComponent({
         const folders = useFolderStore();
         let matches:VaunchFile[] = folders.findLinkFiles(input);
         this.fuzzyFiles = this.sortByHits(matches)
-        console.log(this.fuzzyFiles[0].fileName);
       } else this.fuzzyFiles = [];
     },
     sortByHits(files:VaunchFile[]) {
@@ -139,6 +141,22 @@ main {
   flex-flow: column;
 }
 
+#vaunch-folder-container {
+  position: relative;
+  display: flex;
+  width: 100vw;
+  height: 65vh;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 1em;
+  align-items: top;
+  overflow-y: auto;
+  mask-image: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255, 1) 3%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255, 1) 3%);
+  mask-repeat: no-repeat, no-repeat;
+}
+
 /* Scrollbar themeing */
 ::-webkit-scrollbar {
   width: 3px;
@@ -162,6 +180,10 @@ main {
     v-on:command="executeCommand"
     v-on:fuzzy="fuzzy"
     ref="vaunchInput"/>
-    <VaunchGui v-on:set-input="passInput"/>
+
+    <div v-if="folders.items.length > 0 && config.showGUI" id="vaunch-folder-container">
+        <VaunchGuiFolder v-for="folder in folders.items" v-on:set-input="passInput" :folder="folder"/>
+    </div>
+
   </main>
 </template>

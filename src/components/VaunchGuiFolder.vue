@@ -2,19 +2,22 @@
 import { defineComponent } from "vue";
 import { useFolderStore } from "@/stores/folder";
 import { useConfigStore } from "@/stores/config";
+import { extend } from "@vue/shared";
+
 import VaunchGuiFile from "./VaunchGuiFile.vue";
+import { VaunchFolder } from "@/models/VaunchFolder";
 
 export default defineComponent({
-    name: "VaunchGui",
+    name: "VaunchGuiFolder",
     setup() {
-        // Load folders in to iterate over them and display in GUI if wanted
-        const folders = useFolderStore()
         // Load config store to get Vaunch configuration options
         const config = useConfigStore();
         return {
-            folders,
             config,
         };
+    },
+    props: {
+      folder: {type: extend(VaunchFolder)},
     },
     methods: {
       passInput(input:string) {
@@ -26,23 +29,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
-#vaunch-folder-container {
-  position: relative;
-  display: flex;
-  width: 100vw;
-  height: 65vh;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 1em;
-  align-items: top;
-  overflow-y: auto;
-  mask-image: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255, 1) 3%);
-  -webkit-mask-image: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255, 1) 3%);
-  mask-repeat: no-repeat, no-repeat;
-}
-
+<style scoped>
 .vaunch-folder {
   display: flex;
   flex-direction: column;
@@ -93,8 +80,7 @@ export default defineComponent({
 </style>
 
 <template>
-<div v-if="folders.items.length > 0 && config.showGUI" id="vaunch-folder-container">
-  <div v-for="folder in folders.items" :key="folder.name" class="vaunch-folder vaunch-window">
+  <div class="vaunch-folder vaunch-window">
     <span class="folder-title">
       <i :class="['fa-'+folder.iconClass, 'fa-'+folder.icon]"></i>
       <span v-if="config.titleCase" class="folder-name">{{ folder.titleCase() }}</span>
@@ -104,5 +90,4 @@ export default defineComponent({
       <VaunchGuiFile v-on:set-input="passInput" v-for="file in folder.getFiles()" :file="file" :parent-folder-name="folder.name" />
     </div>
   </div>
-</div>
 </template>
