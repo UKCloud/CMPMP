@@ -41,6 +41,7 @@ export default defineComponent({
   box-shadow: none;
   overflow-wrap: break-word;
   border: solid thin rgba(100, 100, 100, 0.1);
+  user-select: none;
 }
 
 .file:hover {

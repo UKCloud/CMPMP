@@ -28,6 +28,7 @@ export const useConfigStore:StoreDefinition = defineStore({
         let config = {
           background: data.background ? data.background : defaultconfig.background,
           showGUI: data.showGUI != undefined ? data.showGUI : defaultconfig.showGUI,
+          titleCase: data.titleCase != undefined ? data.titleCase : defaultconfig.titleCase,
           defaultFile: data.defaultFile ? data.defaultFile : defaultconfig.defaultFile,
           fuzzy: data.fuzzy != undefined ? data.fuzzy : defaultconfig.fuzzy,
           color: data.color ? data.color : defaultconfig.color
