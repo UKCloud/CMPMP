@@ -66,7 +66,7 @@ export default defineComponent({
 .file-container {
   display: flex;
   justify-content: center;
-  padding: 1em;
+  padding: 0.5em;
   flex-wrap: wrap;
   overflow-y: auto;
 }
