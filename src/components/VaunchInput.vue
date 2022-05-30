@@ -214,6 +214,7 @@ export default defineComponent({
         @keydown.tab.shift.exact.prevent="decrementFuzzy"
         @keydown.down.exact.prevent="incrementFuzzy"
         @keydown.up.exact.prevent="decrementFuzzy"
+        @keydown.esc.exact.prevent="vaunchInput = ''"
         ref="inputBox"
       />
       <input id="vaunch-autocomplete" type="text" :value="autocomplete" />
