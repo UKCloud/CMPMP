@@ -57,6 +57,14 @@ export default defineComponent({
   filter: contrast(1.5);
 }
 
+.command-inner {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-items: center;
+  width: 100%;
+}
+
 .command-name {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
@@ -68,14 +76,17 @@ export default defineComponent({
   justify-content: space-between;
 }
 
-.file-inner * {
-  border: solid thin black
+.command-input-container {
+  width: 100%;
+  flex: 1;
 }
 
 .commandInput {
   border: none;
   background: none;
   font-size: 1rem;
+  width: 100%;
+  flex: 1;
 }
 .commandInput:focus {
   outline: none;
@@ -87,8 +98,8 @@ export default defineComponent({
 <div :key="file.fileName" class="file vaunch-window" 
 @click.exact="handleClick(file, [])"
 :id="parentFolderName+'-'+file.getIdSafeName()">
-  <div>
-    <i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'file-icon']"></i>
+  <div class="command-inner">
+    <i class="fa-solid fa-chevron-right file-icon"></i>
     <span class="command-name">{{ file.titleCase() }}<span v-if="file.hasArgs">:</span></span>
     <input v-if="file.hasArgs" class="commandInput" @keydown.enter.prevent="execute(file, commandInput.split(' '))"
     v-model="commandInput" type="text"

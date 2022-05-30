@@ -42,7 +42,7 @@ export default defineComponent({
   margin: 0.5em;
   box-shadow: none;
   overflow-wrap: break-word;
-  border: solid thin rgba(100, 100, 100, 0.1);
+  border: solid thin rgba(100, 100, 100, 0.25);
   user-select: none;
 }
 
@@ -53,16 +53,6 @@ export default defineComponent({
 
 .filename {
   padding-left: 0.5rem;
-}
-
-.file-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.file-inner * {
-  border: solid thin black
 }
 
 </style>
