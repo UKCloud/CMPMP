@@ -4,6 +4,7 @@ import { commands } from "@/stores/command"
 import type { VaunchFile } from "@/models/VaunchFile";
 import type { VaunchFolder } from "@/models/VaunchFolder";
 import { useFolderStore } from "@/stores/folder";
+import { useConfigStore } from "@/stores/config";
 
 
 export default defineComponent({
@@ -22,12 +23,21 @@ export default defineComponent({
       completeType: ""
     };
   },
-  // props: ["autocomplete"],
-  emits: ["command"],
+  emits: ["command", "fuzzy", "fuzzyIncrement", "set-input-icon", "query-check"],
+  props: ["prefixName", "prefixClass"],
+  mounted() {
+    (this.$refs.inputBox as HTMLInputElement).focus();
+  },
   watch: {
     vaunchInput(val: string) {
-      // Annoyingly if input overflows autcomplete falls apart, so just disable it...
-      if (val.length > 70) {
+      // Emit out what we're typing if fuzzy is enabled
+      const config = useConfigStore();
+      if (config.fuzzy) {
+        this.$emit('fuzzy', val)
+      }
+
+      // Annoyingly if input overflows autcomplete falls apart, so just disable it after a while...
+      if (val.length > 50) {
         this.autocomplete = ""
         return
       }
@@ -51,7 +61,7 @@ export default defineComponent({
       // Search through the valid commands to autocomplete this word with
       // Only do this on the first "word", as commands will always be the first word
       if (lastWord.length > 0 && input.length == 0) {
-        this.autocomplete += this.getAutocompleteFile(lastWord, commands);
+        this.autocomplete += this.getAutocompleteFile(lastWord, commands, "command");
       }
       // If command autocomplete did not find anything, search for folders/files
       if (lastWord.length > 0 && this.completeType == "") {
@@ -61,21 +71,36 @@ export default defineComponent({
         if (this.completeType == "" && lastWord.includes("/") && pathSplit[1].length > 0) {
           // Search for a file, pathSplit[0] is folder, pathSplit[1] is semi-complete filename
           let folder:VaunchFolder = this.folders.getFolderByName(pathSplit[0]);
-          this.autocomplete += pathSplit[0] + "/" + this.getAutocompleteFile(pathSplit[1], folder.getFiles());
+          if (folder) {
+            this.autocomplete += pathSplit[0] + "/" + this.getAutocompleteFile(pathSplit[1], folder.getFiles());
+          }
         }
       }
+
+      // If autocomplete isn't for a file, let Vaunch know VaunchInput thinks the prefix icon should be reset 
+      if (this.completeType != "file") {
+        this.$emit('set-input-icon', undefined)
+      }
+      // If the input contains a : check if the current input is a .qry file
+      if (val.includes(':')) {
+        this.$emit('query-check', val)
+      }
+
       // If no autocomplete was successful, set it autocomplete text to the current value
       if (this.completeType == "") {
         this.autocomplete = val;
       }
-
     },
   },
   methods: {
+    setInput(input:string) {
+      this.vaunchInput = input;
+      (this.$refs.inputBox as any).focus()
+    },
     complete() {
       // Only complete if there is something to complete
       if (this.autocomplete.length > this.vaunchInput.length) {
-        this.vaunchInput = this.autocomplete + (this.completeType == "file" ? " ": "");
+        this.vaunchInput = this.autocomplete + (this.completeType == "command" ? " ": "");
       }
     },
     sendCommand() {
@@ -91,23 +116,34 @@ export default defineComponent({
       }
       return ""
     },
-    getAutocompleteFile(input:string, commands:VaunchFile[]):string {
-      for (let command of commands) {
-        for (let ailias of command.getNames()) {
+    getAutocompleteFile(input:string, files:VaunchFile[], completeType:string = "file"):string {
+      for (let file of files) {
+        for (let ailias of file.getNames()) {
           if (ailias.startsWith(input)) {
-            this.completeType = "file";
+            this.$emit('set-input-icon', file)
+            this.completeType = completeType;
             return ailias;
           }
         }
       }
       return ""
-    }
+    },
+    incrementFuzzy() {
+      this.$emit('fuzzyIncrement', true)
+    },
+    decrementFuzzy() {
+      this.$emit('fuzzyIncrement', false)
+    },
   },
 });
 </script>
 
 <style scoped>
 #vaunch-input-container {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: space-around;
   position: relative;
   width: 75vw;
 }
@@ -116,7 +152,7 @@ export default defineComponent({
 #vaunch-input-container input {
   font-size: 3rem;
   width: 100%;
-  padding: 0.2em 0.75em;
+  padding: 0.2em 0.25em;
   border: none;
 }
 
@@ -137,20 +173,50 @@ export default defineComponent({
   z-index: 1;
   opacity: 0.8;
 
-  color: var(--color-autocomplete);
+  /* color: var(--color-autocomplete); */
   background: none;
+}
+
+#input-inner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#input-wrapper {
+  flex: 1;
+}
+
+.input-icon {
+  margin-left: 1.5rem;
+  width: 3.5rem;
+}
+
+@media (max-width: 768px) {
+  #vaunch-input-container {
+    width: 95vw;
+  }
 }
 </style>
 
 <template>
-  <div id="vaunch-input-container" class="vaunch-window">
-    <input
-      id="vaunch-input"
-      type="text"
-      v-model="vaunchInput"
-      @keydown.tab.prevent="complete"
-      @keydown.enter.prevent="sendCommand"
-    />
-    <input id="vaunch-autocomplete" type="text" :value="autocomplete" />
+<div id="vaunch-input-container">
+  <div class="vaunch-window" id="input-inner">
+      <i :class="['fa-'+prefixClass, 'fa-'+prefixName, 'input-icon', 'fa-3x']"></i>
+    <div id="input-wrapper">
+      <input
+        id="vaunch-input"
+        type="text"
+        v-model="vaunchInput"
+        @keydown.tab.prevent="complete"
+        @keydown.enter.prevent="sendCommand"
+        @keydown.down.exact.prevent="incrementFuzzy"
+        @keydown.up.exact.prevent="decrementFuzzy"
+        @keydown.esc.exact.prevent="vaunchInput = ''"
+        ref="inputBox"
+      />
+      <input id="vaunch-autocomplete" type="text" :value="autocomplete" />
+    </div>
   </div>
+</div>
 </template>

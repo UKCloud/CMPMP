@@ -23,7 +23,6 @@ export const useFolderStore:StoreDefinition = defineStore({
             return map;
           },
           write (v: Map<string, VaunchFolder>) {
-            console.log("writing...");
             let storeData:any[] = []; 
             for (let folder of v) {
               storeData.push(folder[1].info())
@@ -39,6 +38,9 @@ export const useFolderStore:StoreDefinition = defineStore({
     folderNames: (state: { rawFolders: Map<string, VaunchFolder>; }) => Array.from(state.rawFolders.keys()),
     getFolderByName: (state: { rawFolders: any; }) => {
       return (folderName:string) => state.rawFolders.get(folderName)
+    },
+    getFileByPath: (state: { rawFolders: any; }) => {
+      return (path:string) => (state.rawFolders.get(path.split('/')[0]) as VaunchFolder)?.getFile(path.split('/')[1]);
     }
   },
   actions: {
@@ -46,8 +48,21 @@ export const useFolderStore:StoreDefinition = defineStore({
       let newFolder = new VaunchFolder(name);
       this.rawFolders.set(name, newFolder)
     },
+    insert(folder:VaunchFolder) {
+      this.rawFolders.set(folder.name, folder)
+    },
     remove(toDelete:string) {
       this.rawFolders.delete(toDelete)
     },
+    removeAll() {
+      this.rawFolders = new Map<string, VaunchFolder>();
+    },
+    findLinkFiles(search:string) {
+      let matchingFiles:VaunchFile[] = [];
+      for (let folder of this.rawFolders.values()) {
+        matchingFiles.push(...folder.searchFile(search, ["VaunchLink"]))
+      }
+      return matchingFiles;
+    }
   },
 });

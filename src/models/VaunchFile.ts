@@ -3,12 +3,24 @@ export abstract class VaunchFile {
   aliases: string[];
   content:string;
   icon:string;
+  iconClass:string;
+  hits:number;
+  extension:string = "";
 
-  constructor(name:string, icon:string = "file") {
+  constructor(name:string, icon:string = "file", iconClass:string = "solid", hits:number = 0) {
     this.fileName = name
     this.aliases = [];
     this.content = "";
     this.icon = icon;
+    this.iconClass = iconClass;
+    this.hits = hits
+  }
+
+  titleCase(): string {
+    let prettyString = this.getBaseName().replace(/[-_]/g, ' ');
+    return prettyString.toLowerCase().split(' ').map(function(word) {
+      return (word.charAt(0).toUpperCase() + word.slice(1));
+    }).join(' ');
   }
 
   getNames():string[] {
@@ -16,21 +28,30 @@ export abstract class VaunchFile {
     return allNames;
   }
 
-  setIcon(newIcon:string) {
+  setIcon(newIcon:string = this.icon, iconClass:string = "solid") {
     this.icon = newIcon;
+    this.iconClass = iconClass;
   }
 
-  abstract execute(args:string[]): void
+  abstract execute(args:string[]): string|void
 
-  abstract displayName(): string
-
-  info(): any {
-    return {
-      fileName: this.fileName,
-      aliases: this.aliases,
-      content: this.content,
-      icon: this.icon,
-      type: this.constructor.name
-    }
+  getBaseName(): string {
+    return this.fileName.split('.')[0]
   }
+
+  getIdSafeName():string {
+    return this.fileName.replace('.','-')
+  }
+
+  getDescription(): string {
+    return this.content;
+  }
+
+  setName(newName:string) {
+    this.fileName = newName;
+  }
+
+  abstract info(): any;
+  
+  abstract edit(args:string[]): void;
 }

@@ -1,9 +1,21 @@
-import { VaunchFeh, VaunchHideGui, VaunchMkdir, VaunchRmdir, VaunchTouch } from "@/models/VaunchCommands";
+import * as fsCommands from "@/models/VaunchFsCommands";
+import * as configCommands from "@/models/VaunchConfigCommands";
 
 export const commands = [
-  new VaunchMkdir(),
-  new VaunchRmdir(),
-  new VaunchFeh(),
-  new VaunchTouch(),
-  new VaunchHideGui()
+  new fsCommands.VaunchMkdir(),
+  new fsCommands.VaunchRmdir(),
+  new fsCommands.VaunchRm(),
+  new fsCommands.VaunchTouch(),
+  new fsCommands.VaunchSetIcon(),
+  new fsCommands.VaunchEditFile(),
+  new fsCommands.VaunchMv(),
+  new configCommands.VaunchFeh(),
+  new configCommands.VaunchToggleGui(),
+  new configCommands.VaunchToggleFuzzy(),
+  new configCommands.VaunchToggleCase(),
+  new configCommands.VaunchToggleCommands(),
+  new configCommands.VaunchSetColor(),
+  new configCommands.VaunchSetDefaultSearch(),
+  new configCommands.VaunchExport(),
+  new configCommands.VaunchImport(),
 ]
