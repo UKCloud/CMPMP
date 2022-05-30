@@ -162,6 +162,21 @@ export default defineComponent({
   background: none;
 }
 
+#input-inner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#input-wrapper {
+  flex: 1;
+}
+
+.input-icon {
+  padding-left: 1.5em;
+  height: 2rem;
+}
+
 @media (max-width: 768px) {
   #vaunch-input-container {
     width: 95vw;
@@ -171,20 +186,23 @@ export default defineComponent({
 
 <template>
 <div id="vaunch-input-container">
-  <div class="vaunch-window">
-    <input
-      id="vaunch-input"
-      type="text"
-      v-model="vaunchInput"
-      @keydown.tab.prevent="complete"
-      @keydown.enter.prevent="sendCommand"
-      @keydown.tab.exact.prevent="incrementFuzzy"
-      @keydown.tab.shift.exact.prevent="decrementFuzzy"
-      @keydown.down.exact.prevent="incrementFuzzy"
-      @keydown.up.exact.prevent="decrementFuzzy"
-      ref="inputBox"
-    />
-    <input id="vaunch-autocomplete" type="text" :value="autocomplete" />
+  <div class="vaunch-window" id="input-inner">
+      <i class="fa-solid fa-chevron-right input-icon"></i>
+    <div id="input-wrapper">
+      <input
+        id="vaunch-input"
+        type="text"
+        v-model="vaunchInput"
+        @keydown.tab.prevent="complete"
+        @keydown.enter.prevent="sendCommand"
+        @keydown.tab.exact.prevent="incrementFuzzy"
+        @keydown.tab.shift.exact.prevent="decrementFuzzy"
+        @keydown.down.exact.prevent="incrementFuzzy"
+        @keydown.up.exact.prevent="decrementFuzzy"
+        ref="inputBox"
+      />
+      <input id="vaunch-autocomplete" type="text" :value="autocomplete" />
+    </div>
   </div>
 </div>
 </template>
