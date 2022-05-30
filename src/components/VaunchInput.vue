@@ -148,7 +148,7 @@ export default defineComponent({
 #vaunch-input-container input {
   font-size: 3rem;
   width: 100%;
-  padding: 0.2em 0.75em;
+  padding: 0.2em 0.25em;
   border: none;
 }
 
@@ -184,7 +184,8 @@ export default defineComponent({
 }
 
 .input-icon {
-  padding-left: 1.5rem;
+  margin-left: 1.5rem;
+  width: 3rem;
 }
 
 @media (max-width: 768px) {
