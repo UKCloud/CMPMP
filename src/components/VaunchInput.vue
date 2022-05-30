@@ -79,11 +79,11 @@ export default defineComponent({
 
       // If autocomplete isn't for a file, let Vaunch know VaunchInput thinks the prefix icon should be reset 
       if (this.completeType != "file") {
-        this.$emit('set-input-icon', undefined)
+        this.$emit('set-input-icon', undefined);
       }
       // If the input contains a : check if the current input is a .qry file
       if (val.includes(':')) {
-        this.$emit('query-check', val)
+        this.$emit('query-check', val);
       }
 
       // If no autocomplete was successful, set it autocomplete text to the current value

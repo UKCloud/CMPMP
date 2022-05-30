@@ -154,7 +154,7 @@ export default defineComponent({
       if (file) {
         this.prefixName = file.icon
         this.prefixClass = file.iconClass
-      } else if (this.fuzzyFiles.items.length == 0) {
+      } else if (this.fuzzyFiles.items.length == 0 && this.config.fuzzy) {
         this.prefixName = this.config.prefix.name;
         this.prefixClass = this.config.prefix.class;
       }
