@@ -24,6 +24,10 @@ export default defineComponent({
     };
   },
   emits: ["command", "fuzzy", "fuzzyIncrement"],
+  props: ["prefixName", "prefixClass"],
+  mounted() {
+    (this.$refs.inputBox as HTMLInputElement).focus();
+  },
   watch: {
     vaunchInput(val: string) {
       // Emit out what we're typing if fuzzy is enabled
@@ -102,9 +106,9 @@ export default defineComponent({
       }
       return ""
     },
-    getAutocompleteFile(input:string, commands:VaunchFile[]):string {
-      for (let command of commands) {
-        for (let ailias of command.getNames()) {
+    getAutocompleteFile(input:string, files:VaunchFile[]):string {
+      for (let file of files) {
+        for (let ailias of file.getNames()) {
           if (ailias.startsWith(input)) {
             this.completeType = "file";
             return ailias;
@@ -173,8 +177,9 @@ export default defineComponent({
 }
 
 .input-icon {
-  padding-left: 1.5em;
+  padding-left: 1.5rem;
   height: 2rem;
+  text-align: center;
 }
 
 @media (max-width: 768px) {
@@ -187,7 +192,7 @@ export default defineComponent({
 <template>
 <div id="vaunch-input-container">
   <div class="vaunch-window" id="input-inner">
-      <i class="fa-solid fa-chevron-right input-icon"></i>
+      <i :class="['fa-'+prefixClass, 'fa-'+prefixName, 'input-icon', 'fa-2x']"></i>
     <div id="input-wrapper">
       <input
         id="vaunch-input"

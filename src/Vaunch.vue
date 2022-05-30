@@ -31,6 +31,8 @@ export default defineComponent({
       config,
       fuzzyFiles,
       folders,
+      prefixName: config.prefix.name,
+      prefixClass: config.prefix.class,
     };
   },
   methods: {
@@ -105,7 +107,15 @@ export default defineComponent({
         const folders = useFolderStore();
         let matches:VaunchFile[] = folders.findLinkFiles(input);
         this.fuzzyFiles.setFuzzy(this.sortByHits(matches))
-      } else this.fuzzyFiles.clear();
+        if (matches[0]) {
+          this.prefixName = matches[0].icon;
+          this.prefixClass = matches[0].iconClass;
+        }
+      } else {
+        this.fuzzyFiles.clear();
+        this.prefixName = this.config.prefix.name;
+        this.prefixClass = this.config.prefix.class;
+      }
       this.fuzzyFiles.index = 0;
     },
     sortByHits(files:VaunchFile[]) {
@@ -128,13 +138,22 @@ export default defineComponent({
           this.fuzzyFiles.index--;
         } else this.fuzzyFiles.index = this.fuzzyFiles.items.length - 1;
       }
+      if (this.fuzzyFiles.items[this.fuzzyFiles.index]) {
+        this.prefixName = this.fuzzyFiles.items[this.fuzzyFiles.index].icon
+        this.prefixClass = this.fuzzyFiles.items[this.fuzzyFiles.index].iconClass
+      } else {
+        this.prefixName = this.config.prefix.name;
+        this.prefixClass = this.config.prefix.class;
+      }
     }
   },
 });
 </script>
 
 <style>
+@import "@/assets/fontawesome/css/all.css";
 @import "@/assets/base.css";
+
 /* Set vaunch-wide colors, defaults to --color-vaunch-window */
 .vaunch-window {
   border-radius: 5px;
@@ -179,6 +198,8 @@ export default defineComponent({
     v-on:command="executeCommand"
     v-on:fuzzy="fuzzy"
     v-on:fuzzy-increment="updateFuzzyIndex"
+    :prefix-name="prefixName"
+    :prefix-class="prefixClass"
     ref="vaunchInput"/>
 
     <div id="bottom-half">
