@@ -4,8 +4,6 @@ import { commands } from "@/stores/command"
 import type { VaunchFile } from "@/models/VaunchFile";
 import type { VaunchFolder } from "@/models/VaunchFolder";
 import { useFolderStore } from "@/stores/folder";
-import { useConfigStore } from "@/stores/config";
-
 
 export default defineComponent({
   name: "VaunchInput",
@@ -31,10 +29,7 @@ export default defineComponent({
   watch: {
     vaunchInput(val: string) {
       // Emit out what we're typing if fuzzy is enabled
-      const config = useConfigStore();
-      if (config.fuzzy) {
-        this.$emit('fuzzy', val)
-      }
+      this.$emit('fuzzy', val)
 
       // Annoyingly if input overflows autcomplete falls apart, so just disable it after a while...
       if (val.length > 50) {
