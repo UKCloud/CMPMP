@@ -5,6 +5,7 @@ export abstract class VaunchFile {
   icon:string;
   iconClass:string;
   hits:number;
+  extension:string = "";
 
   constructor(name:string, icon:string = "file", iconClass:string = "solid", hits:number = 0) {
     this.fileName = name
@@ -44,6 +45,10 @@ export abstract class VaunchFile {
 
   getDescription(): string {
     return this.content;
+  }
+
+  setName(newName:string) {
+    this.fileName = newName;
   }
 
   abstract info(): any;

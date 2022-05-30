@@ -4,6 +4,7 @@ import { VaunchUrlFile } from "./VaunchUrlFile";
 export class VaunchQuery extends VaunchUrlFile {
 
   prefix:string
+  extension:string = ".qry"
 
   constructor(name: string, prefix:string, content: string, parent:VaunchFolder, icon: string = "magnifying-glass",
     iconClass: string = "solid", hits:number = 0) {

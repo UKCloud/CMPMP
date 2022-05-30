@@ -48,6 +48,9 @@ export const useFolderStore:StoreDefinition = defineStore({
       let newFolder = new VaunchFolder(name);
       this.rawFolders.set(name, newFolder)
     },
+    insert(folder:VaunchFolder) {
+      this.rawFolders.set(folder.name, folder)
+    },
     remove(toDelete:string) {
       this.rawFolders.delete(toDelete)
     },

@@ -3,7 +3,7 @@ import { VaunchUrlFile } from "./VaunchUrlFile";
 
 export class VaunchLink extends VaunchUrlFile {
 
-  parent:VaunchFolder;
+  extension:string = ".lnk"
 
   constructor(name:string, content:string, parent:VaunchFolder, icon:string = "file",
    iconClass:string = "solid", hits:number = 0,) {
@@ -47,5 +47,11 @@ export class VaunchLink extends VaunchUrlFile {
     if (args[0]) {
       this.content = args[0]
     }
+  }
+
+  setName(newName:string) {
+    if (!newName.endsWith('.lnk')) {
+      this.fileName = newName+".lnk"
+    } else this.fileName = newName;
   }
 }
