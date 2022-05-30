@@ -19,6 +19,7 @@ export class VaunchFeh extends VaunchCommand {
 }
 
 export class VaunchToggleGui extends VaunchCommand {
+  hasArgs:boolean = false;
   constructor() {
     super("toggle-gui");
   }
@@ -30,6 +31,7 @@ export class VaunchToggleGui extends VaunchCommand {
 }
 
 export class VaunchToggleCase extends VaunchCommand {
+  hasArgs:boolean = false;
   constructor() {
     super("toggle-case");
   }
@@ -53,7 +55,8 @@ export class VaunchSetDefaultSearch extends VaunchCommand {
   }
 }
 
-export class VaunchSetFuzzy extends VaunchCommand {
+export class VaunchToggleFuzzy extends VaunchCommand {
+  hasArgs:boolean = false;
   constructor() {
     super("toggle-fuzzy");
   }

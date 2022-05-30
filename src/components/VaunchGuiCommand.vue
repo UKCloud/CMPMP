@@ -25,8 +25,11 @@ export default defineComponent({
       (this.$refs.commandInputBox as HTMLInputElement).value = "";
     },
     handleClick(file:VaunchCommand, args:string[]) {
-      console.log("I'll handle it");
-      this.execute(file, args);
+      if (file.hasArgs) {
+        (this.$refs.commandInputBox as HTMLInputElement).focus();
+      } else {
+        this.execute(file, args);
+      }
     }
   },
   components: { VaunchTooltip },
@@ -86,8 +89,8 @@ export default defineComponent({
 :id="parentFolderName+'-'+file.getIdSafeName()">
   <div>
     <i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'file-icon']"></i>
-    <span class="command-name">{{ file.titleCase() }}:</span>
-    <input class="commandInput" @keydown.enter.prevent="execute(file, commandInput.split(' '))"
+    <span class="command-name">{{ file.titleCase() }}<span v-if="file.hasArgs">:</span></span>
+    <input v-if="file.hasArgs" class="commandInput" @keydown.enter.prevent="execute(file, commandInput.split(' '))"
     v-model="commandInput" type="text"
     ref="commandInputBox" />
   </div>

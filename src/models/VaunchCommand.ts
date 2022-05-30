@@ -1,6 +1,8 @@
 import { VaunchFile } from "./VaunchFile";
 
-export class VaunchCommand extends VaunchFile {
+export abstract class VaunchCommand extends VaunchFile {
+  hasArgs:boolean = true;
+
   execute(args: string[]): void {
     return
   }

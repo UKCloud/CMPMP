@@ -10,8 +10,8 @@ export const commands = [
   new fsCommands.VaunchEditFile(),
   new configCommands.VaunchFeh(),
   new configCommands.VaunchToggleGui(),
+  new configCommands.VaunchToggleFuzzy(),
   new configCommands.VaunchToggleCase(),
   new configCommands.VaunchSetColor(),
   new configCommands.VaunchSetDefaultSearch(),
-  new configCommands.VaunchSetFuzzy()
 ]
