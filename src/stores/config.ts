@@ -8,6 +8,7 @@ export const defaultconfig = {
   titleCase: true,
   defaultFile: "",
   fuzzy: false,
+  showCommands: false,
   color: {
     window: 'var(--color-vaunch-window)',
     text: 'var(--color-vaunch-text)',
@@ -30,6 +31,7 @@ export const useConfigStore:StoreDefinition = defineStore({
           titleCase: data.titleCase != undefined ? data.titleCase : defaultconfig.titleCase,
           defaultFile: data.defaultFile ? data.defaultFile : defaultconfig.defaultFile,
           fuzzy: data.fuzzy != undefined ? data.fuzzy : defaultconfig.fuzzy,
+          showCommands: data.showCommands != undefined ? data.showCommands : defaultconfig.showCommands,
           color: data.color ? data.color : defaultconfig.color
         }
         return config;

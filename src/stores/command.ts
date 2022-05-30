@@ -12,6 +12,7 @@ export const commands = [
   new configCommands.VaunchToggleGui(),
   new configCommands.VaunchToggleFuzzy(),
   new configCommands.VaunchToggleCase(),
+  new configCommands.VaunchToggleCommands(),
   new configCommands.VaunchSetColor(),
   new configCommands.VaunchSetDefaultSearch(),
 ]

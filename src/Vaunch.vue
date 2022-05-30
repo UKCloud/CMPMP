@@ -185,9 +185,10 @@ export default defineComponent({
       <VaunchFuzzy v-if="fuzzyFiles.items.length > 0" :fuzzy-matches="fuzzyFiles.items" :current-index="fuzzyFiles.index"/>
 
       <div v-if="config.showGUI" id="commands-folders-container">
-        <div id="commands-container">
+        <div v-if="config.showCommands" id="commands-container">
           <VaunchGuiCommands />
         </div>
+
         <div v-if="folders.items.length > 0 && config.showGUI" id="vaunch-folder-container">
             <VaunchGuiFolder v-for="folder in folders.items" v-on:set-input="passInput" :folder="folder"/>
         </div>

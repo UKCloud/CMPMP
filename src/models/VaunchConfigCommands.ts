@@ -67,6 +67,18 @@ export class VaunchToggleFuzzy extends VaunchCommand {
   }
 }
 
+export class VaunchToggleCommands extends VaunchCommand {
+  hasArgs:boolean = false;
+  constructor() {
+    super("toggle-commands");
+  }
+
+  execute(args:string[]): void {
+    const config = useConfigStore();
+    config.showCommands = !config.showCommands;
+  }
+}
+
 export class VaunchSetColor extends VaunchCommand {
   constructor() {
     super("set-color");
