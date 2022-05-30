@@ -20,7 +20,10 @@ export class VaunchFolder {
   }
 
   titleCase(): string {
-    return this.name.charAt(0).toUpperCase() + this.name.slice(1)
+    let prettyString = this.name.replace(/[-_]/g, ' ');
+    return prettyString.toLowerCase().split(' ').map(function(word) {
+      return (word.charAt(0).toUpperCase() + word.slice(1));
+    }).join(' ');
   }
 
   getFile(fileName:string): VaunchFile|undefined {
