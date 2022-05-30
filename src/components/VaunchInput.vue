@@ -178,8 +178,6 @@ export default defineComponent({
 
 .input-icon {
   padding-left: 1.5rem;
-  height: 2rem;
-  text-align: center;
 }
 
 @media (max-width: 768px) {
@@ -192,7 +190,7 @@ export default defineComponent({
 <template>
 <div id="vaunch-input-container">
   <div class="vaunch-window" id="input-inner">
-      <i :class="['fa-'+prefixClass, 'fa-'+prefixName, 'input-icon', 'fa-2x']"></i>
+      <i :class="['fa-'+prefixClass, 'fa-'+prefixName, 'input-icon', 'fa-3x']"></i>
     <div id="input-wrapper">
       <input
         id="vaunch-input"
