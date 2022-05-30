@@ -140,9 +140,7 @@ export default defineComponent({
       }
     },
     setIconIfQuery(input:string) {
-      console.log("looking");
       let file = this.findQryFile(input);
-      console.log(file);
       if (file) {
         this.setInputIcon(file);
       }
@@ -218,7 +216,7 @@ export default defineComponent({
     ref="vaunchInput"/>
 
     <div id="bottom-half">
-      <VaunchFuzzy v-if="fuzzyFiles.items.length > 0" :fuzzy-matches="fuzzyFiles.items" :current-index="fuzzyFiles.index"/>
+      <VaunchFuzzy v-if="fuzzyFiles.items.length > 0 && config.fuzzy" :fuzzy-matches="fuzzyFiles.items" :current-index="fuzzyFiles.index"/>
 
       <div v-if="config.showGUI" id="commands-folders-container">
         <div v-if="config.showCommands" id="commands-container">
