@@ -118,12 +118,10 @@ export class VaunchSetIcon extends VaunchCommand {
       let file = folder.getFile(fileName);
       if (file) {
         file.setIcon(newIcon, newIconclass);
-        window.location.reload();
       }
     } else if (folder) {
       // Assume we're attempting to set the folder's icon
       folder.setIcon(newIcon, newIconclass);
-      window.location.reload();
     }
   }
 }
