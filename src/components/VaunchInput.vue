@@ -63,11 +63,14 @@ export default defineComponent({
         // If on the second+ word, check folder names/files to autocomplete
         this.autocomplete += this.getAutocompleteFolder(lastWord, this.folders.folderNames);
         let pathSplit = lastWord.split("/")
-        if (this.completeType == "" && lastWord.includes("/") && pathSplit[1].length > 0) {
-          // Search for a file, pathSplit[0] is folder, pathSplit[1] is semi-complete filename
-          let folder:VaunchFolder = this.folders.getFolderByName(pathSplit[0]);
+        let folderName = pathSplit[0];
+        let fileName = pathSplit[1]
+        // If we havent found anything yet, the last word has a '/' (is a folder path) and a filename is being typed
+        if (this.completeType == "" && lastWord.includes("/") && fileName.length > 0) {
+          // Search for a file, using fileName as a semi complete filename
+          let folder:VaunchFolder = this.folders.getFolderByName(folderName);
           if (folder) {
-            this.autocomplete += pathSplit[0] + "/" + this.getAutocompleteFile(pathSplit[1], folder.getFiles());
+            this.autocomplete += folderName + "/" + this.getAutocompleteFile(fileName, folder.getFiles());
           }
         }
       }
