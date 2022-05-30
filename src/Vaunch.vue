@@ -107,7 +107,6 @@ export default defineComponent({
         const folders = useFolderStore();
         let matches:VaunchFile[] = folders.findLinkFiles(input);
         this.fuzzyFiles.setFuzzy(this.sortByHits(matches))
-        console.log("setting icon")
         this.setInputIcon(matches[0]);
       } else {
         this.fuzzyFiles.clear();
@@ -138,6 +137,14 @@ export default defineComponent({
         this.setInputIcon(this.fuzzyFiles.items[this.fuzzyFiles.index]);
       } else {
         this.setInputIcon(undefined);
+      }
+    },
+    setIconIfQuery(input:string) {
+      console.log("looking");
+      let file = this.findQryFile(input);
+      console.log(file);
+      if (file) {
+        this.setInputIcon(file);
       }
     },
     setInputIcon(file:VaunchFile|undefined) {
@@ -205,6 +212,7 @@ export default defineComponent({
     v-on:fuzzy="fuzzy"
     v-on:fuzzy-increment="updateFuzzyIndex"
     v-on:set-input-icon="setInputIcon"
+    v-on:query-check="setIconIfQuery"
     :prefix-name="prefixName"
     :prefix-class="prefixClass"
     ref="vaunchInput"/>

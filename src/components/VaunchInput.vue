@@ -23,7 +23,7 @@ export default defineComponent({
       completeType: ""
     };
   },
-  emits: ["command", "fuzzy", "fuzzyIncrement", "set-input-icon"],
+  emits: ["command", "fuzzy", "fuzzyIncrement", "set-input-icon", "query-check"],
   props: ["prefixName", "prefixClass"],
   mounted() {
     (this.$refs.inputBox as HTMLInputElement).focus();
@@ -80,6 +80,10 @@ export default defineComponent({
       // If autocomplete isn't for a file, let Vaunch know VaunchInput thinks the prefix icon should be reset 
       if (this.completeType != "file") {
         this.$emit('set-input-icon', undefined)
+      }
+      // If the input contains a : check if the current input is a .qry file
+      if (val.includes(':')) {
+        this.$emit('query-check', val)
       }
 
       // If no autocomplete was successful, set it autocomplete text to the current value
@@ -185,7 +189,7 @@ export default defineComponent({
 
 .input-icon {
   margin-left: 1.5rem;
-  width: 3rem;
+  width: 3.5rem;
 }
 
 @media (max-width: 768px) {
