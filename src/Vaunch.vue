@@ -107,14 +107,10 @@ export default defineComponent({
         const folders = useFolderStore();
         let matches:VaunchFile[] = folders.findLinkFiles(input);
         this.fuzzyFiles.setFuzzy(this.sortByHits(matches))
-        if (matches[0]) {
-          this.prefixName = matches[0].icon;
-          this.prefixClass = matches[0].iconClass;
-        }
+        console.log("setting icon")
+        this.setInputIcon(matches[0]);
       } else {
         this.fuzzyFiles.clear();
-        this.prefixName = this.config.prefix.name;
-        this.prefixClass = this.config.prefix.class;
       }
       this.fuzzyFiles.index = 0;
     },
@@ -139,9 +135,19 @@ export default defineComponent({
         } else this.fuzzyFiles.index = this.fuzzyFiles.items.length - 1;
       }
       if (this.fuzzyFiles.items[this.fuzzyFiles.index]) {
-        this.prefixName = this.fuzzyFiles.items[this.fuzzyFiles.index].icon
-        this.prefixClass = this.fuzzyFiles.items[this.fuzzyFiles.index].iconClass
+        this.setInputIcon(this.fuzzyFiles.items[this.fuzzyFiles.index]);
       } else {
+        this.setInputIcon(undefined);
+      }
+    },
+    setInputIcon(file:VaunchFile|undefined) {
+      // Set the prefix icon in VaunchInput. If nothing is passed
+      // the icon will stay the same if there are fuzzy files in case
+      // VaunchInput thinks it should be reset but fuzzy matches shows otherwise
+      if (file) {
+        this.prefixName = file.icon
+        this.prefixClass = file.iconClass
+      } else if (this.fuzzyFiles.items.length == 0) {
         this.prefixName = this.config.prefix.name;
         this.prefixClass = this.config.prefix.class;
       }
@@ -198,6 +204,7 @@ export default defineComponent({
     v-on:command="executeCommand"
     v-on:fuzzy="fuzzy"
     v-on:fuzzy-increment="updateFuzzyIndex"
+    v-on:set-input-icon="setInputIcon"
     :prefix-name="prefixName"
     :prefix-class="prefixClass"
     ref="vaunchInput"/>

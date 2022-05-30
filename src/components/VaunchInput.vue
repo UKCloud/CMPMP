@@ -23,7 +23,7 @@ export default defineComponent({
       completeType: ""
     };
   },
-  emits: ["command", "fuzzy", "fuzzyIncrement"],
+  emits: ["command", "fuzzy", "fuzzyIncrement", "set-input-icon"],
   props: ["prefixName", "prefixClass"],
   mounted() {
     (this.$refs.inputBox as HTMLInputElement).focus();
@@ -61,7 +61,7 @@ export default defineComponent({
       // Search through the valid commands to autocomplete this word with
       // Only do this on the first "word", as commands will always be the first word
       if (lastWord.length > 0 && input.length == 0) {
-        this.autocomplete += this.getAutocompleteFile(lastWord, commands);
+        this.autocomplete += this.getAutocompleteFile(lastWord, commands, "command");
       }
       // If command autocomplete did not find anything, search for folders/files
       if (lastWord.length > 0 && this.completeType == "") {
@@ -76,6 +76,12 @@ export default defineComponent({
           }
         }
       }
+
+      // If autocomplete isn't for a file, let Vaunch know VaunchInput thinks the prefix icon should be reset 
+      if (this.completeType != "file") {
+        this.$emit('set-input-icon', undefined)
+      }
+
       // If no autocomplete was successful, set it autocomplete text to the current value
       if (this.completeType == "") {
         this.autocomplete = val;
@@ -90,7 +96,7 @@ export default defineComponent({
     complete() {
       // Only complete if there is something to complete
       if (this.autocomplete.length > this.vaunchInput.length) {
-        this.vaunchInput = this.autocomplete + (this.completeType == "file" ? " ": "");
+        this.vaunchInput = this.autocomplete + (this.completeType == "command" ? " ": "");
       }
     },
     sendCommand() {
@@ -106,11 +112,12 @@ export default defineComponent({
       }
       return ""
     },
-    getAutocompleteFile(input:string, files:VaunchFile[]):string {
+    getAutocompleteFile(input:string, files:VaunchFile[], completeType:string = "file"):string {
       for (let file of files) {
         for (let ailias of file.getNames()) {
           if (ailias.startsWith(input)) {
-            this.completeType = "file";
+            this.$emit('set-input-icon', file)
+            this.completeType = completeType;
             return ailias;
           }
         }
