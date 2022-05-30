@@ -210,8 +210,6 @@ export default defineComponent({
         v-model="vaunchInput"
         @keydown.tab.prevent="complete"
         @keydown.enter.prevent="sendCommand"
-        @keydown.tab.exact.prevent="incrementFuzzy"
-        @keydown.tab.shift.exact.prevent="decrementFuzzy"
         @keydown.down.exact.prevent="incrementFuzzy"
         @keydown.up.exact.prevent="decrementFuzzy"
         @keydown.esc.exact.prevent="vaunchInput = ''"
