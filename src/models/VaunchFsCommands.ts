@@ -11,6 +11,7 @@ export class VaunchMkdir extends VaunchCommand {
   }
 
   aliases: string[] = ["make-folder"];
+  description: string = "Creates folders"
 
   execute(args:string[]): void {
     const folder = useFolderStore();
@@ -27,6 +28,7 @@ export class VaunchTouch extends VaunchCommand {
     super("touch");
   }
   aliases: string[] = ["make-file"];
+  description: string = "Creates new files"
 
   execute(args:string[]): void {
     const folders = useFolderStore();
@@ -74,6 +76,7 @@ export class VaunchEditFile extends VaunchCommand {
   }
 
   aliases: string[] = ["edit-file"];
+  description: string = "Edits an existing file"
 
   execute(args:string[]): void {
     const folders = useFolderStore();
@@ -98,6 +101,7 @@ export class VaunchSetIcon extends VaunchCommand {
   constructor() {
     super("set-icon");
   }
+  description: string = "Changes the icon of an existing file/folder"
 
   execute(args:string[]): void {
     const folders = useFolderStore();
@@ -128,6 +132,7 @@ export class VaunchRmdir extends VaunchCommand {
   constructor() {
     super("rmdir");
   }
+  description: string = "Deletes directories and files inside"
 
   aliases: string[] = ["remove-folder", "delete-folder"];
 
@@ -146,6 +151,7 @@ export class VaunchRm extends VaunchCommand {
     super("rm");
   }
   aliases: string[] = ["remove-file", "delete-file"];
+  description: string = "Deletes files"
 
   execute(args:string[]): void {
     const folders = useFolderStore();

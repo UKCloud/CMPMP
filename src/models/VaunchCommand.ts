@@ -2,6 +2,7 @@ import { VaunchFile } from "./VaunchFile";
 
 export abstract class VaunchCommand extends VaunchFile {
   hasArgs:boolean = true;
+  description:string = "";
 
   execute(args: string[]): void {
     return
@@ -20,5 +21,9 @@ export abstract class VaunchCommand extends VaunchFile {
   edit(args:string[]): void {
     // Commands cannot be edited
     return;
+  }
+
+  getDescription(): string {
+    return this.description;
   }
 }

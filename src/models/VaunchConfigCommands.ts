@@ -8,6 +8,7 @@ export class VaunchFeh extends VaunchCommand {
     super("feh");
   }
   aliases: string[] = ["set-bg", "set-background"];
+  description = "Changes the background";
 
   execute(args:string[]): void {
     const config = useConfigStore();
@@ -23,6 +24,7 @@ export class VaunchToggleGui extends VaunchCommand {
   constructor() {
     super("toggle-gui");
   }
+  description = "Toggles if Folders/Commands are visible";
 
   execute(args:string[]): void {
     const config = useConfigStore();
@@ -35,6 +37,7 @@ export class VaunchToggleCase extends VaunchCommand {
   constructor() {
     super("toggle-case");
   }
+  description = "Toggles if names are converted to titlecase";
 
   execute(args:string[]): void {
     const config = useConfigStore();
@@ -46,6 +49,7 @@ export class VaunchSetDefaultSearch extends VaunchCommand {
   constructor() {
     super("set-search");
   }
+  description: string = "Sets the default Query file to execute"
 
   execute(args:string[]): void {
     const config = useConfigStore();
@@ -60,6 +64,7 @@ export class VaunchToggleFuzzy extends VaunchCommand {
   constructor() {
     super("toggle-fuzzy");
   }
+  description: string = "Toggles if fuzzy search is enabled"
 
   execute(args:string[]): void {
     const config = useConfigStore();
@@ -72,6 +77,7 @@ export class VaunchToggleCommands extends VaunchCommand {
   constructor() {
     super("toggle-commands");
   }
+  description: string = "Toggles if the commands window is visible"
 
   execute(args:string[]): void {
     const config = useConfigStore();
@@ -84,6 +90,7 @@ export class VaunchSetColor extends VaunchCommand {
     super("set-color");
   }
   aliases: string[] = ["set-colour", "colo"];
+  description: string = "Changes the color of Vaunch. Usage: window [text] [highlight]. * keeps current value"
 
   private rgbToHsl(r:number, g:number, b:number){
     r /= 255;
