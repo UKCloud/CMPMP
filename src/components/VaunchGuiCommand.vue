@@ -54,8 +54,9 @@ export default defineComponent({
   filter: contrast(1.5);
 }
 
-.filename {
+.command-name {
   padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .file-inner {
@@ -85,8 +86,7 @@ export default defineComponent({
 :id="parentFolderName+'-'+file.getIdSafeName()">
   <div>
     <i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'file-icon']"></i>
-    <span v-if="config.titleCase" :class="{filename: !isFuzzy}">{{ file.titleCase() }}</span>
-    <span v-if="!config.titleCase" :class="{filename: !isFuzzy}">{{ file.fileName }}</span>
+    <span class="command-name">{{ file.titleCase() }}:</span>
     <input class="commandInput" @keydown.enter.prevent="execute(file, commandInput.split(' '))"
     v-model="commandInput" type="text"
     ref="commandInputBox" />
