@@ -140,9 +140,7 @@ export default defineComponent({
       }
     },
     setIconIfQuery(input:string) {
-      console.log("looking");
       let file = this.findQryFile(input);
-      console.log(file);
       if (file) {
         this.setInputIcon(file);
       }
