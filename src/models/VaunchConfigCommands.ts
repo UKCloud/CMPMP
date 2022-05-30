@@ -2,6 +2,9 @@ import { useConfigStore } from "@/stores/config";
 import { VaunchCommand } from "./VaunchCommand";
 import defaultBg from "@/assets/img/default.png";
 import { defaultconfig } from "@/stores/config";
+import { useFolderStore } from "@/stores/folder";
+import { exportVaunch, readImportFile } from "@/utilities/exporter";
+import { VaunchFolder } from "./VaunchFolder";
 
 export class VaunchFeh extends VaunchCommand {
   constructor() {
@@ -10,9 +13,9 @@ export class VaunchFeh extends VaunchCommand {
   aliases: string[] = ["set-bg", "set-background"];
   description = "Changes the background";
 
-  execute(args:string[]): void {
+  execute(args: string[]): void {
     const config = useConfigStore();
-    let background:string = args[0];
+    let background: string = args[0];
     // If arg is 'default' set the background back to default
     if (background == "default") background = defaultBg;
     config.background = background;
@@ -20,26 +23,26 @@ export class VaunchFeh extends VaunchCommand {
 }
 
 export class VaunchToggleGui extends VaunchCommand {
-  hasArgs:boolean = false;
+  hasArgs: boolean = false;
   constructor() {
     super("toggle-gui");
   }
   description = "Toggles if Folders/Commands are visible";
 
-  execute(args:string[]): void {
+  execute(args: string[]): void {
     const config = useConfigStore();
     config.showGUI = !config.showGUI;
   }
 }
 
 export class VaunchToggleCase extends VaunchCommand {
-  hasArgs:boolean = false;
+  hasArgs: boolean = false;
   constructor() {
     super("toggle-case");
   }
   description = "Toggles if names are converted to titlecase";
 
-  execute(args:string[]): void {
+  execute(args: string[]): void {
     const config = useConfigStore();
     config.titleCase = !config.titleCase;
   }
@@ -51,7 +54,7 @@ export class VaunchSetDefaultSearch extends VaunchCommand {
   }
   description: string = "Sets the default Query file to execute"
 
-  execute(args:string[]): void {
+  execute(args: string[]): void {
     const config = useConfigStore();
     if (args[0] = "none") {
       config.defaultFile = "";
@@ -60,26 +63,26 @@ export class VaunchSetDefaultSearch extends VaunchCommand {
 }
 
 export class VaunchToggleFuzzy extends VaunchCommand {
-  hasArgs:boolean = false;
+  hasArgs: boolean = false;
   constructor() {
     super("toggle-fuzzy");
   }
   description: string = "Toggles if fuzzy search is enabled"
 
-  execute(args:string[]): void {
+  execute(args: string[]): void {
     const config = useConfigStore();
     config.fuzzy = !config.fuzzy;
   }
 }
 
 export class VaunchToggleCommands extends VaunchCommand {
-  hasArgs:boolean = false;
+  hasArgs: boolean = false;
   constructor() {
     super("toggle-commands");
   }
   description: string = "Toggles if the commands window is visible"
 
-  execute(args:string[]): void {
+  execute(args: string[]): void {
     const config = useConfigStore();
     config.showCommands = !config.showCommands;
   }
@@ -92,7 +95,7 @@ export class VaunchSetColor extends VaunchCommand {
   aliases: string[] = ["set-colour", "colo"];
   description: string = "Changes the color of Vaunch. Usage: window [text] [highlight]. * keeps current value"
 
-  private rgbToHsl(r:number, g:number, b:number){
+  private rgbToHsl(r: number, g: number, b: number) {
     r /= 255;
     g /= 255;
     b /= 255;
@@ -100,10 +103,10 @@ export class VaunchSetColor extends VaunchCommand {
     const s = l - Math.min(r, g, b);
     const h = s
       ? l === r
-      ? (g - b) / s
-      : l === g
-      ? 2 + (b - r) / s
-      : 4 + (r - g) / s
+        ? (g - b) / s
+        : l === g
+          ? 2 + (b - r) / s
+          : 4 + (r - g) / s
       : 0;
     return [
       Math.round(60 * h < 0 ? 60 * h + 360 : 60 * h),
@@ -112,38 +115,38 @@ export class VaunchSetColor extends VaunchCommand {
     ];
   }
 
-  private getRgbColor(newColor:string):string {
+  private getRgbColor(newColor: string): string {
     let fakeDiv = document.createElement("div");
 
     fakeDiv.style.color = newColor;
     document.body.appendChild(fakeDiv);
     // get RBG value of div from color passed. works with any valid CSS color,
     // even names such as green, orange, etc...
-    let rgbColor:string = window.getComputedStyle(fakeDiv).getPropertyValue("color");
+    let rgbColor: string = window.getComputedStyle(fakeDiv).getPropertyValue("color");
     // remove the fake div, no longer needed
     document.body.removeChild(fakeDiv);
     return rgbColor
   }
 
-  private calcWindowColor(newColor:string):string {
-    let rgbColor:string = this.getRgbColor(newColor);
+  private calcWindowColor(newColor: string): string {
+    let rgbColor: string = this.getRgbColor(newColor);
     // Convert rgb to rgba for background transparency
     let rgbaColor = rgbColor.replace(/(?:rgb)+/g, 'rgba');
     return rgbaColor.replace(/(?:\))+/g, ', 0.64)');
   }
 
-  private getRgbValue(rgbcolor:string):number[] {
-    let rgb:RegExpMatchArray|null = rgbcolor.match(/^rgba?\((\d+),\s?(\d+),\s?(\d+)(,\s?\d+(\.\d+)?)?\)$/);
+  private getRgbValue(rgbcolor: string): number[] {
+    let rgb: RegExpMatchArray | null = rgbcolor.match(/^rgba?\((\d+),\s?(\d+),\s?(\d+)(,\s?\d+(\.\d+)?)?\)$/);
     if (rgb) {
       return [parseInt(rgb[1]), parseInt(rgb[2]), parseInt(rgb[3])]
-    } else return [0,0,0]
+    } else return [0, 0, 0]
   }
 
-  private calcTextColor(windowColor:string):string {
+  private calcTextColor(windowColor: string): string {
     // let rgb = windowColor.substr(4, windowColor.length - 5);
-    let rgb:number[] = this.getRgbValue(windowColor);
+    let rgb: number[] = this.getRgbValue(windowColor);
     let contrast = (rgb[0]) * 299 + rgb[1] * 587 + rgb[2] * 114 / 1000;
-    return contrast < 255/2 ? 'white' : 'black'
+    return contrast < 255 / 2 ? 'white' : 'black'
   }
 
   private calcAutocompleteColor(newTextColor: string): any {
@@ -160,7 +163,7 @@ export class VaunchSetColor extends VaunchCommand {
     return `hsla(${hsl[0]},${hsl[1]}%,${hsl[2]}%, 0.75)`;
   }
 
-  execute(args:string[]): void {
+  execute(args: string[]): void {
     const config = useConfigStore();
     let newWindowColor = args[0];
     let newTextColor = args[1];
@@ -189,5 +192,61 @@ export class VaunchSetColor extends VaunchCommand {
         }
       }
     }
+  }
+}
+
+export class VaunchExport extends VaunchCommand {
+  constructor() {
+    super("export");
+  }
+  description = "Exports vaunch to a file";
+
+  execute(args: string[]): void {
+    const config = useConfigStore();
+    const folders = useFolderStore();
+    let exportFile = args[0] ? args[0] : "vaunch"
+
+    let exportedConfig: string = exportVaunch(folders.items, config.currentConfig);
+    var hiddenElement = document.createElement('a');
+
+    hiddenElement.href = 'data:attachment/text,' + encodeURIComponent(exportedConfig);
+    hiddenElement.target = '_blank';
+    hiddenElement.download = `${exportFile}.json`;
+    hiddenElement.click();
+  }
+}
+
+export class VaunchImport extends VaunchCommand {
+  constructor() {
+    super("import");
+  }
+  description = "Imports vaunch from a file";
+
+  execute(args: string[]): void {
+    let importElem = document.createElement('input');
+    importElem.type = "file";
+    importElem.click();
+    let importReader = readImportFile
+    importElem.addEventListener('change', function () {
+      if (this.files) {
+        importReader(this.files[0]).then(function (importData) {
+          const folders = useFolderStore();
+          const config = useConfigStore();
+          if (args[0]) {
+            folders.removeAll();
+          }
+          for (let folder of (importData as any).folders) {
+            let vaunchFolder:VaunchFolder = VaunchFolder.parse(folder);
+            // If this folder doesn't exist, import it. If overwriting, all folders will be gone by now
+            if (!folders.getFolderByName(vaunchFolder.name)){
+              folders.insert(vaunchFolder)
+            }
+            if (args[0]) {
+              config.newConfig((importData as any).config);
+            }
+          }
+        })
+      }
+    })
   }
 }
