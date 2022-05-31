@@ -93,7 +93,7 @@ export class VaunchSetColor extends VaunchCommand {
     super("set-color");
   }
   aliases: string[] = ["set-colour", "colo"];
-  description: string = "Changes the color of Vaunch. Usage: window [text] [highlight]. * keeps current value"
+  description: string = "Changes the colour of Vaunch. Usage: windowColoe [textColor] [highlightColor]. * keeps current value"
 
   private rgbToHsl(r: number, g: number, b: number) {
     r /= 255;
