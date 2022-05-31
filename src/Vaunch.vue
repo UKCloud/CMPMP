@@ -75,12 +75,17 @@ export default defineComponent({
 
       // Failing everything else, pass the input to the default file
       // Push the first word back into commandArgs, as there is no operator
-      let defaultPrefix:string = this.config.defaultFile;
-      if (defaultPrefix) {
+      let defaultFile:string = this.config.defaultFile;
+      if (defaultFile) {
         commandArgs.unshift(operator)
-        let file:VaunchFile|undefined = this.findQryFile(defaultPrefix);
+        let file:VaunchFile|undefined = folders.getFileByPath(defaultFile)
+        // If the defaultfile is not a filepath, check if it's just the prefix
+        if (!file) {
+          file = this.findQryFile(defaultFile);
+        }
+        // If a default file was found, execute it with the commandArgs, returning the response to vaunchInput
         if (file) {
-          return file.execute(commandArgs);
+          return this.passInput(file.execute(commandArgs));
         }
       }
       // If everything fails, i.e no default search, just clear the input
