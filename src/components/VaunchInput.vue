@@ -101,8 +101,8 @@ export default defineComponent({
         this.vaunchInput = this.autocomplete + (this.completeType == "command" ? " ": "");
       }
     },
-    sendCommand() {
-      this.$emit("command", this.vaunchInput.split(' '))
+    sendCommand(newTab:boolean=false) {
+      this.$emit("command", this.vaunchInput.split(' '), newTab)
     },
     getAutocompleteFolder(input:string, folders:string[]):string {
       for (let folder of folders) {
@@ -206,7 +206,8 @@ export default defineComponent({
         type="text"
         v-model="vaunchInput"
         @keydown.tab.prevent="complete"
-        @keydown.enter.prevent="sendCommand"
+        @keydown.enter.exact.prevent="sendCommand()"
+        @keydown.enter.ctrl.exact.prevent="sendCommand(true)"
         @keydown.down.exact.prevent="incrementFuzzy"
         @keydown.up.exact.prevent="decrementFuzzy"
         @keydown.esc.exact.prevent="vaunchInput = ''"
