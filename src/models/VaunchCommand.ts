@@ -2,7 +2,6 @@ import { VaunchFile } from "./VaunchFile";
 
 export abstract class VaunchCommand extends VaunchFile {
   hasArgs:boolean = true;
-  description:string = "";
   filetype:string = "VaunchCommand";
 
   execute(args: string[]): void {

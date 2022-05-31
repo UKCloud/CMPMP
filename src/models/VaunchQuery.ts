@@ -8,16 +8,17 @@ export class VaunchQuery extends VaunchUrlFile {
   filetype:string = "VaunchQuery";
 
   constructor(name: string, prefix:string, content: string, parent:VaunchFolder, icon: string = "magnifying-glass",
-    iconClass: string = "solid", hits:number = 0) {
+    iconClass: string = "solid", hits:number = 0, descrition:string="") {
     if (!name.endsWith('.qry')) {
       name = name + ".qry"
     }
-    super(name, parent, icon, iconClass, hits);
+    super(name, parent, icon, iconClass, hits, descrition);
     this.prefix = prefix.replace(':','');
     this.content = content;
   }
 
   getDescription(): string {
+    if (this.description) return `Search: ${this.prefix}: ${this.description}`;
     let host:string|undefined = this.createUrl()?.origin
     if (host) {
       return `Search: ${this.prefix}: ${this.content}`;
@@ -69,7 +70,8 @@ export class VaunchQuery extends VaunchUrlFile {
       icon: this.icon,
       iconClass: this.iconClass,
       type: this.filetype,
-      hits: this.hits
+      hits: this.hits,
+      description: this.description,
     }
   }
 

@@ -4,6 +4,7 @@ import type { VaunchFile } from "./VaunchFile";
 import type { VaunchFolder } from "./VaunchFolder";
 import { VaunchLink } from "./VaunchLink";
 import { VaunchQuery } from "./VaunchQuery";
+import type { VaunchUrlFile } from "./VaunchUrlFile";
 
 export class VaunchMkdir extends VaunchCommand {
   constructor() {
@@ -219,6 +220,27 @@ export class VaunchMv extends VaunchCommand {
           newFolder.addFile(file);
         }
       }
+    }
+  }
+}
+
+export class VaunchSetDescription extends VaunchCommand {
+  constructor() {
+    super("set-description");
+  }
+  aliases: string[] = ["set-desc"];
+  description: string = "Sets the description of a file's tooltip"
+
+  execute(args:string[]): void {
+    const folders = useFolderStore();
+    let fullPath:string|undefined = args.shift();
+    if (fullPath) {
+      let filePath = fullPath.split('/');
+      let folderName:string = filePath[0];
+      let fileName:string = filePath[1];
+      let folder:VaunchFolder = folders.getFolderByName(folderName);
+      let file:VaunchFile|undefined = folder.getFile(fileName);
+      if (file) file.description = args.join(' ');
     }
   }
 }

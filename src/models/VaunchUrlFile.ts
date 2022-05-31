@@ -6,9 +6,10 @@ export abstract class VaunchUrlFile extends VaunchFile {
   parent:VaunchFolder;
   filetype:string = "VaunchUrlFile";
 
-  constructor(name:string, parent:VaunchFolder, icon:string, iconClass:string, hits:number = 0) {
+  constructor(name:string, parent:VaunchFolder, icon:string, iconClass:string, hits:number = 0, description:string="") {
     super(name, icon, iconClass, hits);
     this.parent = parent;
+    this.description = description
   }
 
   protected prependHttps(urlString:string):string {
