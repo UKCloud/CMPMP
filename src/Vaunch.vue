@@ -75,11 +75,10 @@ export default defineComponent({
 
       // Failing everything else, pass the input to the default file
       // Push the first word back into commandArgs, as there is no operator
-      let defaultFile = this.config.defaultFile;
-      if (defaultFile) {
+      let defaultPrefix:string = this.config.defaultFile;
+      if (defaultPrefix) {
         commandArgs.unshift(operator)
-  
-        let file:VaunchFile = folders.getFileByPath(defaultFile)
+        let file:VaunchFile|undefined = this.findQryFile(defaultPrefix);
         if (file) {
           return file.execute(commandArgs);
         }
@@ -89,15 +88,14 @@ export default defineComponent({
     },
     findQryFile(operator:string):VaunchFile|undefined {
       if (operator.includes(':')) {
-        let queryPrefix = operator.split(':')[0]
-
-        const folders = useFolderStore();
-        for (let folder of (folders.items as VaunchFolder[])) {
-          for (let file of folder.getFiles()) {
-            if (file.filetype == "VaunchQuery") {
-              if (file.getNames().includes(queryPrefix)) {
-                return file;
-              }
+        operator = operator.split(':')[0]
+      }
+      const folders = useFolderStore();
+      for (let folder of (folders.items as VaunchFolder[])) {
+        for (let file of folder.getFiles()) {
+          if (file.filetype == "VaunchQuery") {
+            if (file.getNames().includes(operator)) {
+              return file;
             }
           }
         }
