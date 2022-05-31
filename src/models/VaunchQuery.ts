@@ -5,6 +5,7 @@ export class VaunchQuery extends VaunchUrlFile {
 
   prefix:string
   extension:string = ".qry"
+  filetype:string = "VaunchQuery";
 
   constructor(name: string, prefix:string, content: string, parent:VaunchFolder, icon: string = "magnifying-glass",
     iconClass: string = "solid", hits:number = 0) {
@@ -67,7 +68,7 @@ export class VaunchQuery extends VaunchUrlFile {
       content: this.content,
       icon: this.icon,
       iconClass: this.iconClass,
-      type: this.constructor.name,
+      type: this.filetype,
       hits: this.hits
     }
   }

@@ -6,6 +6,7 @@ export abstract class VaunchFile {
   iconClass:string;
   hits:number;
   extension:string = "";
+  filetype:string = "VaunchFile";
 
   constructor(name:string, icon:string = "file", iconClass:string = "solid", hits:number = 0) {
     this.fileName = name

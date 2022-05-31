@@ -91,7 +91,7 @@ export default defineComponent({
         const folders = useFolderStore();
         for (let folder of (folders.items as VaunchFolder[])) {
           for (let file of folder.getFiles()) {
-            if (file.constructor.name == "VaunchQuery") {
+            if (file.filetype == "VaunchQuery") {
               if (file.getNames().includes(queryPrefix)) {
                 return file;
               }

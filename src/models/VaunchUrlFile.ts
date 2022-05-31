@@ -4,6 +4,7 @@ import type { VaunchFolder } from "./VaunchFolder";
 export abstract class VaunchUrlFile extends VaunchFile {
 
   parent:VaunchFolder;
+  filetype:string = "VaunchUrlFile";
 
   constructor(name:string, parent:VaunchFolder, icon:string, iconClass:string, hits:number = 0) {
     super(name, icon, iconClass, hits);
