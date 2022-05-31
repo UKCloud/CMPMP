@@ -30,9 +30,7 @@ export class VaunchQuery extends VaunchUrlFile {
     return nameAndPrefix;
   }
 
-  execute(args: string[]): void|string {
-    this.hits++;
-    // If no args are provided or ctrl clicking on the file, return
+  execute(args: string[]): void|string {    // If no args are provided or ctrl clicking on the file, return
     // the file's prefix
     if (args.length == 0 || args[0] == "_blank" || args[0] == "" ) {
       return `${this.prefix}: `
@@ -57,6 +55,7 @@ export class VaunchQuery extends VaunchUrlFile {
     // Ensure the final file content is "linkable"
     let linkUrl:URL|undefined = this.createUrl(newLocation);
     if (linkUrl) {
+      this.hits++;
       window.location.href = linkUrl.href;
     }
   }
