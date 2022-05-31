@@ -18,7 +18,7 @@ export class VaunchQuery extends VaunchUrlFile {
   }
 
   getDescription(): string {
-    if (this.description) return `Search: ${this.prefix}: ${this.description}`;
+    if (this.description) return `${this.prefix}: ${this.description}`;
     let host:string|undefined = this.createUrl()?.origin
     if (host) {
       return `Search: ${this.prefix}: ${this.content}`;
