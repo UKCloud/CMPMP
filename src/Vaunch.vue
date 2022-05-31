@@ -69,7 +69,9 @@ export default defineComponent({
 
       // If a fuzzy file has been chosen, let's execute that
       if (this.fuzzyFiles.items.length > 0) {
-        this.fuzzyFiles.items[this.fuzzyFiles.index].execute(commandArgs)
+        let response = this.fuzzyFiles.items[this.fuzzyFiles.index].execute(commandArgs)
+        if (response) this.passInput(response);
+        return;
       }
 
       // Failing everything else, pass the input to the default file
@@ -83,6 +85,8 @@ export default defineComponent({
           return file.execute(commandArgs);
         }
       }
+      // If everything fails, i.e no default search, just clear the input
+      this.passInput("");
     },
     findQryFile(operator:string):VaunchFile|undefined {
       if (operator.includes(':')) {
@@ -105,7 +109,7 @@ export default defineComponent({
       if (input.length > 0) {
         // If fuzzy is enabled, search for files matching
         const folders = useFolderStore();
-        let matches:VaunchFile[] = folders.findLinkFiles(input);
+        let matches:VaunchFile[] = folders.findFiles(input);
         this.fuzzyFiles.setFuzzy(this.sortByHits(matches))
         this.setInputIcon(matches[0]);
       } else {

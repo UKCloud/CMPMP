@@ -103,7 +103,6 @@ export default defineComponent({
     },
     sendCommand() {
       this.$emit("command", this.vaunchInput.split(' '))
-      this.vaunchInput = "";
     },
     getAutocompleteFolder(input:string, folders:string[]):string {
       for (let folder of folders) {

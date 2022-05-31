@@ -57,10 +57,10 @@ export const useFolderStore:StoreDefinition = defineStore({
     removeAll() {
       this.rawFolders = new Map<string, VaunchFolder>();
     },
-    findLinkFiles(search:string) {
+    findFiles(search:string, types:string[]=[]) {
       let matchingFiles:VaunchFile[] = [];
       for (let folder of this.rawFolders.values()) {
-        matchingFiles.push(...folder.searchFile(search, ["VaunchLink"]))
+        matchingFiles.push(...folder.searchFile(search, types))
       }
       return matchingFiles;
     }
