@@ -43,7 +43,7 @@ export default defineComponent({
       // Check if we're running a command, if we find it in commands, execute it
        for (let command of commands) {
         if (command.getNames().includes(operator)) {
-          this.passInput(command.execute(commandArgs));
+          return this.passInput(command.execute(commandArgs));
         }
       };
 
