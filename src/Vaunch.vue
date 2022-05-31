@@ -224,7 +224,10 @@ export default defineComponent({
     ref="vaunchInput"/>
 
     <div id="bottom-half">
-      <VaunchFuzzy v-if="fuzzyFiles.items.length > 0 && config.fuzzy" :fuzzy-matches="fuzzyFiles.items" :current-index="fuzzyFiles.index"/>
+      <VaunchFuzzy v-if="fuzzyFiles.items.length > 0 && config.fuzzy"
+      :fuzzy-matches="fuzzyFiles.items"
+      :current-index="fuzzyFiles.index"
+      v-on:set-input="passInput"/>
 
       <div v-if="config.showGUI" id="commands-folders-container">
         <div v-if="config.showCommands" id="commands-container">
