@@ -16,8 +16,14 @@ export class VaunchLink extends VaunchUrlFile {
     this.parent = parent;
   }
 
+  trimString(stringTotrim:string, trimTo:number=50): string {
+    if (stringTotrim.length > (trimTo - 3)) {
+      return `${stringTotrim.substring(0,trimTo)}...`
+    } else return stringTotrim;
+  }
+
   getDescription(): string {
-    return "Naviagte to: " + this.getCorrectURL();
+    return "Naviagte to: " + this.trimString(this.getCorrectURL());
   }
 
   execute(args:string[]): void {
