@@ -192,6 +192,7 @@ export default defineComponent({
 }
 .commandInput {
   border-bottom: solid thin v-bind('config.color.text') !important;
+  color: v-bind('config.color.text');
 }
 
 /* Scrollbar themeing */

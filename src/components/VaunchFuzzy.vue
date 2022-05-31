@@ -30,7 +30,7 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style>
 #fuzzy-container {
   display: flex;
   flex-direction: column;
@@ -64,7 +64,7 @@ export default defineComponent({
 }
 
 .highlight {
-  filter: contrast(1.5);
+  filter: hue-rotate(30deg);
 }
 
 @media (max-width: 768px) {

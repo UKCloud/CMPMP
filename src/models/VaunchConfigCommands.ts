@@ -93,7 +93,7 @@ export class VaunchSetColor extends VaunchCommand {
     super("set-color");
   }
   aliases: string[] = ["set-colour", "colo"];
-  description: string = "Changes the color of Vaunch. Usage: window [text] [highlight]. * keeps current value"
+  description: string = "Changes the colour of Vaunch. Usage: windowColoe [textColor] [highlightColor]. * keeps current value"
 
   private rgbToHsl(r: number, g: number, b: number) {
     r /= 255;
@@ -132,7 +132,7 @@ export class VaunchSetColor extends VaunchCommand {
     let rgbColor: string = this.getRgbColor(newColor);
     // Convert rgb to rgba for background transparency
     let rgbaColor = rgbColor.replace(/(?:rgb)+/g, 'rgba');
-    return rgbaColor.replace(/(?:\))+/g, ', 0.64)');
+    return rgbaColor.replace(/(?:\))+/g, ', 0.70)');
   }
 
   private getRgbValue(rgbcolor: string): number[] {
