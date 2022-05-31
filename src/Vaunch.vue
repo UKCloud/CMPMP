@@ -36,7 +36,7 @@ export default defineComponent({
     };
   },
   methods: {
-    executeCommand(commandArgs: string[]) {
+    executeCommand(commandArgs: string[], newTab:boolean=false) {
       let operator = commandArgs[0];
       commandArgs.shift();
 
@@ -49,6 +49,10 @@ export default defineComponent({
 
       // From here on, the folder store is needed
       const folders = useFolderStore()
+
+      // If ctrl was held, append _black to commandArgs
+      if (newTab) commandArgs.push('_blank');
+
       // If no command was found, could it be a qry file?
       let file = this.findQryFile(operator)
       if (file) {
@@ -224,7 +228,10 @@ export default defineComponent({
     ref="vaunchInput"/>
 
     <div id="bottom-half">
-      <VaunchFuzzy v-if="fuzzyFiles.items.length > 0 && config.fuzzy" :fuzzy-matches="fuzzyFiles.items" :current-index="fuzzyFiles.index"/>
+      <VaunchFuzzy v-if="fuzzyFiles.items.length > 0 && config.fuzzy"
+      :fuzzy-matches="fuzzyFiles.items"
+      :current-index="fuzzyFiles.index"
+      v-on:set-input="passInput"/>
 
       <div v-if="config.showGUI" id="commands-folders-container">
         <div v-if="config.showCommands" id="commands-container">

@@ -31,11 +31,17 @@ export class VaunchQuery extends VaunchUrlFile {
   }
 
   execute(args: string[]): void|string {
-    this.hits++;
-    // If no args are provided or ctrl clicking on the file, return
-    // the file's prefix
+    // If no args are provided or ctrl clicking on the file, return the file's prefix
     if (args.length == 0 || args[0] == "_blank" || args[0] == "" ) {
       return `${this.prefix}: `
+    }
+
+    // If _black is the last arg, open this in a new window
+    let newTab:boolean = false;
+    if (args[args.length-1] == "_blank") {
+      newTab = true;
+      // Remove the _blank from the args, otherwise _blank would also be searched
+      args.pop();
     }
 
     let newLocation:string;
@@ -57,7 +63,10 @@ export class VaunchQuery extends VaunchUrlFile {
     // Ensure the final file content is "linkable"
     let linkUrl:URL|undefined = this.createUrl(newLocation);
     if (linkUrl) {
-      window.location.href = linkUrl.href;
+      this.hits++;
+      if (newTab){
+        window.open(linkUrl,'_blank');
+      } else window.location.href = linkUrl.href;
     }
   }
 

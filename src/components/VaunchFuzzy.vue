@@ -5,6 +5,7 @@ import VaunchGuiFile from "./VaunchGuiFile.vue";
 export default defineComponent({
   name: "VaunchFuzzy",
   props: ['fuzzyMatches','currentIndex'],
+  emits: ['set-input'],
   components: {
     VaunchGuiFile
   },
