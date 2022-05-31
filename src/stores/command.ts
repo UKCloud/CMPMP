@@ -9,6 +9,7 @@ export const commands = [
   new fsCommands.VaunchSetIcon(),
   new fsCommands.VaunchEditFile(),
   new fsCommands.VaunchMv(),
+  new fsCommands.VaunchSetDescription(),
   new configCommands.VaunchFeh(),
   new configCommands.VaunchToggleGui(),
   new configCommands.VaunchToggleFuzzy(),

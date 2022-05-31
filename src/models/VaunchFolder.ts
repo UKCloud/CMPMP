@@ -80,9 +80,11 @@ export class VaunchFolder {
     for (let fileData of data.files) {
       let file: VaunchFile|undefined = undefined;
       if (fileData.type == "VaunchLink") {
-        file = new VaunchLink(fileData.fileName, fileData.content, folder, fileData.icon, fileData.iconClass, fileData.hits);
+        file = new VaunchLink(fileData.fileName, fileData.content, folder,
+          fileData.icon, fileData.iconClass, fileData.hits, fileData.description);
       } else if (fileData.type == "VaunchQuery") {
-        file = new VaunchQuery(fileData.fileName, fileData.prefix, fileData.content, folder, fileData.icon, fileData.iconClass, fileData.hits);
+        file = new VaunchQuery(fileData.fileName, fileData.prefix, fileData.content, folder,
+          fileData.icon, fileData.iconClass, fileData.hits, fileData.description);
       }
       if (file != undefined) folder.addFile(file)
     }

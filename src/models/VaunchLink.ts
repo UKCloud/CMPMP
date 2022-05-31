@@ -7,11 +7,11 @@ export class VaunchLink extends VaunchUrlFile {
   filetype:string = "VaunchLink";
 
   constructor(name:string, content:string, parent:VaunchFolder, icon:string = "file",
-   iconClass:string = "solid", hits:number = 0,) {
+   iconClass:string = "solid", hits:number = 0, description:string="") {
     if (!name.endsWith('.lnk')) {
       name = name+".lnk"
     }
-    super(name, parent, icon, iconClass, hits);
+    super(name, parent, icon, iconClass, hits, description);
     this.content = content;
     this.parent = parent;
   }
@@ -23,6 +23,7 @@ export class VaunchLink extends VaunchUrlFile {
   }
 
   getDescription(): string {
+    if (this.description) return `Navigate to: ${this.description}`;
     return "Naviagte to: " + this.trimString(this.getCorrectURL());
   }
 
@@ -46,7 +47,8 @@ export class VaunchLink extends VaunchUrlFile {
       icon: this.icon,
       iconClass: this.iconClass,
       type: this.filetype,
-      hits: this.hits
+      hits: this.hits,
+      description: this.description,
     }
   }
 
