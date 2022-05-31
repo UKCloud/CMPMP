@@ -132,7 +132,7 @@ export class VaunchSetColor extends VaunchCommand {
     let rgbColor: string = this.getRgbColor(newColor);
     // Convert rgb to rgba for background transparency
     let rgbaColor = rgbColor.replace(/(?:rgb)+/g, 'rgba');
-    return rgbaColor.replace(/(?:\))+/g, ', 0.64)');
+    return rgbaColor.replace(/(?:\))+/g, ', 0.70)');
   }
 
   private getRgbValue(rgbcolor: string): number[] {
