@@ -38,11 +38,15 @@ export class VaunchFolder {
     return Array.from(this.files.values())
   }
 
-  searchFile(search:string, types:string[]): VaunchFile[] {
+  searchFile(search:string, types:string[]=[]): VaunchFile[] {
     let matches:VaunchFile[] = [];
     for (const [fileName, file] of this.files.entries()) {
-      if (fileName.includes(search) && types.includes(file.filetype)) {
-        matches.push(file)
+      if (fileName.includes(search)) {
+        if (types.includes(file.filetype)) {
+          matches.push(file)
+        } else if (types.length == 0) {
+          matches.push(file)
+        }
       }
     }
     return matches;

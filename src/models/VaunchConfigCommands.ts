@@ -56,7 +56,7 @@ export class VaunchSetDefaultSearch extends VaunchCommand {
 
   execute(args: string[]): void {
     const config = useConfigStore();
-    if (args[0] = "none") {
+    if (args[0] == "none") {
       config.defaultFile = "";
     } else config.defaultFile = args[0];
   }

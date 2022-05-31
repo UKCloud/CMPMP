@@ -43,7 +43,7 @@ export default defineComponent({
       // Check if we're running a command, if we find it in commands, execute it
        for (let command of commands) {
         if (command.getNames().includes(operator)) {
-          return command.execute(commandArgs)
+          this.passInput(command.execute(commandArgs));
         }
       };
 
@@ -56,45 +56,46 @@ export default defineComponent({
         // it into the commandArgs. This deals with a multi ${} file, executed like:
         // prefix:firstArg secondArg
         if (operator.split(':')[1]) commandArgs.unshift(operator.split(':')[1])
-        return file.execute(commandArgs);
+        return this.passInput(file.execute(commandArgs));
       }
 
       // If no command was found, let's check if we're running a file
       if (operator.includes("/")) {
         let file:VaunchFile = folders.getFileByPath(operator)
         if (file) {
-          return file.execute(commandArgs);
+          return this.passInput(file.execute(commandArgs));
         }
       }
 
       // If a fuzzy file has been chosen, let's execute that
       if (this.fuzzyFiles.items.length > 0) {
-        this.fuzzyFiles.items[this.fuzzyFiles.index].execute(commandArgs)
+        let response = this.fuzzyFiles.items[this.fuzzyFiles.index].execute(commandArgs)
+        return this.passInput(response);
       }
 
       // Failing everything else, pass the input to the default file
       // Push the first word back into commandArgs, as there is no operator
-      let defaultFile = this.config.defaultFile;
-      if (defaultFile) {
+      let defaultPrefix:string = this.config.defaultFile;
+      if (defaultPrefix) {
         commandArgs.unshift(operator)
-  
-        let file:VaunchFile = folders.getFileByPath(defaultFile)
+        let file:VaunchFile|undefined = this.findQryFile(defaultPrefix);
         if (file) {
           return file.execute(commandArgs);
         }
       }
+      // If everything fails, i.e no default search, just clear the input
+      this.passInput("");
     },
     findQryFile(operator:string):VaunchFile|undefined {
       if (operator.includes(':')) {
-        let queryPrefix = operator.split(':')[0]
-
-        const folders = useFolderStore();
-        for (let folder of (folders.items as VaunchFolder[])) {
-          for (let file of folder.getFiles()) {
-            if (file.filetype == "VaunchQuery") {
-              if (file.getNames().includes(queryPrefix)) {
-                return file;
-              }
+        operator = operator.split(':')[0]
+      }
+      const folders = useFolderStore();
+      for (let folder of (folders.items as VaunchFolder[])) {
+        for (let file of folder.getFiles()) {
+          if (file.filetype == "VaunchQuery") {
+            if (file.getNames().includes(operator)) {
+              return file;
             }
           }
         }
@@ -105,7 +106,7 @@ export default defineComponent({
       if (input.length > 0) {
         // If fuzzy is enabled, search for files matching
         const folders = useFolderStore();
-        let matches:VaunchFile[] = folders.findLinkFiles(input);
+        let matches:VaunchFile[] = folders.findFiles(input);
         this.fuzzyFiles.setFuzzy(this.sortByHits(matches))
         this.setInputIcon(matches[0]);
       } else {
@@ -116,8 +117,9 @@ export default defineComponent({
     sortByHits(files:VaunchFile[]) {
       return files.sort((a, b) => (a.hits < b.hits) ? 1 : -1)
     },
-    passInput(input:string) {
-      (this.$refs['vaunchInput'] as typeof VaunchInput).setInput(input);
+    passInput(input:string|void) {
+      let newInput:string = input ? input : "";
+      (this.$refs['vaunchInput'] as typeof VaunchInput).setInput(newInput);
     },
     updateFuzzyIndex(increment:boolean) {
       if (increment) {
