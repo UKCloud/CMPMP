@@ -48,7 +48,7 @@ export default defineComponent({
 
 .file:hover {
   cursor: pointer;
-  filter: hue-rotate(30deg);
+  filter: hue-rotate(30deg) invert(20%);
 }
 
 .filename {
