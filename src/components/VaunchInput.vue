@@ -18,7 +18,7 @@ export default defineComponent({
     return {
       vaunchInput: "",
       autocomplete: "",
-      completeType: ""
+      isAutocompletePartial: true,
     };
   },
   emits: ["command", "fuzzy", "fuzzyIncrement", "set-input-icon", "query-check"],
@@ -28,7 +28,7 @@ export default defineComponent({
   },
   watch: {
     vaunchInput(val: string) {
-      // Emit out what we're typing if fuzzy is enabled
+      // Emit out what we're typing to fuzzy, to build a list of potential files this matches
       this.$emit('fuzzy', val)
 
       // Annoyingly if input overflows autcomplete falls apart, so just disable it after a while...
@@ -36,19 +36,23 @@ export default defineComponent({
         this.autocomplete = ""
         return
       }
+      // If input is empty, reset the prefix icon
+      if (val.length == 0 ) this.$emit('set-input-icon', undefined);
 
-      this.completeType = "";
+      // Reset the type of autocompletion this.
+      // Commands/files add a space to the end, while folders will not.
+      let matches:string[] = [];
       let input = val.split(' ');
 
-      // Get the current word that is being typed 
+      // Get the current word that is being typed, to find an autocomplete for
       // Remove the last word, so it wont be considered in the autocomplete placeholder text
       let lastWord: string = input[input.length - 1]
       input.pop();
       
-      // Set autocomplete to go up to the last word (i.e what input is after lastWord was popped of)
+      // Set autocomplete to go up to before the half-typed word
       this.autocomplete = input.join(" ");
 
-      // If on the second+ word, prefix the autocomplete text with the previous words
+      // If there's at least one word left after popping the last word off, add a space
       if (input.length > 0) {
         this.autocomplete += " "; // Add extra space for the to-be-completed word
       }
@@ -56,40 +60,53 @@ export default defineComponent({
       // Search through the valid commands to autocomplete this word with
       // Only do this on the first "word", as commands will always be the first word
       if (lastWord.length > 0 && input.length == 0) {
-        this.autocomplete += this.getAutocompleteFile(lastWord, commands, "command");
+        let commandMatches:string[] = this.getAutocompleteFile(lastWord, commands);
+        matches.push(...commandMatches);
       }
 
       // If command autocomplete did not find anything, search for folders/files
-      if (lastWord.length > 0 && this.completeType == "") {
-        // If on the second+ word, check folder names/files to autocomplete
-        this.autocomplete += this.getAutocompleteFolder(lastWord, this.folders.folderNames);
-
-        let pathSplit = lastWord.split("/")
-        let folderName = pathSplit[0];
-        let fileName = pathSplit[1]
+      if (lastWord.length > 0) {
         // If we havent found anything yet, the last word has a '/' (is a folder path) and a filename is being typed
-        if (this.completeType == "" && lastWord.includes("/") && fileName.length > 0) {
-          // Search for a file, using fileName as a semi complete filename
-          let folder:VaunchFolder = this.folders.getFolderByName(folderName);
-          if (folder) {
-            this.autocomplete += folderName + "/" + this.getAutocompleteFile(fileName, folder.getFiles());
+        if (lastWord.includes("/")) {
+          let pathSplit = lastWord.split("/")
+          let folderName = pathSplit[0];
+          let fileName = pathSplit[1];
+          if (fileName.length > 0) {
+            // Search for a file, using fileName as a semi complete filename
+            let folder:VaunchFolder = this.folders.getFolderByName(folderName);
+            if (folder) {
+              let fileMatches:string[] = this.getAutocompleteFile(fileName, folder.getFiles()).map(file => folderName + "/" + file)
+              matches.push(...fileMatches);
+            }
           }
+        } else {
+          // If on the second+ word, check folder names/files to autocomplete
+          let folderMatches:string[] = this.getAutocompleteFolder(lastWord, this.folders.folderNames);
+          matches.push(...folderMatches);
         }
       }
 
-      // If autocomplete isn't for a file, let Vaunch know VaunchInput thinks the prefix icon should be reset 
-      if (this.completeType != "file") {
-        this.$emit('set-input-icon', undefined);
-      }
       // If the input contains a : check if the current input is a .qry file
       if (val.includes(':')) {
         this.$emit('query-check', val);
       }
 
-      // If no autocomplete was successful, set it autocomplete text to the current value
-      if (this.completeType == "") {
+      if (matches.length == 1){
+        this.isAutocompletePartial = false;
+        this.autocomplete += matches[0]
+      } else if (matches.length > 1) {
+        // If there were more than one match, this is a partial autocomplete,
+        // and more text should be added to this word
+        this.isAutocompletePartial = true;
+        this.autocomplete += this.getCommonStartString(matches);
+      } else {
+        // // If no matches were found, set the autocomplete text to the current input
+        this.isAutocompletePartial = false;
         this.autocomplete = val;
       }
+      // Check if the final input matches a file, if it does, set the icon to it
+      let file = this.folders.getFileByPath(val.trim());
+      if (file) this.$emit('set-input-icon', file);
     },
   },
   methods: {
@@ -100,53 +117,32 @@ export default defineComponent({
     complete() {
       // Only complete if there is something to complete
       if (this.autocomplete.length > this.vaunchInput.length) {
-        this.vaunchInput = this.autocomplete + (this.completeType == "command" ? " ": "");
+        this.vaunchInput = this.autocomplete + 
+          (this.isAutocompletePartial || this.autocomplete.endsWith("/") ? "" : " ");
       }
     },
     sendCommand(newTab:boolean=false) {
       this.$emit("command", this.vaunchInput.split(' '), newTab)
     },
-    getAutocompleteFolder(input:string, folders:string[]):string {
-      let completeText: string = ""
+    getAutocompleteFolder(input:string, folders:string[]):string[] {
       let matches: string[] = [];
       for (let folder of folders) {
         if (folder.startsWith(input)) {
           matches.push(folder)
-          // We've found at least one matching folder, so we can autocomplete
-          this.completeType = "folder";
         }
       }
-      // If there's only one potential match, append a slash
-      if (matches.length == 1) return matches[0] + "/";
-      if (matches.length > 0) completeText = this.getCommonStartString(matches);
-      return completeText;
+      // If there's only one potential match, append a slash and return
+      if (matches.length == 1) return [matches[0] + "/"];
+      return matches;
     },
-    getAutocompleteFile(input:string, files:VaunchFile[], completeType:string = "file"):string {
-      let completeText: string = ""
+    getAutocompleteFile(input:string, files:VaunchFile[]):string[] {
       let matches: string[] = [];
-      let matchedFile:VaunchFile|undefined;
       for (let file of files) {
         for (let ailias of file.getNames()) {
-          if (ailias.startsWith(input)) {
-            matches.push(ailias)
-            // Set the matched file, if ony one match was found
-            // this can be used to set the prefix icon
-            matchedFile = file;
-            // return ailias;
-          }
+          if (ailias.startsWith(input)) matches.push(ailias)
         }
       }
-
-      if (matches.length == 1)  {
-        this.completeType = completeType;
-        this.$emit('set-input-icon', matchedFile);
-        return matches[0];
-      }
-      if (matches.length > 0) {
-        this.completeType = "partial";
-        completeText = this.getCommonStartString(matches);
-      }
-      return completeText;
+      return matches;
     },
     incrementFuzzy() {
       this.$emit('fuzzyIncrement', true)
