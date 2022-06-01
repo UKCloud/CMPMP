@@ -23,8 +23,8 @@ export class VaunchLink extends VaunchUrlFile {
   }
 
   getDescription(): string {
-    if (this.description) return `Navigate to: ${this.description}`;
-    return "Naviagte to: " + this.trimString(this.getCorrectURL());
+    if (this.description) return this.description;
+    return "Navigate to: " + this.trimString(this.getCorrectURL());
   }
 
   execute(args:string[]): void {
