@@ -100,7 +100,7 @@ export default defineComponent({
 :id="parentFolderName+'-'+file.getIdSafeName()">
   <div class="command-inner">
     <i class="fa-solid fa-chevron-right file-icon"></i>
-    <span class="command-name">{{ file.titleCase() }}<span v-if="file.hasArgs">:</span></span>
+    <span class="command-name">{{ file.titleCase() }}</span>
     <input v-if="file.hasArgs" class="commandInput" @keydown.enter.prevent="execute(file, commandInput.split(' '))"
     v-model="commandInput" type="text"
     ref="commandInputBox" />
