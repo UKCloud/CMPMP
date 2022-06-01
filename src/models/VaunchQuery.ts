@@ -26,8 +26,7 @@ export class VaunchQuery extends VaunchUrlFile {
   }
 
   getNames():string[] {
-    let nameAndPrefix:string[] = [this.fileName, this.prefix]
-    return nameAndPrefix;
+    return [this.fileName, this.prefix, ...this.aliases];
   }
 
   execute(args: string[]): void|string {

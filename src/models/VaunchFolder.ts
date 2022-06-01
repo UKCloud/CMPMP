@@ -47,6 +47,12 @@ export class VaunchFolder {
         } else if (types.length == 0) {
           matches.push(file)
         }
+      } else if (file.namesStartWith(search)) {
+        if (types.includes(file.filetype)) {
+          matches.push(file)
+        } else if (types.length == 0) {
+          matches.push(file)
+        }
       }
     }
     return matches;
