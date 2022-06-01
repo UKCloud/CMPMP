@@ -65,7 +65,7 @@ export default defineComponent({
 }
 
 .highlight {
-  filter: hue-rotate(30deg);
+  filter: hue-rotate(30deg) invert(20%);
 }
 
 @media (max-width: 768px) {
