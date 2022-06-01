@@ -117,7 +117,7 @@ export default defineComponent({
         const folders = useFolderStore();
         let matches:VaunchFile[] = folders.findFiles(input);
         this.fuzzyFiles.setFuzzy(this.sortByHits(matches))
-        this.setInputIcon(matches[0]);
+        if (this.config.fuzzy) this.setInputIcon(matches[0]);
       } else {
         this.fuzzyFiles.clear();
       }
