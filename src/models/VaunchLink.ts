@@ -13,7 +13,6 @@ export class VaunchLink extends VaunchUrlFile {
     }
     super(name, parent, icon, iconClass, hits, description);
     this.content = content;
-    this.parent = parent;
   }
 
   trimString(stringTotrim:string, trimTo:number=50): string {

@@ -30,6 +30,13 @@ export abstract class VaunchFile {
     return allNames;
   }
 
+  namesStartWith(search:string):boolean {
+    for (let name of this.getNames()) {
+      if (name.startsWith(search)) return true
+    }
+    return false
+  }
+
   setIcon(newIcon:string = this.icon, iconClass:string = "solid") {
     this.icon = newIcon;
     this.iconClass = iconClass;

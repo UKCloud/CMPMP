@@ -58,10 +58,12 @@ export default defineComponent({
       if (lastWord.length > 0 && input.length == 0) {
         this.autocomplete += this.getAutocompleteFile(lastWord, commands, "command");
       }
+
       // If command autocomplete did not find anything, search for folders/files
       if (lastWord.length > 0 && this.completeType == "") {
         // If on the second+ word, check folder names/files to autocomplete
         this.autocomplete += this.getAutocompleteFolder(lastWord, this.folders.folderNames);
+
         let pathSplit = lastWord.split("/")
         let folderName = pathSplit[0];
         let fileName = pathSplit[1]
@@ -105,25 +107,46 @@ export default defineComponent({
       this.$emit("command", this.vaunchInput.split(' '), newTab)
     },
     getAutocompleteFolder(input:string, folders:string[]):string {
+      let completeText: string = ""
+      let matches: string[] = [];
       for (let folder of folders) {
         if (folder.startsWith(input)) {
+          matches.push(folder)
+          // We've found at least one matching folder, so we can autocomplete
           this.completeType = "folder";
-          return folder + "/"
         }
       }
-      return ""
+      // If there's only one potential match, append a slash
+      if (matches.length == 1) return matches[0] + "/";
+      if (matches.length > 0) completeText = this.getCommonStartString(matches);
+      return completeText;
     },
     getAutocompleteFile(input:string, files:VaunchFile[], completeType:string = "file"):string {
+      let completeText: string = ""
+      let matches: string[] = [];
+      let matchedFile:VaunchFile|undefined;
       for (let file of files) {
         for (let ailias of file.getNames()) {
           if (ailias.startsWith(input)) {
-            this.$emit('set-input-icon', file)
-            this.completeType = completeType;
-            return ailias;
+            matches.push(ailias)
+            // Set the matched file, if ony one match was found
+            // this can be used to set the prefix icon
+            matchedFile = file;
+            // return ailias;
           }
         }
       }
-      return ""
+
+      if (matches.length == 1)  {
+        this.completeType = completeType;
+        this.$emit('set-input-icon', matchedFile);
+        return matches[0];
+      }
+      if (matches.length > 0) {
+        this.completeType = "partial";
+        completeText = this.getCommonStartString(matches);
+      }
+      return completeText;
     },
     incrementFuzzy() {
       this.$emit('fuzzyIncrement', true)
@@ -131,6 +154,18 @@ export default defineComponent({
     decrementFuzzy() {
       this.$emit('fuzzyIncrement', false)
     },
+    getCommonStartString(matches:string[]){
+      let sortedMatches = matches.sort();
+      // Get the first and second indx of the sorted match list
+      let item1 = sortedMatches[0];
+      let item2 = sortedMatches[sortedMatches.length-1];
+      let maxLength = item1.length;
+      let i= 0;
+      // iterate over the charactres in both items, if they match continue
+      // else return that substring
+      while(i< maxLength && item1.charAt(i) === item2.charAt(i)) i++;
+      return item1.substring(0, i);
+    }
   },
 });
 </script>

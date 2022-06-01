@@ -10,6 +10,9 @@ export abstract class VaunchUrlFile extends VaunchFile {
     super(name, icon, iconClass, hits);
     this.parent = parent;
     this.description = description
+    if (this.parent) {
+      this.aliases.push(`${this.parent.name}/${this.fileName}`);
+    }
   }
 
   protected prependHttps(urlString:string):string {
