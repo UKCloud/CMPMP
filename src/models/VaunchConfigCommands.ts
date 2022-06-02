@@ -338,23 +338,36 @@ export class VaunchImport extends VaunchCommand {
     importElem.type = "file";
     importElem.click();
     let importReader = readImportFile
+
+    // If '-f' is passed to import, overwrite everything
+    let overwrite:boolean = args.includes("-f") ? true:false;
+    // If 'files' is passed to import import files, or if nothing was passed import just files by default
+    let importFolders:boolean = args.length == 0 || args.includes("files") ? true:false;
+    let importConfig:boolean = args.includes("config") ? true:false;
+
     importElem.addEventListener('change', function () {
       if (this.files) {
         importReader(this.files[0]).then(function (importData) {
           const folders = useFolderStore();
           const config = useConfigStore();
-          if (args[0]) {
-            folders.removeAll();
+
+          // Delete all folders if -f is supplied to import
+          if (overwrite) folders.removeAll();
+
+          // Only import files/folders if importConfig is true
+          if (importFolders) {
+            for (let folder of (importData as any).folders) {
+              let vaunchFolder:VaunchFolder = VaunchFolder.parse(folder);
+              // If this folder doesn't exist, import it. If overwriting, all folders will be gone by now
+              if (!folders.getFolderByName(vaunchFolder.name)){
+                folders.insert(vaunchFolder)
+              }
+            }
           }
-          for (let folder of (importData as any).folders) {
-            let vaunchFolder:VaunchFolder = VaunchFolder.parse(folder);
-            // If this folder doesn't exist, import it. If overwriting, all folders will be gone by now
-            if (!folders.getFolderByName(vaunchFolder.name)){
-              folders.insert(vaunchFolder)
-            }
-            if (args[0]) {
-              config.newConfig((importData as any).config);
-            }
+
+          // Only import config if importConfig is true
+          if (importConfig) {
+            config.newConfig((importData as any).config);
           }
         })
       }
