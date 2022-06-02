@@ -5,10 +5,25 @@ import { defaultconfig } from "@/stores/config";
 import { useFolderStore } from "@/stores/folder";
 import { exportVaunch, readImportFile } from "@/utilities/exporter";
 import { VaunchFolder } from "./VaunchFolder";
+import type { Example, Parameter } from "./VaunchManual";
 
 export class VaunchFeh extends VaunchCommand {
   constructor() {
-    super("feh");
+    let longDescription:string[] = ["Sets the background of Vaunch to the URL specified."];
+    let parameters:Parameter[] = [{
+      name: "URL|default",
+      optional:true,
+      repeatable:false
+    }]
+    let examples:Example[] = [{
+      args:["https://example.com/image.png"],
+      description: ["Sets the background of Vaunch to the image available at: https://example.com/image.png"]
+    },
+    {
+      args:["default"],
+      description: ["Resets the background of Vaunch to the default image"]
+    }]
+    super("feh", longDescription, parameters, examples);
   }
   aliases: string[] = ["set-bg", "set-background"];
   description = "Changes the background";
@@ -25,7 +40,13 @@ export class VaunchFeh extends VaunchCommand {
 export class VaunchToggleGui extends VaunchCommand {
   hasArgs: boolean = false;
   constructor() {
-    super("toggle-gui");
+    let longDescription:string[] = ["Toggles if the Folders/Commands section of Vaunch will be visible.",
+      "If the GUI is off, only the command box/fuzzy search results will be visible"]
+    let examples:Example[] = [{
+      args:[],
+      description: ["Toggles the GUI's visibility"]
+    }]
+    super("toggle-gui", longDescription, [], examples);
   }
   description = "Toggles if Folders/Commands are visible";
 
@@ -38,9 +59,14 @@ export class VaunchToggleGui extends VaunchCommand {
 export class VaunchToggleCase extends VaunchCommand {
   hasArgs: boolean = false;
   constructor() {
-    super("toggle-case");
+    let longDescription:string[] = ["Toggles if the names of files/folders are displayed in Title Case or not."]
+    let examples:Example[] = [{
+      args:[],
+      description: ["Toggles if files/folders are displayed in Title Case, or displayed as their raw file/folder names"]
+    }]
+    super("toggle-case", longDescription, [], examples);
   }
-  description = "Toggles if names are converted to titlecase";
+  description = "Toggles if names are converted to Title Case";
 
   execute(args: string[]): void {
     const config = useConfigStore();
@@ -50,7 +76,25 @@ export class VaunchToggleCase extends VaunchCommand {
 
 export class VaunchSetDefaultSearch extends VaunchCommand {
   constructor() {
-    super("set-search");
+    let longDescription:string[] = ["Sets the default Query file to use when no matching file was found.", "Either the Query prefix of full filepath can be supplied"]
+    let parameters:Parameter[] = [{
+      name: "filename|none",
+      optional: true,
+      repeatable: false
+    }]
+    let examples:Example[] = [{
+      args: ["sites/example.qry"],
+      description: ["Sets the default Query file to 'sites/example.qry'"]
+    },
+    {
+      args: ["exl"],
+      description: ["Sets the default Query file to the file associated with the 'exl' prefix"]
+    },
+    {
+      args: ["none"],
+      description: ["Clears the default Query file, nothing will happen if no matching file was found"]
+    }]
+    super("set-search", longDescription, parameters, examples);
   }
   description: string = "Sets the default Query file to execute"
 
@@ -65,7 +109,14 @@ export class VaunchSetDefaultSearch extends VaunchCommand {
 export class VaunchToggleFuzzy extends VaunchCommand {
   hasArgs: boolean = false;
   constructor() {
-    super("toggle-fuzzy");
+    let longDescription:string[] = [`Toggles if fuzzy searching is enabled. When enabled, typing in the command box will display
+     a list of fuzzy matches files that can be executed, sorted by most used.`,`The list of matched files can be traversed with 
+     the up and down arrow keys, and can be executed with Enter.`]
+    let examples:Example[] = [{
+      args: [],
+      description: ["Toggles if fuzzy searching is enabled"]
+    }]
+    super("toggle-fuzzy", longDescription, [], examples);
   }
   description: string = "Toggles if fuzzy search is enabled"
 
@@ -78,7 +129,14 @@ export class VaunchToggleFuzzy extends VaunchCommand {
 export class VaunchToggleCommands extends VaunchCommand {
   hasArgs: boolean = false;
   constructor() {
-    super("toggle-commands");
+    let longDescription:string[] = [`Toggles if the command window is shows. The command window lists all available commands, and
+      contains input boxes to execute the command. Commands without any parameters can just be clicked to be executed.`, 
+      `If the GUI has been toggled off, this command will have no visible effect until the GUI is toggled back on.`]
+   let examples:Example[] = [{
+     args: [],
+     description: ["Toggles if the command window is shown"]
+   }]
+    super("toggle-commands", longDescription, [], examples);
   }
   description: string = "Toggles if the commands window is visible"
 
@@ -257,7 +315,7 @@ export class VaunchHelp extends VaunchCommand {
   constructor() {
     super("help");
   }
-  aliases: string[] = ["show-help"];
+  aliases: string[] = ["show-help", "man"];
   description: string = "Shows the help window for all Vaunch commands"
 
   execute(args: string[]): void {
