@@ -62,7 +62,7 @@ h1,h2 {
 
   <!-- If Parameters are defined, show the usage of the command -->
   <div v-if="manual.parameters.length">
-    <h2>Usage</h2>
+    <h2>Synopsis</h2>
     <code>
       {{ command.fileName }}
     <span class="parameter" v-for="(parameter, index) in manual.parameters">
