@@ -38,9 +38,9 @@ export default defineComponent({
             box.textContent = nextProps.content.getDescription();
           }
           // Color diffing
-          if (box.style.background != config.color.window ||
+          if (box.style.background != config.color.windowOpaque ||
               box.style.color != config.color.text ) {
-            box.style.background = config.color.window;
+            box.style.background = config.color.windowOpaque;
             box.style.color = config.color.text;
           }
         }

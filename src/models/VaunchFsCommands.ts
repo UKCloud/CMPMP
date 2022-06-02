@@ -4,7 +4,6 @@ import type { VaunchFile } from "./VaunchFile";
 import type { VaunchFolder } from "./VaunchFolder";
 import { VaunchLink } from "./VaunchLink";
 import { VaunchQuery } from "./VaunchQuery";
-import type { VaunchUrlFile } from "./VaunchUrlFile";
 
 export class VaunchMkdir extends VaunchCommand {
   constructor() {
@@ -29,7 +28,7 @@ export class VaunchTouch extends VaunchCommand {
     super("touch");
   }
   aliases: string[] = ["make-file"];
-  description: string = "Creates new files"
+  description: string = "Creates new files";
 
   execute(args:string[]): void {
     const folders = useFolderStore();
@@ -77,7 +76,7 @@ export class VaunchEditFile extends VaunchCommand {
   }
 
   aliases: string[] = ["edit-file"];
-  description: string = "Edits an existing file"
+  description: string = "Edits an existing file";
 
   execute(args:string[]): void {
     const folders = useFolderStore();
@@ -102,7 +101,7 @@ export class VaunchSetIcon extends VaunchCommand {
   constructor() {
     super("set-icon");
   }
-  description: string = "Changes the icon of an existing file/folder"
+  description: string = "Changes the icon of an existing file/folder";
 
   execute(args:string[]): void {
     const folders = useFolderStore();
@@ -131,7 +130,7 @@ export class VaunchRmdir extends VaunchCommand {
   constructor() {
     super("rmdir");
   }
-  description: string = "Deletes directories and files inside"
+  description: string = "Deletes directories and files inside";
 
   aliases: string[] = ["remove-folder", "delete-folder"];
 
@@ -169,7 +168,7 @@ export class VaunchMv extends VaunchCommand {
     super("mv");
   }
   aliases: string[] = ["move", "move-file", "move-folder"];
-  description: string = "Moves or Renames files and folders"
+  description: string = "Moves or Renames files and folders";
 
   execute(args:string[]): void {
     if (args.length != 2) return;
@@ -229,7 +228,7 @@ export class VaunchSetDescription extends VaunchCommand {
     super("set-description");
   }
   aliases: string[] = ["set-desc"];
-  description: string = "Sets the description of a file's tooltip"
+  description: string = "Sets the description of a file's tooltip";
 
   execute(args:string[]): void {
     const folders = useFolderStore();

@@ -128,11 +128,11 @@ export class VaunchSetColor extends VaunchCommand {
     return rgbColor
   }
 
-  private calcWindowColor(newColor: string): string {
+  private calcWindowColor(newColor: string, opacity:number=0.70): string {
     let rgbColor: string = this.getRgbColor(newColor);
     // Convert rgb to rgba for background transparency
     let rgbaColor = rgbColor.replace(/(?:rgb)+/g, 'rgba');
-    return rgbaColor.replace(/(?:\))+/g, ', 0.70)');
+    return rgbaColor.replace(/(?:\))+/g, `, ${opacity})`);
   }
 
   private getRgbValue(rgbcolor: string): number[] {
@@ -175,6 +175,7 @@ export class VaunchSetColor extends VaunchCommand {
       // Set the new window color
       if (newWindowColor != "*") {
         config.color.window = this.calcWindowColor(newWindowColor);
+        config.color.windowOpaque = this.calcWindowColor(newWindowColor,1);
       }
 
       // If a second color is provided, set the text color to that
@@ -248,5 +249,19 @@ export class VaunchImport extends VaunchCommand {
         })
       }
     })
+  }
+}
+
+export class VaunchHelp extends VaunchCommand {
+  hasArgs: boolean = false;
+  constructor() {
+    super("help");
+  }
+  aliases: string[] = ["show-help"];
+  description: string = "Shows the help window for all Vaunch commands"
+
+  execute(args: string[]): void {
+    const config = useConfigStore();
+    config.showHelp = true;
   }
 }

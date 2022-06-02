@@ -9,12 +9,14 @@ export const defaultconfig = {
   defaultFile: "",
   fuzzy: false,
   showCommands: false,
+  showHelp: false,
   prefix: {
     class: "solid",
     name: "chevron-right",
   },
   color: {
     window: 'var(--color-vaunch-window)',
+    windowOpaque: 'var(--color-vaunch-window-opaque)',
     text: 'var(--color-vaunch-text)',
     autocomplete: 'var(--color-autocomplete)',
     highlight: 'var(--color-highlight)',
@@ -37,7 +39,13 @@ export const useConfigStore: StoreDefinition = defineStore({
             fuzzy: data.fuzzy != undefined ? data.fuzzy : defaultconfig.fuzzy,
             showCommands: data.showCommands != undefined ? data.showCommands : defaultconfig.showCommands,
             prefix: data.prefix ? data.prefix : defaultconfig.prefix,
-            color: data.color ? data.color : defaultconfig.color
+            color: {
+              window: data.color.window ? data.color.window : defaultconfig.color.window,
+              windowOpaque: data.color.windowOpaque ? data.color.windowOpaque : defaultconfig.color.windowOpaque,
+              text: data.color.text ? data.color.text : defaultconfig.color.text,
+              autocomplete: data.color.autocomplete ? data.color.autocomplete : defaultconfig.color.autocomplete,
+              highlight: data.color.highlight ? data.color.highlight : defaultconfig.color.highlight,
+            }
           }
           return config;
         },
