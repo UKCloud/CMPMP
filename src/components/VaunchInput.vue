@@ -122,7 +122,8 @@ export default defineComponent({
       }
     },
     sendCommand(newTab:boolean=false) {
-      this.$emit("command", this.vaunchInput.split(' '), newTab)
+      let trimmedInput = this.vaunchInput.trim();
+      this.$emit("command", trimmedInput.split(' '), newTab)
     },
     getAutocompleteFolder(input:string, folders:string[]):string[] {
       let matches: string[] = [];

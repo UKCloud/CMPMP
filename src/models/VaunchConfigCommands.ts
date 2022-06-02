@@ -341,7 +341,12 @@ export class VaunchImport extends VaunchCommand {
 
     // If '-f' is passed to import, overwrite everything
     let overwrite:boolean = args.includes("-f") ? true:false;
-    // If 'files' is passed to import import files, or if nothing was passed import just files by default
+    let mergeFiles:boolean = args.includes("-m") ? true:false;
+    // After setting flag variables, remove them from args
+    args = args.filter(e => e !== '-f')
+    args = args.filter(e => e !== '-m')
+    // If 'files' is passed to import import files, or if nothing was passed
+    // (not including flags, which are now removed) import just files by default
     let importFolders:boolean = args.length == 0 || args.includes("files") ? true:false;
     let importConfig:boolean = args.includes("config") ? true:false;
 
@@ -357,10 +362,16 @@ export class VaunchImport extends VaunchCommand {
           // Only import files/folders if importConfig is true
           if (importFolders) {
             for (let folder of (importData as any).folders) {
-              let vaunchFolder:VaunchFolder = VaunchFolder.parse(folder);
+              let folderToImport:VaunchFolder = VaunchFolder.parse(folder);
               // If this folder doesn't exist, import it. If overwriting, all folders will be gone by now
-              if (!folders.getFolderByName(vaunchFolder.name)){
-                folders.insert(vaunchFolder)
+              if (!folders.getFolderByName(folderToImport.name)){
+                folders.insert(folderToImport)
+              } else if (mergeFiles) {
+                // If the folder already exists, try and merge files into it
+                for (let fileToImport of folderToImport.getFiles()) {
+                  let existingFolder:VaunchFolder = folders.getFolderByName(folderToImport.name)
+                  existingFolder.addFile(fileToImport);
+                }
               }
             }
           }
