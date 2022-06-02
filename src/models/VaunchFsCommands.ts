@@ -59,11 +59,11 @@ export class VaunchTouch extends VaunchCommand {
     }]
     let examples:Example[] = [{
       args: ["sites/example", "example.com"],
-      description: ["Creates a Link file within the sites folder. The file will navigate to https://example.com"],
+      description: ["Creates a Link file within the 'sites' folder. The file will navigate to https://example.com"],
     },
     {
       args: ["sites/example.qry", "ex", "example.com/search?q=${}"],
-      description: ["Creates a Query file within the sites folder.",
+      description: ["Creates a Query file within the 'sites' folder.",
       "Can be executed with: 'sites/example.qry foo', or 'ex: foo'"],
     }]
     super("touch", longDescription, parameters, examples);
@@ -131,19 +131,19 @@ export class VaunchEditFile extends VaunchCommand {
     }]
     let examples:Example[] = [{
       args: ["sites/example", "newsite.com"],
-      description: ["Edits the Link file sites/example.lnk. The file will now navigate to https://newsite.com"],
+      description: ["Edits the Link file 'sites/example.lnk'. The file will now navigate to https://newsite.com"],
     },
     {
       args: ["sites/example.qry", "exl", "example.com/lists?q=${}"],
-      description: ["Edits the Query file sites/example.qry. The file will now search example.com/lists?q=${}, and uses the prefix exl:"]
+      description: ["Edits the Query file 'sites/example.qry'. The file will now search example.com/lists?q=${}, and uses the prefix exl:"]
     },
     {
       args: ["sites/example.qry", "*", "example.com/lists?q=${}"],
-      description: ["Edits the Query file sites/example.qry. The file will now search example.com/lists?q=${}, leaving the prefix the same"]
+      description: ["Edits the Query file 'sites/example.qry'. The file will now search example.com/lists?q=${}, leaving the prefix the same"]
     },
     {
       args: ["sites/example.qry", "exl", "*"],
-      description: ["Edits the Query file sites/example.qry. The file will now use the prefix exl: leaving the search link the same"]
+      description: ["Edits the Query file 'sites/example.qry'. The file will now use the prefix exl: leaving the search link the same"]
     }]
     super("edit", longDescription, parameters, examples);
   }
@@ -172,7 +172,36 @@ export class VaunchEditFile extends VaunchCommand {
 
 export class VaunchSetIcon extends VaunchCommand {
   constructor() {
-    super("set-icon");
+    let longDescription:string[] = ["Changes the icon of a file or folder from its currently set icon.","Can be any Font Awesome Free icon, i.e solid, or brands",
+    "If the Icon Class is not provided, it will default to the solid icon class"]
+    let parameters:Parameter[] = [{
+      name:"filepath",
+      optional: false,
+      repeatable: false,
+    },
+    {
+      name:"iconName",
+      optional: true,
+      repeatable: false,
+    },
+    {
+      name:"iconClass",
+      optional: true,
+      repeatable: false,
+    }]
+    let examples:Example[] = [{
+      args: ["sites/example.lnk", "newspaper"],
+      description: ["Edits the icon for the file 'sites/example.lnk' to the newspaper icon, using the 'solid' icon class"],
+    },
+    {
+      args: ["sites/example.qry", "ubuntu", "brands"],
+      description: ["Edits the icon for the file 'sites/example.qry' to the ubuntu icon, using the 'brands' icon class"]
+    },
+    {
+      args: ["sites", "ethernet"],
+      description: ["Edits the icon for the folder 'sites' to the ethernet icon, using the 'solid' icon class"]
+    }]
+    super("set-icon", longDescription, parameters, examples);
   }
   description: string = "Changes the icon of an existing file/folder";
 
@@ -210,7 +239,7 @@ export class VaunchRmdir extends VaunchCommand {
   execute(args:string[]): void {
     const folders = useFolderStore();
     args.forEach(toDelete => {
-      // Strip slashes from foldernames, if running from autocompleted value
+      // Strip slashes from folder names, if running from autocompleted value
       toDelete = toDelete.replace("/","");
       folders.remove(toDelete);
     })
