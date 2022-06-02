@@ -14,32 +14,6 @@ export default defineComponent({
       const config = useConfigStore();
       config.showHelp = false;
     }
-  },
-  mounted() {
-    var offset = [0,0];
-    var titlebar = (this.$refs.titlebar as HTMLElement);
-    var window = (this.$refs.window as HTMLElement);
-    var isDown = false;
-
-    titlebar.addEventListener('mousedown', function(e) {
-    isDown = true;
-    offset = [
-        window.offsetLeft - e.clientX,
-        window.offsetTop - e.clientY
-    ];
-    }, true);
-
-    document.addEventListener('mouseup', function() {
-      isDown = false;
-    }, true);
-
-    document.addEventListener('mousemove', function(e) {
-      e.preventDefault();
-      if (isDown) {
-        window.style.left = (e.clientX + offset[0]) + 'px';
-        window.style.top  = (e.clientY + offset[1]) + 'px';
-      }
-    }, true);
   }
 })
 </script>
