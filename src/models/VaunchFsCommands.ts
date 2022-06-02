@@ -314,7 +314,31 @@ export class VaunchRm extends VaunchCommand {
 
 export class VaunchMv extends VaunchCommand {
   constructor() {
-    super("mv");
+    let longDescription:string[] = ["Moves files and folders to new locations. Can also be used to rename files/folders",
+      "The file extension must be supplied when moving a file."]
+    let parameters:Parameter[] = [{
+      name: "sourcePath",
+      optional: false,
+      repeatable: false
+    },
+    {
+      name: "destinationPath",
+      optional: false,
+      repeatable: false
+    }]
+    let examples:Example[] = [{
+      args:["sites/example.lnk", "other/"],
+      description: ["Moves the file 'example.lnk' within the 'sites' folder to the 'other' folder, retaining its filename"]
+    },
+    {
+      args:["sites/exmaple.lnk","sites/example.lnk"],
+      description: ["Renames the file 'exmaple.lnk' to 'example.lnk', staying in the same folder"]
+    },
+    {
+      args:["sites/","other/"],
+      description: ["Renames the folder 'sites' to 'other'"]
+    }]
+    super("mv", longDescription, parameters, examples);
   }
   aliases: string[] = ["move", "move-file", "move-folder"];
   description: string = "Moves or Renames files and folders";
@@ -374,7 +398,23 @@ export class VaunchMv extends VaunchCommand {
 
 export class VaunchSetDescription extends VaunchCommand {
   constructor() {
-    super("set-description");
+    let longDescription:string[] = ["Sets the description for a file. Descriptions are displayed as a tooltip when hovering over the file's entry.",
+      "The file extension must be supplied to set the file's description."]
+    let parameters:Parameter[] = [{
+      name: "filename",
+      optional:false,
+      repeatable:false
+    },
+    {
+      name:"description",
+      optional:false,
+      repeatable:false
+    }]
+    let examples:Example[] = [{
+      args:["sites/example.lnk", "Goes to an example site"],
+      description: ["Changes the description of the file 'example.lnk' within the 'sites' folder"]
+    }]
+    super("set-description", longDescription, parameters, examples);
   }
   aliases: string[] = ["set-desc"];
   description: string = "Sets the description of a file's tooltip";
