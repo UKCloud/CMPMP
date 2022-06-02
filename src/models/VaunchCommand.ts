@@ -6,9 +6,9 @@ export abstract class VaunchCommand extends VaunchFile {
   filetype:string = "VaunchCommand";
   manual:VaunchManual;
 
-  constructor(fileName:string, parameter:Parameter[]=[], examples:Example[]=[]) {
+  constructor(fileName:string, longDescription:string[]=[""], parameter:Parameter[]=[], examples:Example[]=[]) {
     super(fileName);
-    this.manual = new VaunchManual(parameter, examples);
+    this.manual = new VaunchManual(longDescription, parameter, examples);
   }
 
   execute(args: string[]): void {

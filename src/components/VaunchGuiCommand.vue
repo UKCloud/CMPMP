@@ -105,6 +105,6 @@ export default defineComponent({
     v-model="commandInput" type="text"
     ref="commandInputBox" />
   </div>
-  <VaunchTooltip v-if="file.description.length  > 0" :tip-for="'commands-'+file.getIdSafeName()" :tip-file="file"/>
+  <VaunchTooltip v-if="file.getDescription().length  > 0" :tip-for="'commands-'+file.getIdSafeName()" :tip-file="file"/>
 </div>
 </template>

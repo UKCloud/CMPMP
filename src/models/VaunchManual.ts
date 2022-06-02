@@ -1,18 +1,21 @@
 export type Parameter = {
   name: string,
-  optional: boolean
+  optional: boolean,
+  repeatable: boolean,
 }
-export type Example = [{
-  argument: string,
-  description: string
-}]
+export type Example = {
+  args: string[],
+  description: string[],
+}
 
 export class VaunchManual {
   parameters:Parameter[];
   examples:Example[];
+  description:string[];
 
-  constructor(parameters:Parameter[]=[], examples:Example[]=[]) {
+  constructor(description:string[], parameters:Parameter[], examples:Example[]) {
     this.parameters = parameters;
     this.examples = examples;
+    this.description = description;
   }
 }

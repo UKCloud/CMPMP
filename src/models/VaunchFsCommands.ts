@@ -3,15 +3,26 @@ import { VaunchCommand } from "./VaunchCommand";
 import type { VaunchFile } from "./VaunchFile";
 import type { VaunchFolder } from "./VaunchFolder";
 import { VaunchLink } from "./VaunchLink";
+import type { Example, Parameter } from "./VaunchManual";
 import { VaunchQuery } from "./VaunchQuery";
 
 export class VaunchMkdir extends VaunchCommand {
   constructor() {
-    super("mkdir");
+    let longDescription:string[] = [`Creates new folder(s), if the provided folders do not already exist.`]
+    let parameters:Parameter[] = [{
+      name:"folder",
+      optional: false,
+      repeatable: true,
+    }]
+    let examples:Example[] = [{
+      args: ["media", "social"],
+      description: ["Creates two folders: media and social"],
+    }]
+    super("mkdir", longDescription, parameters, examples);
   }
-
-  aliases: string[] = ["make-folder"];
+  
   description: string = "Creates folders"
+  aliases: string[] = ["make-folder"];
 
   execute(args:string[]): void {
     const folder = useFolderStore();
@@ -25,7 +36,37 @@ export class VaunchMkdir extends VaunchCommand {
 
 export class VaunchTouch extends VaunchCommand {
   constructor() {
-    super("touch");
+    let longDescription:string[] = [`Creates new file(s) within a folder. A file will only be created in the folder name exists,
+    and a file does not already exist with the provided name. Two types of files can be made: Link files (.lnk) and Query files (.qry)`, 
+    `Link files redirect to the page within the file's content. Query files allow additional arguments to be passed when running,
+    to search using that URL, or navigate to a defined page, by replacing '\${}' within the file's content with the provided arguments.`,
+    `Query files can be ran either by typing the full filepath, or using a defined shortened prefix, followed by a colon.`,
+    `If no file extension is specified, a link file will be created by default.`]
+    let parameters:Parameter[] = [{
+      name:"filepath",
+      optional: false,
+      repeatable: false,
+    },
+    {
+      name:"prefix",
+      optional: true,
+      repeatable: false,
+    },
+    {
+      name:"content",
+      optional: false,
+      repeatable: false,
+    }]
+    let examples:Example[] = [{
+      args: ["sites/example", "example.com"],
+      description: ["Creates a Link file within the sites folder. The file will navigate to https://example.com"],
+    },
+    {
+      args: ["sites/example.qry", "ex", "example.com/search?q=${}"],
+      description: ["Creates a Query file within the sites folder.",
+      "Can be executed with: 'sites/example.qry foo', or 'ex: foo'"],
+    }]
+    super("touch", longDescription, parameters, examples);
   }
   aliases: string[] = ["make-file"];
   description: string = "Creates new files";
@@ -72,7 +113,39 @@ export class VaunchTouch extends VaunchCommand {
 
 export class VaunchEditFile extends VaunchCommand {
   constructor() {
-    super("edit");
+    let longDescription:string[] = ["Edits an existing files' content. If there is content in the file you do not want to change, a single '*' will leave that section the same"]
+    let parameters:Parameter[] = [{
+      name:"filepath",
+      optional: false,
+      repeatable: false,
+    },
+    {
+      name:"prefix",
+      optional: true,
+      repeatable: false,
+    },
+    {
+      name:"content",
+      optional: false,
+      repeatable: false,
+    }]
+    let examples:Example[] = [{
+      args: ["sites/example", "newsite.com"],
+      description: ["Edits the Link file sites/example.lnk. The file will now navigate to https://newsite.com"],
+    },
+    {
+      args: ["sites/example.qry", "exl", "example.com/lists?q=${}"],
+      description: ["Edits the Query file sites/example.qry. The file will now search example.com/lists?q=${}, and uses the prefix exl:"]
+    },
+    {
+      args: ["sites/example.qry", "*", "example.com/lists?q=${}"],
+      description: ["Edits the Query file sites/example.qry. The file will now search example.com/lists?q=${}, leaving the prefix the same"]
+    },
+    {
+      args: ["sites/example.qry", "exl", "*"],
+      description: ["Edits the Query file sites/example.qry. The file will now use the prefix exl: leaving the search link the same"]
+    }]
+    super("edit", longDescription, parameters, examples);
   }
 
   aliases: string[] = ["edit-file"];
@@ -107,7 +180,7 @@ export class VaunchSetIcon extends VaunchCommand {
     const folders = useFolderStore();
     let fullPath:string = args[0];
     let newIcon:string = args[1]
-    let newIconclass:string = args[2]
+    let newIconClass:string = args[2]
     let splitPath = fullPath.split('/');
 
     let folderName:string = splitPath[0];
@@ -117,11 +190,11 @@ export class VaunchSetIcon extends VaunchCommand {
     if (folder && fileName) {
       let file = folder.getFile(fileName);
       if (file) {
-        file.setIcon(newIcon, newIconclass);
+        file.setIcon(newIcon, newIconClass);
       }
     } else if (folder) {
       // Assume we're attempting to set the folder's icon
-      folder.setIcon(newIcon, newIconclass);
+      folder.setIcon(newIcon, newIconClass);
     }
   }
 }
