@@ -22,7 +22,9 @@ export default defineComponent({
   methods: {
     execute(file:VaunchCommand, args:string[]) {
       file.execute(args);
-      (this.$refs.commandInputBox as HTMLInputElement).value = "";
+      if (file.hasArgs) {
+        (this.$refs.commandInputBox as HTMLInputElement).value = "";
+      }
     },
     handleClick(file:VaunchCommand, args:string[]) {
       if (file.hasArgs) {
