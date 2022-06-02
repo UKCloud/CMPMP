@@ -238,10 +238,19 @@ export class VaunchRmdir extends VaunchCommand {
 
   execute(args:string[]): void {
     const folders = useFolderStore();
+    let force: boolean = false;
+    if (args[0] == "-f") {
+      force = true;
+      args.shift();
+    }
     args.forEach(toDelete => {
       // Strip slashes from folder names, if running from autocompleted value
       toDelete = toDelete.replace("/","");
-      folders.remove(toDelete);
+      if (force) {
+        folders.remove(toDelete);
+      } else if (folders.getFolderByName(toDelete).files.size == 0 ) {
+        folders.remove(toDelete);
+      }
     })
   }
 }
