@@ -4,8 +4,8 @@ import * as configCommands from "@/models/VaunchConfigCommands";
 export const commands = [
   new fsCommands.VaunchMkdir(),
   new fsCommands.VaunchRmdir(),
-  new fsCommands.VaunchRm(),
   new fsCommands.VaunchTouch(),
+  new fsCommands.VaunchRm(),
   new fsCommands.VaunchSetIcon(),
   new fsCommands.VaunchEditFile(),
   new fsCommands.VaunchMv(),
@@ -19,4 +19,5 @@ export const commands = [
   new configCommands.VaunchSetDefaultSearch(),
   new configCommands.VaunchExport(),
   new configCommands.VaunchImport(),
+  new configCommands.VaunchHelp(),
 ]

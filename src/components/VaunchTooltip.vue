@@ -1,18 +1,13 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import { extend } from "@vue/shared";
 
 import tippy, {followCursor} from 'tippy.js/headless';
 import 'tippy.js/dist/tippy.css';
 import { useConfigStore } from "@/stores/config";
-import { VaunchFile } from "@/models/VaunchFile";
 
 export default defineComponent({
   name: "VaunchTooltip",
-  props: {
-    tipFor: String,
-    tipFile: extend(VaunchFile),
-  },
+  props: ["tipFor", "tipFile"],
   mounted() {
     tippy('#'+ this.tipFor, {
       content: this.tipFile,
@@ -38,9 +33,9 @@ export default defineComponent({
             box.textContent = nextProps.content.getDescription();
           }
           // Color diffing
-          if (box.style.background != config.color.window ||
+          if (box.style.background != config.color.windowOpaque ||
               box.style.color != config.color.text ) {
-            box.style.background = config.color.window;
+            box.style.background = config.color.windowOpaque;
             box.style.color = config.color.text;
           }
         }

@@ -11,6 +11,7 @@ import { defineComponent } from "vue";
 import { useFuzzyStore } from "./stores/fuzzy";
 import VaunchFuzzy from "./components/VaunchFuzzy.vue";
 import VaunchGuiCommands from "./components/VaunchGuiCommands.vue";
+import VaunchMan from "./components/VaunchMan.vue";
 
 export default defineComponent({
   name: "Vaunch",
@@ -18,7 +19,8 @@ export default defineComponent({
     VaunchInput,
     VaunchGuiFolder,
     VaunchFuzzy,
-    VaunchGuiCommands
+    VaunchGuiCommands,
+    VaunchMan
 },
   setup() {
     // Load config store for Vaunch configuration options, e/.g background image
@@ -192,11 +194,13 @@ export default defineComponent({
 }
 .folder-title {
   background: v-bind('config.color.window');
-  filter: contrast(1);
 }
 .commandInput {
   border-bottom: solid thin v-bind('config.color.text') !important;
   color: v-bind('config.color.text');
+}
+.vaunch-solid-bg {
+  background: v-bind('config.color.windowOpaque') !important;
 }
 
 /* Scrollbar themeing */
@@ -245,5 +249,6 @@ export default defineComponent({
 
     </div>
 
+    <VaunchMan v-if="config.showHelp" :commands="commands" />
   </main>
 </template>

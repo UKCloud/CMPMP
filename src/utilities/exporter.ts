@@ -16,6 +16,7 @@ export function exportVaunch(folders:VaunchFolder[], config:any):string {
       },
       color: {
         window: config.color.window,
+        windowOpaque: config.color.windowOpaque,
         text: config.color.text,
         autocomplete: config.color.autocomplete,
         highlight: config.color.highlight,

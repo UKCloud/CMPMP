@@ -16,6 +16,7 @@ export class VaunchFolder {
   }
 
   public addFile(newFile:VaunchFile): void {
+    if (this.getFile(newFile.fileName)) return;
     this.files.set(newFile.fileName, newFile);
   }
 

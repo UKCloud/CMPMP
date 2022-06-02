@@ -1,8 +1,15 @@
 import { VaunchFile } from "./VaunchFile";
+import { VaunchManual, type Example, type Parameter } from "./VaunchManual";
 
 export abstract class VaunchCommand extends VaunchFile {
   hasArgs:boolean = true;
   filetype:string = "VaunchCommand";
+  manual:VaunchManual;
+
+  constructor(fileName:string, longDescription:string[]=[""], parameter:Parameter[]=[], examples:Example[]=[]) {
+    super(fileName);
+    this.manual = new VaunchManual(longDescription, parameter, examples);
+  }
 
   execute(args: string[]): void {
     return

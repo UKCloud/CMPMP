@@ -3,16 +3,26 @@ import { VaunchCommand } from "./VaunchCommand";
 import type { VaunchFile } from "./VaunchFile";
 import type { VaunchFolder } from "./VaunchFolder";
 import { VaunchLink } from "./VaunchLink";
+import type { Example, Parameter } from "./VaunchManual";
 import { VaunchQuery } from "./VaunchQuery";
-import type { VaunchUrlFile } from "./VaunchUrlFile";
 
 export class VaunchMkdir extends VaunchCommand {
   constructor() {
-    super("mkdir");
+    let longDescription:string[] = [`Creates new folder(s), if the provided folders do not already exist.`]
+    let parameters:Parameter[] = [{
+      name:"folder",
+      optional: false,
+      repeatable: true,
+    }]
+    let examples:Example[] = [{
+      args: ["media", "social"],
+      description: ["Creates two folders: media and social"],
+    }]
+    super("mkdir", longDescription, parameters, examples);
   }
-
-  aliases: string[] = ["make-folder"];
+  
   description: string = "Creates folders"
+  aliases: string[] = ["make-folder"];
 
   execute(args:string[]): void {
     const folder = useFolderStore();
@@ -26,10 +36,40 @@ export class VaunchMkdir extends VaunchCommand {
 
 export class VaunchTouch extends VaunchCommand {
   constructor() {
-    super("touch");
+    let longDescription:string[] = [`Creates new file(s) within a folder. A file will only be created in the folder name exists,
+    and a file does not already exist with the provided name. Two types of files can be made: Link files (.lnk) and Query files (.qry)`, 
+    `Link files redirect to the page within the file's content. Query files allow additional arguments to be passed when running,
+    to search using that URL, or navigate to a defined page, by replacing '\${}' within the file's content with the provided arguments.`,
+    `Query files can be ran either by typing the full filepath, or using a defined shortened prefix, followed by a colon.`,
+    `If no file extension is specified when running this command, a link file will be created by default.`]
+    let parameters:Parameter[] = [{
+      name:"filepath",
+      optional: false,
+      repeatable: false,
+    },
+    {
+      name:"prefix",
+      optional: true,
+      repeatable: false,
+    },
+    {
+      name:"content",
+      optional: false,
+      repeatable: false,
+    }]
+    let examples:Example[] = [{
+      args: ["sites/example", "example.com"],
+      description: ["Creates a Link file within the 'sites' folder. The file will navigate to https://example.com"],
+    },
+    {
+      args: ["sites/example.qry", "ex", "example.com/search?q=${}"],
+      description: ["Creates a Query file within the 'sites' folder",
+      "Can be executed with: 'sites/example.qry foo', or 'ex: foo'"],
+    }]
+    super("touch", longDescription, parameters, examples);
   }
   aliases: string[] = ["make-file"];
-  description: string = "Creates new files"
+  description: string = "Creates new files";
 
   execute(args:string[]): void {
     const folders = useFolderStore();
@@ -73,11 +113,44 @@ export class VaunchTouch extends VaunchCommand {
 
 export class VaunchEditFile extends VaunchCommand {
   constructor() {
-    super("edit");
+    let longDescription:string[] = ["Edits an existing files' content. If there is content in the file you do not want to change, a single '*' will leave that section the same",
+    "The file extension must be supplied for the file to edit it."]
+    let parameters:Parameter[] = [{
+      name:"filepath",
+      optional: false,
+      repeatable: false,
+    },
+    {
+      name:"prefix",
+      optional: true,
+      repeatable: false,
+    },
+    {
+      name:"content",
+      optional: false,
+      repeatable: false,
+    }]
+    let examples:Example[] = [{
+      args: ["sites/example", "newsite.com"],
+      description: ["Edits the Link file 'sites/example.lnk'. The file will now navigate to https://newsite.com"],
+    },
+    {
+      args: ["sites/example.qry", "exl", "example.com/lists?q=${}"],
+      description: ["Edits the Query file 'sites/example.qry'. The file will now search example.com/lists?q=${}, and uses the prefix exl:"]
+    },
+    {
+      args: ["sites/example.qry", "*", "example.com/lists?q=${}"],
+      description: ["Edits the Query file 'sites/example.qry'. The file will now search example.com/lists?q=${}, leaving the prefix the same"]
+    },
+    {
+      args: ["sites/example.qry", "exl", "*"],
+      description: ["Edits the Query file 'sites/example.qry'. The file will now use the prefix exl: leaving the search link the same"]
+    }]
+    super("edit", longDescription, parameters, examples);
   }
 
   aliases: string[] = ["edit-file"];
-  description: string = "Edits an existing file"
+  description: string = "Edits an existing file";
 
   execute(args:string[]): void {
     const folders = useFolderStore();
@@ -100,15 +173,44 @@ export class VaunchEditFile extends VaunchCommand {
 
 export class VaunchSetIcon extends VaunchCommand {
   constructor() {
-    super("set-icon");
+    let longDescription:string[] = ["Changes the icon of a file or folder from its currently set icon.","Can be any Font Awesome Free icon, i.e solid, or brands",
+    "If the Icon Class is not provided, it will default to the solid icon class", "The file extension must be supplied for the file to set its icon."]
+    let parameters:Parameter[] = [{
+      name:"filepath",
+      optional: false,
+      repeatable: false,
+    },
+    {
+      name:"iconName",
+      optional: true,
+      repeatable: false,
+    },
+    {
+      name:"iconClass",
+      optional: true,
+      repeatable: false,
+    }]
+    let examples:Example[] = [{
+      args: ["sites/example.lnk", "newspaper"],
+      description: ["Edits the icon for the file 'sites/example.lnk' to the newspaper icon, using the 'solid' icon class"],
+    },
+    {
+      args: ["sites/example.qry", "ubuntu", "brands"],
+      description: ["Edits the icon for the file 'sites/example.qry' to the ubuntu icon, using the 'brands' icon class"]
+    },
+    {
+      args: ["sites", "ethernet"],
+      description: ["Edits the icon for the folder 'sites' to the ethernet icon, using the 'solid' icon class"]
+    }]
+    super("set-icon", longDescription, parameters, examples);
   }
-  description: string = "Changes the icon of an existing file/folder"
+  description: string = "Changes the icon of an existing file/folder";
 
   execute(args:string[]): void {
     const folders = useFolderStore();
     let fullPath:string = args[0];
     let newIcon:string = args[1]
-    let newIconclass:string = args[2]
+    let newIconClass:string = args[2]
     let splitPath = fullPath.split('/');
 
     let folderName:string = splitPath[0];
@@ -118,58 +220,128 @@ export class VaunchSetIcon extends VaunchCommand {
     if (folder && fileName) {
       let file = folder.getFile(fileName);
       if (file) {
-        file.setIcon(newIcon, newIconclass);
+        file.setIcon(newIcon, newIconClass);
       }
     } else if (folder) {
       // Assume we're attempting to set the folder's icon
-      folder.setIcon(newIcon, newIconclass);
+      folder.setIcon(newIcon, newIconClass);
     }
   }
 }
 
 export class VaunchRmdir extends VaunchCommand {
   constructor() {
-    super("rmdir");
+    let longDescription:string[] = ["Deletes the folder specified. Folders with files within them will not be deleted unless the -f switch is supplied."]
+    let parameters:Parameter[] = [{
+      name: "-f",
+      optional:true,
+      repeatable:false
+    },
+    {
+      name: "folder",
+      optional: false,
+      repeatable: true
+    }]
+    let examples:Example[] = [{
+      args:["sites"],
+      description: ["Deletes the folder 'sites', assuming it has no files within it"]
+    },
+    {
+      args:["-f","sites"],
+      description: ["Deletes the folder 'sites', even it has files within it"]
+    },
+    {
+      args:["sites", "foo"],
+      description: ["Deletes the folders 'sites', and 'foo'. If one of the folders has files within it, that folder will not be deleted"]
+    }]
+    super("rmdir", longDescription, parameters, examples);
   }
-  description: string = "Deletes directories and files inside"
+  description: string = "Deletes folders";
 
   aliases: string[] = ["remove-folder", "delete-folder"];
 
   execute(args:string[]): void {
     const folders = useFolderStore();
+    let force: boolean = false;
+    if (args[0] == "-f") {
+      force = true;
+      args.shift();
+    }
     args.forEach(toDelete => {
-      // Strip slashes from foldernames, if running from autocompleted value
+      // Strip slashes from folder names, if running from autocompleted value
       toDelete = toDelete.replace("/","");
-      folders.remove(toDelete);
+      if (force) {
+        folders.remove(toDelete);
+      } else if (folders.getFolderByName(toDelete).files.size == 0 ) {
+        folders.remove(toDelete);
+      }
     })
   }
 }
 
 export class VaunchRm extends VaunchCommand {
   constructor() {
-    super("rm");
+    let longDescription:string[] = ["Deletes the file specified. The file extension must be supplied for the file to be deleted."]
+    let parameters:Parameter[] = [{
+      name: "file",
+      optional: false,
+      repeatable: true
+    }]
+    let examples:Example[] = [{
+      args:["sites/example.lnk"],
+      description: ["Deletes the file 'example.lnk' within the 'sites' folder"]
+    },
+    {
+      args:["sites/example.lnk","other/foo.qry"],
+      description: ["Deletes the files 'sites/example.lnk' and 'other/foo.qry"]
+    }]
+    super("rm", longDescription, parameters, examples);
   }
   aliases: string[] = ["remove-file", "delete-file"];
   description: string = "Deletes files"
 
   execute(args:string[]): void {
     const folders = useFolderStore();
-    let fullPath:string = args[0];
-
-    let filePath = fullPath.split('/');
-    let folderName:string = filePath[0];
-    let fileToDelete:string = filePath[1];
-    let folder:VaunchFolder = folders.getFolderByName(folderName);
-    folder.removeFile(fileToDelete)
+    for (let filepath of args) {
+      let filePath = filepath.split('/');
+      let folderName:string = filePath[0];
+      let fileToDelete:string = filePath[1];
+      let folder:VaunchFolder = folders.getFolderByName(folderName);
+      if (folder) folder.removeFile(fileToDelete)
+    }
   }
 }
 
 export class VaunchMv extends VaunchCommand {
   constructor() {
-    super("mv");
+    let longDescription:string[] = ["Moves files and folders to new locations. Can also be used to rename files/folders",
+      "The file extension must be supplied when moving a file."]
+    let parameters:Parameter[] = [{
+      name: "sourcePath",
+      optional: false,
+      repeatable: false
+    },
+    {
+      name: "destinationPath",
+      optional: false,
+      repeatable: false
+    }]
+    let examples:Example[] = [{
+      args:["sites/example.lnk", "other/"],
+      description: ["Moves the file 'example.lnk' within the 'sites' folder to the 'other' folder, retaining its filename"]
+    },
+    {
+      args:["sites/exmaple.lnk","sites/example.lnk"],
+      description: ["Renames the file 'exmaple.lnk' to 'example.lnk', staying in the same folder"]
+    },
+    {
+      args:["sites/","other/"],
+      description: ["Renames the folder 'sites' to 'other'"]
+    }]
+    super("mv", longDescription, parameters, examples);
   }
   aliases: string[] = ["move", "move-file", "move-folder"];
-  description: string = "Moves or Renames files and folders"
+  description: string = "Moves or Renames files and folders";
 
   execute(args:string[]): void {
     if (args.length != 2) return;
@@ -226,10 +398,26 @@ export class VaunchMv extends VaunchCommand {
 
 export class VaunchSetDescription extends VaunchCommand {
   constructor() {
-    super("set-description");
+    let longDescription:string[] = ["Sets the description for a file. Descriptions are displayed as a tooltip when hovering over the file's entry.",
+      "The file extension must be supplied to set the file's description."]
+    let parameters:Parameter[] = [{
+      name: "filename",
+      optional:false,
+      repeatable:false
+    },
+    {
+      name:"description",
+      optional:false,
+      repeatable:false
+    }]
+    let examples:Example[] = [{
+      args:["sites/example.lnk", "Goes to an example site"],
+      description: ["Changes the description of the file 'example.lnk' within the 'sites' folder"]
+    }]
+    super("set-description", longDescription, parameters, examples);
   }
   aliases: string[] = ["set-desc"];
-  description: string = "Sets the description of a file's tooltip"
+  description: string = "Sets the description of a file's tooltip";
 
   execute(args:string[]): void {
     const folders = useFolderStore();
