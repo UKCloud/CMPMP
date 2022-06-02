@@ -148,7 +148,44 @@ export class VaunchToggleCommands extends VaunchCommand {
 
 export class VaunchSetColor extends VaunchCommand {
   constructor() {
-    super("set-color");
+    let longDescription:string[] = ["Changes the colours of Vaunch. The window colour, text color, and highlight color can be customised. Colors can either be a css colour name, or hex-code.",
+      "Supplying * at any of the parameters will leave that element's colour unchanged.",
+      "If the window colour is changed, and text colour is not specified Vaunch will set the text colour to either black or white, based on the window colour.",
+      "If 'default' is supplied, Vaunch will be reset to the default colour scheme, based on your preferred OS colour theme."]
+    let parameters:Parameter[] = [{
+      name: "windowColor|default",
+      optional: true,
+      repeatable: false
+    },
+    {
+      name: "textColor",
+      optional: true,
+      repeatable: false
+    },
+    {
+      name: "highlightColor",
+      optional: true,
+      repeatable: false
+    }]
+
+    let examples:Example[] = [{
+      args: ["cornflowerblue"],
+      description: ["Sets the window color to the css colour 'cornflowerblue'",
+        "Vaunch will additionally set the text colour to black, as textColor was not specified"]
+    },
+    {
+      args: ["cornflowerblue", "#ffffff"],
+      description: ["Sets the window color to the css colour 'cornflowerblue' and the text colour to #ffffff (white)"]
+    },
+    {
+      args: ["*", "*", "orange"],
+      description: ["Sets the highlight colour to 'orange' while preserving the current window and text colour"]
+    },
+    {
+      args: ["default"],
+      description: ["Changes the colour scheme to Vaunch's default, which is based on your OS colour scheme"]
+    }]
+    super("set-color", longDescription, parameters, examples);
   }
   aliases: string[] = ["set-colour", "colo"];
   description: string = "Changes the colour of Vaunch"
@@ -256,7 +293,22 @@ export class VaunchSetColor extends VaunchCommand {
 
 export class VaunchExport extends VaunchCommand {
   constructor() {
-    super("export");
+    let longDescription:string[] = ["Exports your Vaunch data/config to a file to download. This file can then be imported to other Vaunch instances.",
+    "The export format is in a standard, editable JSON file. The exported config can be modified in an external editor and re-imported if desired."]
+    let parameters:Parameter[] = [{
+      name: "exportFileName",
+      optional: true,
+      repeatable: false
+    }]
+    let examples:Example[] = [{
+      args: [],
+      description: ["Exports your current Vaunch instance to a file called 'vaunch.json'"]
+    },
+    {
+      args: ["myExport"],
+      description: ["Exports your current Vaunch instance to a file called 'myExport.json'"]
+    }]
+    super("export", longDescription, parameters, examples);
   }
   description = "Exports vaunch to a file";
 
@@ -313,7 +365,8 @@ export class VaunchImport extends VaunchCommand {
 export class VaunchHelp extends VaunchCommand {
   hasArgs: boolean = false;
   constructor() {
-    super("help");
+    let description:string[] = ["Shows this help page"]
+    super("help", description);
   }
   aliases: string[] = ["show-help", "man"];
   description: string = "Shows the help window for all Vaunch commands"
