@@ -55,6 +55,24 @@ export default defineComponent({
   padding-left: 0.5rem;
 }
 
+.fuzzyInfo {
+  width: 30%;
+}
+
+.description {
+  margin-left: 5rem;
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .description { 
+    display: none;
+  }
+  .fuzzyInfo {
+  width: auto;
+}
+}
+
 </style>
 
 <template>
@@ -63,13 +81,14 @@ export default defineComponent({
 @click.ctrl="execute(file, ['_blank'])"
 @click.middle="execute(file, ['_blank'])"
 :id="parentFolderName+'-'+file.getIdSafeName()">
-  <div>
+  <div :class="{fuzzyInfo: isFuzzy}">
     <i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'file-icon']"></i>
     <span v-if="isFuzzy" class="filename">{{ file.getParentName(config.titleCase) }}: </span>
     <span v-if="config.titleCase" :class="{filename: !isFuzzy}">{{ file.titleCase() }}</span>
     <span v-if="!config.titleCase" :class="{filename: !isFuzzy}">{{ file.fileName }}</span>
   </div>
+  <span v-if="isFuzzy" class="description"> {{ file.getDescription() }}</span>
   <span v-if="isFuzzy">Hits: {{ file.hits }}</span>
-  <VaunchTooltip :tip-for="parentFolderName+'-'+file.getIdSafeName()" :tip-file="file"/>
+  <VaunchTooltip v-if="!isFuzzy" :tip-for="parentFolderName+'-'+file.getIdSafeName()" :tip-file="file"/>
 </div>
 </template>
