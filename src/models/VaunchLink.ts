@@ -6,7 +6,7 @@ export class VaunchLink extends VaunchUrlFile {
   extension:string = ".lnk"
   filetype:string = "VaunchLink";
 
-  constructor(name:string, content:string, parent:VaunchFolder, icon:string = "file",
+  constructor(name:string, content:string, parent:VaunchFolder|undefined=undefined, icon:string = "file",
    iconClass:string = "solid", hits:number = 0, description:string="") {
     if (!name.endsWith('.lnk')) {
       name = name+".lnk"

@@ -12,6 +12,7 @@ import { useFuzzyStore } from "./stores/fuzzy";
 import VaunchFuzzy from "./components/VaunchFuzzy.vue";
 import VaunchGuiCommands from "./components/VaunchGuiCommands.vue";
 import VaunchMan from "./components/VaunchMan.vue";
+import { VaunchLink } from "./models/VaunchLink";
 
 export default defineComponent({
   name: "Vaunch",
@@ -74,10 +75,16 @@ export default defineComponent({
       }
 
       // If a fuzzy file has been chosen, let's execute that
-      if (this.fuzzyFiles.items.length > 0) {
+      if (this.fuzzyFiles.items.length > 0 && this.config.fuzzy) {
         let response = this.fuzzyFiles.items[this.fuzzyFiles.index].execute(commandArgs)
         return this.passInput(response);
       }
+
+      // If the input is a valid URL, navigate to it. Create a temporary VaunchLink with the operator and commandArgs
+      // then attempt to run the file. If it isn't a valid URL nothing will happen, if it is, the url is navigated to.
+      let urlValue:string = [operator, ...commandArgs].join(' ');
+      let tempLink:VaunchLink = new VaunchLink("temp", urlValue);
+      tempLink.execute([]);
 
       // Failing everything else, pass the input to the default file
       // Push the first word back into commandArgs, as there is no operator
