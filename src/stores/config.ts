@@ -10,6 +10,7 @@ export const defaultconfig = {
   fuzzy: false,
   showCommands: false,
   showHelp: false,
+  helpCommand: "",
   prefix: {
     class: "solid",
     name: "chevron-right",

@@ -437,14 +437,30 @@ export class VaunchImport extends VaunchCommand {
 export class VaunchHelp extends VaunchCommand {
   hasArgs: boolean = false;
   constructor() {
-    let description:string[] = ["Shows this help page"]
-    super("help", description);
+    let longDescription:string[] = ["Shows this help page. Passing an argument will automatically search for the command."]
+    let parameters:Parameter[] = [{
+      name: "command",
+      optional: false,
+      repeatable: false,
+    }]
+    let examples:Example[] =[{
+      args: [],
+      description: ["Shows the help page, showing all commands"],
+    },
+    {
+      args: ["touch"],
+      description: ["Shows the help page, only showing help for the 'touch' command."],
+    }]
+    super("help", longDescription, parameters, examples);
   }
   aliases: string[] = ["show-help", "man"];
   description: string = "Shows the help window for all Vaunch commands"
 
   execute(args: string[]): void {
     const config = useConfigStore();
+    if (args[0]) {
+      config.helpCommand = args[0];
+    } else config.helpCommand = "";
     config.showHelp = true;
   }
 }
