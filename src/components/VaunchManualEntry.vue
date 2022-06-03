@@ -53,7 +53,7 @@ h1,h2 {
   <div v-if="command.aliases.length" class="command-ailiases">
     Aliases: <span v-for="(ailias, index) in command.aliases">{{ ailias + (index != command.aliases.length-1 ? ", ":"") }}</span>
   </div>
-  <!-- Print out the description, seperating indices as new paragraphs -->
+  <!-- Print out the description, separating indices as new paragraphs -->
   <div class="description">
     <p v-for="descriptionLine in manual.description">
       {{ descriptionLine }}
