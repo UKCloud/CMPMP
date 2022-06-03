@@ -22,6 +22,7 @@ export default defineComponent({
       vaunchInput: "",
       autocomplete: "",
       isAutocompletePartial: true,
+      traversingHistory: true,
     };
   },
   emits: ["command", "fuzzy", "fuzzyIncrement", "set-input-icon", "query-check"],
@@ -31,6 +32,11 @@ export default defineComponent({
   },
   watch: {
     vaunchInput(val: string) {
+      // If traversing history, ignore this input. Otherwise continue on and reset the history index
+      if (this.traversingHistory) {
+        this.traversingHistory = false;
+        return;
+      } else this.sessionConfig.historyIndex = -1;
       // Emit out what we're typing to fuzzy, to build a list of potential files this matches
       this.$emit('fuzzy', val)
 
@@ -155,8 +161,8 @@ export default defineComponent({
       let currentHistoryEntry:string = this.sessionConfig.history[this.sessionConfig.historyIndex]
       if ((this.vaunchInput == "" || this.vaunchInput == currentHistoryEntry) && 
         this.sessionConfig.historyIndex != -1) {
-        console.log("will decrement history");
         this.sessionConfig.historyIndex--;
+        this.traversingHistory = true;
         if (this.sessionConfig.historyIndex == -1) {
           this.vaunchInput = "";
         } else {
@@ -172,6 +178,7 @@ export default defineComponent({
       if ((this.vaunchInput == "" || this.vaunchInput == currentHistoryEntry) && 
         this.sessionConfig.historyIndex < this.sessionConfig.history.length-1) {
         this.sessionConfig.historyIndex++;
+        this.traversingHistory = true;
         let wantedEntry = this.sessionConfig.history[this.sessionConfig.historyIndex];
         this.vaunchInput = wantedEntry;
       }

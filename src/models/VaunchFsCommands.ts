@@ -270,10 +270,12 @@ export class VaunchRmdir extends VaunchCommand {
     args.forEach(toDelete => {
       // Strip slashes from folder names, if running from autocompleted value
       toDelete = toDelete.replace("/","");
-      if (force) {
-        folders.remove(toDelete);
-      } else if (folders.getFolderByName(toDelete).files.size == 0 ) {
-        folders.remove(toDelete);
+      if (folders.getFolderByName(toDelete)) {
+        if (force) {
+          folders.remove(toDelete);
+        } else if (folders.getFolderByName(toDelete).files.size == 0 ) {
+          folders.remove(toDelete);
+        }
       }
     })
   }
@@ -361,10 +363,10 @@ export class VaunchMv extends VaunchCommand {
     // Always need a folder, so get it now
     let folder:VaunchFolder = folders.getFolderByName(folderToMove);
 
+    // If no source file was supplied, we're moving a folder
+    // Remove the folder from the store, rename it, then add it back in
+    // This is to update the underlying Maps key so we still get the folder with O(1)
     if (!fileToMove && folder) {
-      // If no source file was supplied, we're moving a folder
-      // Remove the folder from the store, rename it, then add it back in
-      // This is to update the underlying Maps key so we still get the folder with O(1)
       folders.remove(folderToMove);
       folder.name = newFolderDest;
       folders.insert(folder);
@@ -385,7 +387,7 @@ export class VaunchMv extends VaunchCommand {
           // If the new folder contains a file with the same name, exit
           if (newFolder.getFile(newFileName)) return
   
-          // Chnage the name, remove the file from the current folder, then add it to the new folder
+          // Change the name, remove the file from the current folder, then add it to the new folder
           // If the folder hasnt, this essentially does the same as the folder move to update the Map's key
           file.setName(newFileName);
           folder.removeFile(fileToMove)
@@ -427,8 +429,10 @@ export class VaunchSetDescription extends VaunchCommand {
       let folderName:string = filePath[0];
       let fileName:string = filePath[1];
       let folder:VaunchFolder = folders.getFolderByName(folderName);
-      let file:VaunchFile|undefined = folder.getFile(fileName);
-      if (file) file.description = args.join(' ');
+      if (folder) {
+        let file:VaunchFile|undefined = folder.getFile(fileName);
+        if (file) file.description = args.join(' ');
+      }
     }
   }
 }
