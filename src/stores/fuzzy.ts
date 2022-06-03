@@ -1,7 +1,7 @@
 import type { VaunchFile } from '@/models/VaunchFile'
 import { defineStore } from 'pinia'
 
-export const useFuzzyStore = defineStore('storeId', {
+export const useFuzzyStore = defineStore('fuzzy', {
   // arrow function recommended for full type inference
   state: () => {
     return {

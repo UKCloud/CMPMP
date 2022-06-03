@@ -9,8 +9,6 @@ export const defaultconfig = {
   defaultFile: "",
   fuzzy: false,
   showCommands: false,
-  showHelp: false,
-  helpCommand: "",
   prefix: {
     class: "solid",
     name: "chevron-right",

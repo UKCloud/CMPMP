@@ -14,6 +14,8 @@ import VaunchGuiCommands from "./components/VaunchGuiCommands.vue";
 import VaunchMan from "./components/VaunchMan.vue";
 import { VaunchLink } from "./models/VaunchLink";
 
+import { useSessionStore } from "./stores/sessionState";
+
 export default defineComponent({
   name: "Vaunch",
   components: {
@@ -29,9 +31,11 @@ export default defineComponent({
     // Load folders in to iterate over them and display in GUI if wanted
     const folders = useFolderStore()
     const fuzzyFiles = useFuzzyStore();
+    const sessionConfig = useSessionStore();
     return {
       commands,
       config,
+      sessionConfig,
       fuzzyFiles,
       folders,
       prefixName: config.prefix.name,
@@ -40,6 +44,8 @@ export default defineComponent({
   },
   methods: {
     executeCommand(commandArgs: string[], newTab:boolean=false) {
+      // Before all else, push this command to Vaunch's history
+      this.sessionConfig.history.unshift(commandArgs.join(' '));
       let operator = commandArgs[0];
       commandArgs.shift();
 
@@ -76,6 +82,8 @@ export default defineComponent({
 
       // If a fuzzy file has been chosen, let's execute that
       if (this.fuzzyFiles.items.length > 0 && this.config.fuzzy) {
+        // Also shift this entry off the history, in case it was a qry file
+        this.sessionConfig.history.shift();
         let response = this.fuzzyFiles.items[this.fuzzyFiles.index].execute(commandArgs)
         return this.passInput(response);
       }
@@ -258,6 +266,6 @@ export default defineComponent({
 
     </div>
 
-    <VaunchMan v-if="config.showHelp" :commands="commands" />
+    <VaunchMan v-if="sessionConfig.showHelp" :commands="commands" />
   </main>
 </template>
