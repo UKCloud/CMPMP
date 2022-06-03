@@ -75,7 +75,7 @@ export default defineComponent({
             // Search for a file, using fileName as a semi complete filename
             let folder:VaunchFolder = this.folders.getFolderByName(folderName);
             if (folder) {
-              let fileMatches:string[] = this.getAutocompleteFile(fileName, folder.getFiles()).map(file => folderName + "/" + file)
+              let fileMatches:string[] = this.getAutocompleteFile(fileName, folder.getFiles(), false).map(file => folderName + "/" + file)
               matches.push(...fileMatches);
             }
           }
@@ -136,12 +136,14 @@ export default defineComponent({
       if (matches.length == 1) return [matches[0] + "/"];
       return matches;
     },
-    getAutocompleteFile(input:string, files:VaunchFile[]):string[] {
+    getAutocompleteFile(input:string, files:VaunchFile[], includeAiliases:boolean=true):string[] {
       let matches: string[] = [];
       for (let file of files) {
-        for (let ailias of file.getNames()) {
-          if (ailias.startsWith(input)) matches.push(ailias)
-        }
+        if (includeAiliases) {
+          for (let alias of file.getNames()) {
+            if (alias.startsWith(input)) matches.push(alias)
+          }
+        } else if (file.fileName.startsWith(input)) matches.push(file.fileName)
       }
       return matches;
     },
