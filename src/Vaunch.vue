@@ -14,6 +14,8 @@ import VaunchGuiCommands from "./components/VaunchGuiCommands.vue";
 import VaunchMan from "./components/VaunchMan.vue";
 import { VaunchLink } from "./models/VaunchLink";
 
+import { useSessionStore } from "./stores/sessionState";
+
 export default defineComponent({
   name: "Vaunch",
   components: {
@@ -29,9 +31,11 @@ export default defineComponent({
     // Load folders in to iterate over them and display in GUI if wanted
     const folders = useFolderStore()
     const fuzzyFiles = useFuzzyStore();
+    const sessionConfig = useSessionStore();
     return {
       commands,
       config,
+      sessionConfig,
       fuzzyFiles,
       folders,
       prefixName: config.prefix.name,
@@ -258,6 +262,6 @@ export default defineComponent({
 
     </div>
 
-    <VaunchMan v-if="config.showHelp" :commands="commands" />
+    <VaunchMan v-if="sessionConfig.showHelp" :commands="commands" />
   </main>
 </template>

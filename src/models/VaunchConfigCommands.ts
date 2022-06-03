@@ -6,6 +6,7 @@ import { useFolderStore } from "@/stores/folder";
 import { exportVaunch, readImportFile } from "@/utilities/exporter";
 import { VaunchFolder } from "./VaunchFolder";
 import type { Example, Parameter } from "./VaunchManual";
+import { useSessionStore } from "@/stores/sessionState";
 
 export class VaunchFeh extends VaunchCommand {
   constructor() {
@@ -457,10 +458,10 @@ export class VaunchHelp extends VaunchCommand {
   description: string = "Shows the help window for all Vaunch commands"
 
   execute(args: string[]): void {
-    const config = useConfigStore();
+    const sessionConfig = useSessionStore()
     if (args[0]) {
-      config.helpCommand = args[0];
-    } else config.helpCommand = "";
-    config.showHelp = true;
+      sessionConfig.helpCommand = args[0];
+    } else sessionConfig.helpCommand = "";
+    sessionConfig.showHelp = true;
   }
 }

@@ -1,7 +1,8 @@
 <script lang="ts">
-import { useConfigStore } from "@/stores/config";
 import { defineComponent } from "vue";
 import VaunchManualEntry from "./VaunchManualEntry.vue";
+
+import { useSessionStore } from "@/stores/sessionState";
 
 export default defineComponent({
   name: "VaunchMan",
@@ -17,15 +18,15 @@ export default defineComponent({
   },
   methods: {
     closeWindow() {
-      const config = useConfigStore();
-      config.helpCommand = "";
-      config.showHelp = false;
+      const sessionConfig = useSessionStore()
+      sessionConfig.helpCommand = "";
+      sessionConfig.showHelp = false;
     }
   },
   mounted() {
-    const config = useConfigStore();
-    if (config.helpCommand) {
-      this.searchInput = config.helpCommand;
+    const sessionConfig = useSessionStore()
+    if (sessionConfig.helpCommand) {
+      this.searchInput = sessionConfig.helpCommand;
     }
   },
   watch: {
