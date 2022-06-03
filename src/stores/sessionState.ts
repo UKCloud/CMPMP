@@ -6,6 +6,7 @@ export const useSessionStore = defineStore('session', {
       showHelp: false,
       helpCommand: "",
       history: ([] as string[]),
+      historyIndex: -1,
     }
   }
 })

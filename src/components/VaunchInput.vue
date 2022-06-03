@@ -4,14 +4,17 @@ import { commands } from "@/stores/command"
 import type { VaunchFile } from "@/models/VaunchFile";
 import type { VaunchFolder } from "@/models/VaunchFolder";
 import { useFolderStore } from "@/stores/folder";
+import { useSessionStore } from "@/stores/sessionState";
 
 export default defineComponent({
   name: "VaunchInput",
   setup() {
     const folders = useFolderStore()
+    const sessionConfig = useSessionStore()
     return {
       commands,
       folders,
+      sessionConfig,
     }
   },
   data() {
@@ -147,10 +150,31 @@ export default defineComponent({
       }
       return matches;
     },
-    incrementFuzzy() {
+    downKeyAction() {
+      // If current input is either blank, or the same as what the current history entry is, go to the previous history entry
+      let currentHistoryEntry:string = this.sessionConfig.history[this.sessionConfig.historyIndex]
+      if ((this.vaunchInput == "" || this.vaunchInput == currentHistoryEntry) && 
+        this.sessionConfig.historyIndex != -1) {
+        console.log("will decrement history");
+        this.sessionConfig.historyIndex--;
+        if (this.sessionConfig.historyIndex == -1) {
+          this.vaunchInput = "";
+        } else {
+          let wantedEntry = this.sessionConfig.history[this.sessionConfig.historyIndex];
+          this.vaunchInput = wantedEntry;
+        }
+      }
       this.$emit('fuzzyIncrement', true)
     },
-    decrementFuzzy() {
+    upKeyAction() {
+      // If current input is either blank, or the same as what the current history entry is, go to the next history entry
+      let currentHistoryEntry:string = this.sessionConfig.history[this.sessionConfig.historyIndex]
+      if ((this.vaunchInput == "" || this.vaunchInput == currentHistoryEntry) && 
+        this.sessionConfig.historyIndex < this.sessionConfig.history.length-1) {
+        this.sessionConfig.historyIndex++;
+        let wantedEntry = this.sessionConfig.history[this.sessionConfig.historyIndex];
+        this.vaunchInput = wantedEntry;
+      }
       this.$emit('fuzzyIncrement', false)
     },
     getCommonStartString(matches:string[]){
@@ -242,8 +266,8 @@ export default defineComponent({
         @keydown.tab.prevent="complete"
         @keydown.enter.exact.prevent="sendCommand()"
         @keydown.enter.ctrl.exact.prevent="sendCommand(true)"
-        @keydown.down.exact.prevent="incrementFuzzy"
-        @keydown.up.exact.prevent="decrementFuzzy"
+        @keydown.down.exact.prevent="downKeyAction"
+        @keydown.up.exact.prevent="upKeyAction"
         @keydown.esc.exact.prevent="vaunchInput = ''"
         ref="inputBox"
       />

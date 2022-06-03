@@ -44,6 +44,8 @@ export default defineComponent({
   },
   methods: {
     executeCommand(commandArgs: string[], newTab:boolean=false) {
+      // Before all else, push this command to Vaunch's history
+      this.sessionConfig.history.unshift(commandArgs.join(' '));
       let operator = commandArgs[0];
       commandArgs.shift();
 
@@ -80,6 +82,8 @@ export default defineComponent({
 
       // If a fuzzy file has been chosen, let's execute that
       if (this.fuzzyFiles.items.length > 0 && this.config.fuzzy) {
+        // Also shift this entry off the history, in case it was a qry file
+        this.sessionConfig.history.shift();
         let response = this.fuzzyFiles.items[this.fuzzyFiles.index].execute(commandArgs)
         return this.passInput(response);
       }
