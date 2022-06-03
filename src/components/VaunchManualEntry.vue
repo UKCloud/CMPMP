@@ -27,6 +27,10 @@ h1,h2 {
   font-weight: normal;
   text-decoration: underline;
 }
+h2 {
+  margin-top: 0.5rem;
+  border: solid thin black;
+}
 
 .parameter * {
   white-space: no-wrap;
