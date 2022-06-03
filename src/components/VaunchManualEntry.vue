@@ -27,6 +27,10 @@ h1,h2 {
   font-weight: normal;
   text-decoration: underline;
 }
+h2 {
+  margin-top: 0.5rem;
+  border: solid thin black;
+}
 
 .parameter * {
   white-space: no-wrap;
@@ -51,7 +55,7 @@ h1,h2 {
 <div class="manual-entry">
   <h1 class="command-title">{{ command.fileName }}</h1>
   <div v-if="command.aliases.length" class="command-ailiases">
-    Aliases: <span v-for="(ailias, index) in command.aliases">{{ ailias + (index != command.aliases.length-1 ? ", ":"") }}</span>
+    Alias{{ command.aliases.length > 1 ? "es" : ""}}: <span v-for="(ailias, index) in command.aliases">{{ ailias + (index != command.aliases.length-1 ? ", ":"") }}</span>
   </div>
   <!-- Print out the description, separating indices as new paragraphs -->
   <div class="description">

@@ -101,7 +101,7 @@ export default defineComponent({
 </style>
 
 <template>
-<div ref="window" id="vaunch-man-container" class="vaunch-window vaunch-solid-bg">
+<div tabindex="0" @keydown.esc="closeWindow" ref="window" id="vaunch-man-container" class="vaunch-window vaunch-solid-bg">
     <span ref="titlebar" id="man-title" class="folder-title greyscale-title">
       <span id="man-icon"><i class="fa-solid fa-info"></i></span>
       <span id="man-title-text">Help</span>
