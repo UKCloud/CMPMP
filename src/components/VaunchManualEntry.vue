@@ -29,7 +29,6 @@ h1,h2 {
 }
 h2 {
   margin-top: 0.5rem;
-  border: solid thin black;
 }
 
 .parameter * {
