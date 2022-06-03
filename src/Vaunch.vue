@@ -84,7 +84,9 @@ export default defineComponent({
       // then attempt to run the file. If it isn't a valid URL nothing will happen, if it is, the url is navigated to.
       let urlValue:string = [operator, ...commandArgs].join(' ');
       let tempLink:VaunchLink = new VaunchLink("temp", urlValue);
-      tempLink.execute([]);
+      if (tempLink.hasValidURL()){
+        return tempLink.execute([]);
+      } 
 
       // Failing everything else, pass the input to the default file
       // Push the first word back into commandArgs, as there is no operator
