@@ -49,12 +49,18 @@ export abstract class VaunchUrlFile extends VaunchFile {
     } else return "";
   }
 
-  getCorrectURL(): string {
+  getCorrectURL():string {
     let linkUrl:URL|undefined = this.createUrl();
     if (linkUrl) {
       return linkUrl.href
     } else {
       return this.content;
     }
+  }
+
+  hasValidURL():boolean {
+    let linkUrl:URL|undefined = this.createUrl();
+    if (linkUrl) return true;
+    return false
   }
 }
