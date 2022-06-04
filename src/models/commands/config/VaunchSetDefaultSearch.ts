@@ -4,27 +4,38 @@ import { useConfigStore } from "@/stores/config";
 
 export class VaunchSetDefaultSearch extends VaunchCommand {
   constructor() {
-    let longDescription:string[] = ["Sets the default Query file to use when no matching file was found.", "Either the Query prefix of full filepath can be supplied"]
-    let parameters:Parameter[] = [{
-      name: "filename|none",
-      optional: true,
-      repeatable: false
-    }]
-    let examples:Example[] = [{
-      args: ["sites/example.qry"],
-      description: ["Sets the default Query file to 'sites/example.qry'"]
-    },
-    {
-      args: ["exl"],
-      description: ["Sets the default Query file to the file associated with the 'exl' prefix"]
-    },
-    {
-      args: ["none"],
-      description: ["Clears the default Query file, nothing will happen if no matching file was found"]
-    }]
+    const longDescription: string[] = [
+      "Sets the default Query file to use when no matching file was found.",
+      "Either the Query prefix of full filepath can be supplied",
+    ];
+    const parameters: Parameter[] = [
+      {
+        name: "filename|none",
+        optional: true,
+        repeatable: false,
+      },
+    ];
+    const examples: Example[] = [
+      {
+        args: ["sites/example.qry"],
+        description: ["Sets the default Query file to 'sites/example.qry'"],
+      },
+      {
+        args: ["exl"],
+        description: [
+          "Sets the default Query file to the file associated with the 'exl' prefix",
+        ],
+      },
+      {
+        args: ["none"],
+        description: [
+          "Clears the default Query file, nothing will happen if no matching file was found",
+        ],
+      },
+    ];
     super("set-search", longDescription, parameters, examples);
   }
-  description: string = "Sets the default Query file to execute"
+  description = "Sets the default Query file to execute";
 
   execute(args: string[]): void {
     const config = useConfigStore();

@@ -1,7 +1,7 @@
 import type { VaunchFolder } from "@/models/VaunchFolder";
 
-export function exportVaunch(folders:VaunchFolder[], config:any):string {
-  let vaunchData = {
+export function exportVaunch(folders: VaunchFolder[], config: any): string {
+  const vaunchData = {
     folders: [] as any[],
     config: {},
   };
@@ -25,22 +25,22 @@ export function exportVaunch(folders:VaunchFolder[], config:any):string {
         autocomplete: config.color.autocomplete,
         highlight: config.color.highlight,
       },
-    }
+    };
   }
 
-  for (let folder of folders) {
-    vaunchData.folders.push(folder.info())
+  for (const folder of folders) {
+    vaunchData.folders.push(folder.info());
   }
-  return JSON.stringify(vaunchData, undefined, 2)
+  return JSON.stringify(vaunchData, undefined, 2);
 }
 
-export function readImportFile(file:Blob) {
+export function readImportFile(file: Blob) {
   return new Promise((resolve, reject) => {
-    var fr = new FileReader();  
+    const fr = new FileReader();
     fr.onload = () => {
       if (fr.result) {
-        let importObject = JSON.parse(fr.result.toString());
-        resolve(importObject )
+        const importObject = JSON.parse(fr.result.toString());
+        resolve(importObject);
       }
     };
     fr.onerror = reject;

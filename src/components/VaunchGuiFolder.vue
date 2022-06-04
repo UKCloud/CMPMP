@@ -7,24 +7,24 @@ import VaunchGuiFile from "./VaunchGuiFile.vue";
 import { VaunchFolder } from "@/models/VaunchFolder";
 
 export default defineComponent({
-    name: "VaunchGuiFolder",
-    setup() {
-        // Load config store to get Vaunch configuration options
-        const config = useConfigStore();
-        return {
-            config,
-        };
+  name: "VaunchGuiFolder",
+  setup() {
+    // Load config store to get Vaunch configuration options
+    const config = useConfigStore();
+    return {
+      config,
+    };
+  },
+  props: {
+    folder: { type: extend(VaunchFolder) },
+  },
+  methods: {
+    passInput(input: string) {
+      this.$emit("set-input", input);
     },
-    props: {
-      folder: {type: extend(VaunchFolder)},
-    },
-    methods: {
-      passInput(input:string) {
-        this.$emit('set-input', input)
-      }
-    },
-    components: { VaunchGuiFile },
-    emits: ['set-input']
+  },
+  components: { VaunchGuiFile },
+  emits: ["set-input"],
 });
 </script>
 
@@ -59,12 +59,17 @@ export default defineComponent({
 <template>
   <div class="vaunch-folder vaunch-window">
     <span class="folder-title">
-      <i :class="['fa-'+folder.iconClass, 'fa-'+folder.icon]"></i>
+      <i :class="['fa-' + folder.iconClass, 'fa-' + folder.icon]"></i>
       <span v-if="config.titleCase">{{ folder.titleCase() }}</span>
       <span v-if="!config.titleCase">{{ folder.name }}</span>
     </span>
     <div v-if="folder.getFiles().length > 0" class="file-container">
-      <VaunchGuiFile v-on:set-input="passInput" v-for="file in folder.getFiles()" :file="file" :parent-folder-name="folder.name" />
+      <VaunchGuiFile
+        v-on:set-input="passInput"
+        v-for="file in folder.getFiles()"
+        :file="file"
+        :parent-folder-name="folder.name"
+      />
     </div>
   </div>
 </template>

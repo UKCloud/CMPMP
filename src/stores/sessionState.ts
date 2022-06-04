@@ -1,12 +1,12 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
 
-export const useSessionStore = defineStore('session', {
+export const useSessionStore = defineStore("session", {
   state: () => {
     return {
       showHelp: false,
       helpCommand: "",
-      history: ([] as string[]),
+      history: [] as string[],
       historyIndex: -1,
-    }
-  }
-})
+    };
+  },
+});

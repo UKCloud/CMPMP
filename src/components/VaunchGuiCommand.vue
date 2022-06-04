@@ -12,31 +12,32 @@ export default defineComponent({
     return {
       config,
       commandInput: "",
-    }
+    };
   },
   props: {
-    file: {type: extend(VaunchCommand)},
-    parentFolderName: {type: String, required: true},
-    isFuzzy: {type: Boolean, default: false}
+    file: { type: extend(VaunchCommand) },
+    parentFolderName: { type: String, required: true },
+    isFuzzy: { type: Boolean, default: false },
   },
   methods: {
-    execute(file:VaunchCommand, args:string[]) {
+    execute(file: VaunchCommand, args: string[]) {
       file.execute(args);
+      // Clear the input for this command after executing
       if (file.hasArgs) {
         (this.$refs.commandInputBox as HTMLInputElement).value = "";
       }
     },
-    handleClick(file:VaunchCommand, args:string[]) {
+    handleClick(file: VaunchCommand, args: string[]) {
       if (file.hasArgs) {
         (this.$refs.commandInputBox as HTMLInputElement).focus();
       } else {
         this.execute(file, args);
       }
-    }
+    },
   },
   components: { VaunchTooltip },
-  emits: ['set-input']
-})
+  emits: ["set-input"],
+});
 </script>
 
 <style scoped>
@@ -93,20 +94,31 @@ export default defineComponent({
 .commandInput:focus {
   outline: none;
 }
-
 </style>
 
 <template>
-<div :key="file.fileName" class="file vaunch-window" 
-@click.exact="handleClick(file, [])"
-:id="parentFolderName+'-'+file.getIdSafeName()">
-  <div class="command-inner">
-    <i class="fa-solid fa-chevron-right file-icon"></i>
-    <span class="command-name">{{ file.titleCase() }}</span>
-    <input v-if="file.hasArgs" class="commandInput" @keydown.enter.prevent="execute(file, commandInput.split(' '))"
-    v-model="commandInput" type="text"
-    ref="commandInputBox" />
+  <div
+    :key="file.fileName"
+    class="file vaunch-window"
+    @click.exact="handleClick(file, [])"
+    :id="parentFolderName + '-' + file.getIdSafeName()"
+  >
+    <div class="command-inner">
+      <i class="fa-solid fa-chevron-right file-icon"></i>
+      <span class="command-name">{{ file.titleCase() }}</span>
+      <input
+        v-if="file.hasArgs"
+        class="commandInput"
+        @keydown.enter.prevent="execute(file, commandInput.split(' '))"
+        v-model="commandInput"
+        type="text"
+        ref="commandInputBox"
+      />
+    </div>
+    <VaunchTooltip
+      v-if="file.getDescription().length > 0"
+      :tip-for="'commands-' + file.getIdSafeName()"
+      :tip-file="file"
+    />
   </div>
-  <VaunchTooltip v-if="file.getDescription().length  > 0" :tip-for="'commands-'+file.getIdSafeName()" :tip-file="file"/>
-</div>
 </template>

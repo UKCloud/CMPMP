@@ -6,9 +6,9 @@ import { useSessionStore } from "@/stores/sessionState";
 
 export default defineComponent({
   name: "VaunchMan",
-  props: ['commands'],
+  props: ["commands"],
   components: {
-    VaunchManualEntry
+    VaunchManualEntry,
   },
   data() {
     return {
@@ -18,13 +18,13 @@ export default defineComponent({
   },
   methods: {
     closeWindow() {
-      const sessionConfig = useSessionStore()
+      const sessionConfig = useSessionStore();
       sessionConfig.helpCommand = "";
       sessionConfig.showHelp = false;
-    }
+    },
   },
   mounted() {
-    const sessionConfig = useSessionStore()
+    const sessionConfig = useSessionStore();
     if (sessionConfig.helpCommand) {
       this.searchInput = sessionConfig.helpCommand;
     }
@@ -32,7 +32,7 @@ export default defineComponent({
   watch: {
     searchInput(val: string) {
       this.matches = 0;
-      (this.$refs.manualItems as any[]).forEach(item => {
+      (this.$refs.manualItems as any[]).forEach((item) => {
         if (item.command.fileName.toLowerCase().includes(val.toLowerCase())) {
           item.$el.classList.remove("hidden");
           if (val != "") this.matches++;
@@ -40,9 +40,9 @@ export default defineComponent({
           item.$el.classList.add("hidden");
         }
       });
-    }
-  }
-})
+    },
+  },
+});
 </script>
 
 <style scoped>
@@ -102,21 +102,42 @@ export default defineComponent({
 </style>
 
 <template>
-<div tabindex="0" @keydown.esc="closeWindow" ref="window" id="vaunch-man-container" class="vaunch-window vaunch-solid-bg">
+  <div
+    tabindex="0"
+    @keydown.esc="closeWindow"
+    ref="window"
+    id="vaunch-man-container"
+    class="vaunch-window vaunch-solid-bg"
+  >
     <span ref="titlebar" id="man-title" class="folder-title greyscale-title">
       <span id="man-icon"><i class="fa-solid fa-info"></i></span>
       <span id="man-title-text">Help</span>
-      <span v-on:click="closeWindow" id="man-close"><i class="fa-solid fa-circle-xmark"></i></span>
+      <span v-on:click="closeWindow" id="man-close"
+        ><i class="fa-solid fa-circle-xmark"></i
+      ></span>
     </span>
     <div id="manual-inner">
       <div id="search-container">
-        <label id="manual-search-label" for="manual-search-input">Search:</label>
-        <input id="manual-search-input" class="commandInput" type="text" v-model="searchInput"/>
-        <div v-if="matches != 0 || searchInput != ''">Matches: {{ matches }}</div>
+        <label id="manual-search-label" for="manual-search-input"
+          >Search:</label
+        >
+        <input
+          id="manual-search-input"
+          class="commandInput"
+          type="text"
+          v-model="searchInput"
+        />
+        <div v-if="matches != 0 || searchInput != ''">
+          Matches: {{ matches }}
+        </div>
       </div>
       <div class="manual-container">
-          <VaunchManualEntry v-for="command in commands" :command="command" ref="manualItems" />
+        <VaunchManualEntry
+          v-for="command in commands"
+          :command="command"
+          ref="manualItems"
+        />
       </div>
     </div>
-</div>
+  </div>
 </template>
