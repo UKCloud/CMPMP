@@ -61,7 +61,7 @@ export default defineComponent({
 <template>
   <div class="response-window-container" ref="responseWindow">
     <div class="vaunch-window" id="response-window">
-      <span id="error-title" class="folder-title greyscale-title">
+      <span id="error-title" class="folder-title">
         <i class="fa-solid fa-circle-exclamation"></i>
         <span id="man-title-text">Error</span>
       </span>
