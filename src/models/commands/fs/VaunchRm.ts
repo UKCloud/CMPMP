@@ -63,7 +63,7 @@ export class VaunchRm extends VaunchCommand {
         ResponseType.Error,
         `The file${plural ? "s" : ""}: ${failedToDelete.join(", ")} do${
           plural ? "" : "es"
-        } not exist and were not deleted`
+        } not exist and ${plural ? "were" : "was"} not deleted`
       );
     }
   }
