@@ -1,6 +1,7 @@
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { VaunchFolder } from "@/models/VaunchFolder";
 import type { Parameter, Example } from "@/models/VaunchManual";
+import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useConfigStore } from "@/stores/config";
 import { useFolderStore } from "@/stores/folder";
 import { exportVaunch } from "@/utilities/exporter";
@@ -58,13 +59,15 @@ export class VaunchExport extends VaunchCommand {
   }
   description = "Exports vaunch to a file";
 
-  execute(args: string[]): void {
+  execute(args: string[]): VaunchResponse {
     const config = useConfigStore();
     const folders = useFolderStore();
 
+    const componentsExported: string[] = [];
+
     // Setup variables to export
     let foldersToExport: VaunchFolder[] = [];
-    let configToExport: any = undefined;
+    let configToExport: unknown = undefined;
     let exportFile = "vaunch";
 
     // Check if config wil be exported. config is not exported by default
@@ -72,6 +75,7 @@ export class VaunchExport extends VaunchCommand {
     args = args.filter((e) => e !== "-c");
     if (exportConfig) {
       configToExport = config.currentConfig;
+      componentsExported.push("config");
     }
 
     // Set custom export filename if -n flag is passed
@@ -89,9 +93,15 @@ export class VaunchExport extends VaunchCommand {
       for (const name of args) {
         const folderName: string = name.split("/")[0];
         const folder: VaunchFolder = folders.getFolderByName(folderName);
-        if (folder) foldersToExport.push(folder);
+        if (folder) {
+          foldersToExport.push(folder);
+          componentsExported.push(folderName);
+        }
       }
-    } else foldersToExport = folders.items;
+    } else {
+      componentsExported.push("all folders");
+      foldersToExport = folders.items;
+    }
 
     const exportedConfig: string = exportVaunch(
       foldersToExport,
@@ -104,5 +114,11 @@ export class VaunchExport extends VaunchCommand {
     hiddenElement.target = "_blank";
     hiddenElement.download = `${exportFile}.json`;
     hiddenElement.click();
+    return this.makeResponse(
+      ResponseType.Success,
+      `Exported Vaunch components: ${componentsExported.join(
+        ", "
+      )}, as ${exportFile}.json`
+    );
   }
 }

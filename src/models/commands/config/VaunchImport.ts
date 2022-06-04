@@ -1,6 +1,7 @@
 import { VaunchCommand } from "@/models/VaunchCommand";
 import { VaunchFolder } from "@/models/VaunchFolder";
 import type { Parameter, Example } from "@/models/VaunchManual";
+import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useConfigStore } from "@/stores/config";
 import { useFolderStore } from "@/stores/folder";
 import { readImportFile } from "@/utilities/exporter";
@@ -78,11 +79,13 @@ export class VaunchImport extends VaunchCommand {
   }
   description = "Imports vaunch from a file";
 
-  execute(args: string[]): void {
+  execute(args: string[]): VaunchResponse {
     const importElem = document.createElement("input");
     importElem.type = "file";
     importElem.click();
     const importReader = readImportFile;
+
+    const importedComponents: string[] = [];
 
     // If '-f' is passed to import, overwrite everything
     const overwrite: boolean = args.includes("-f") ? true : false;
@@ -112,8 +115,10 @@ export class VaunchImport extends VaunchCommand {
               // If this folder doesn't exist, import it. If overwriting, all folders will be gone by now
               if (!folders.getFolderByName(folderToImport.name)) {
                 folders.insert(folderToImport);
+                importedComponents.push(folderToImport.name);
               } else if (mergeFiles) {
                 // If the folder already exists, try and merge files into it
+                importedComponents.push(`${folderToImport.name} (merged)`);
                 for (const fileToImport of folderToImport.getFiles()) {
                   const existingFolder: VaunchFolder = folders.getFolderByName(
                     folderToImport.name
@@ -125,11 +130,16 @@ export class VaunchImport extends VaunchCommand {
           }
 
           // Only import config if importConfig is true, and the export actually has config to import
-          if (importConfig && (importData as any).config) {
-            config.newConfig((importData as any).config);
+          if (importConfig && (importData as Record<string, unknown>).config) {
+            importedComponents.push("config");
+            config.newConfig((importData as Record<string, unknown>).config);
           }
         });
       }
     });
+    return this.makeResponse(
+      ResponseType.Success,
+      `Imported Vaunch components: ${importedComponents.join(", ")}`
+    );
   }
 }

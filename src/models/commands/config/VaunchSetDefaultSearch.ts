@@ -1,5 +1,6 @@
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { Parameter, Example } from "@/models/VaunchManual";
+import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useConfigStore } from "@/stores/config";
 
 export class VaunchSetDefaultSearch extends VaunchCommand {
@@ -37,10 +38,18 @@ export class VaunchSetDefaultSearch extends VaunchCommand {
   }
   description = "Sets the default Query file to execute";
 
-  execute(args: string[]): void {
+  execute(args: string[]): VaunchResponse {
     const config = useConfigStore();
-    if (args[0] == "none") {
+    let newQueryName = "none";
+    if (!args[0] || args[0] == "none") {
       config.defaultFile = "";
-    } else config.defaultFile = args[0];
+    } else {
+      newQueryName = args[0];
+      config.defaultFile = args[0];
+    }
+    return this.makeResponse(
+      ResponseType.Success,
+      `Set default Query file to: ${newQueryName}`
+    );
   }
 }

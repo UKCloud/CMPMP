@@ -1,5 +1,6 @@
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { Example } from "@/models/VaunchManual";
+import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useConfigStore } from "@/stores/config";
 
 export class VaunchToggleCommands extends VaunchCommand {
@@ -20,8 +21,12 @@ export class VaunchToggleCommands extends VaunchCommand {
   }
   description = "Toggles if the commands window is visible";
 
-  execute(args: string[]): void {
+  execute(args: string[]): VaunchResponse {
     const config = useConfigStore();
     config.showCommands = !config.showCommands;
+    return this.makeResponse(
+      ResponseType.Success,
+      `Showing commands: ${config.titleCase}`
+    );
   }
 }

@@ -1,5 +1,6 @@
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { Example } from "@/models/VaunchManual";
+import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useConfigStore } from "@/stores/config";
 
 export class VaunchToggleCase extends VaunchCommand {
@@ -20,8 +21,12 @@ export class VaunchToggleCase extends VaunchCommand {
   }
   description = "Toggles if names are converted to Title Case";
 
-  execute(args: string[]): void {
+  execute(args: string[]): VaunchResponse {
     const config = useConfigStore();
     config.titleCase = !config.titleCase;
+    return this.makeResponse(
+      ResponseType.Success,
+      `Edited Titlecase to: ${config.titleCase}`
+    );
   }
 }

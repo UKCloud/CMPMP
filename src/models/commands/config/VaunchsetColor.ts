@@ -1,5 +1,6 @@
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { Parameter, Example } from "@/models/VaunchManual";
+import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useConfigStore, defaultconfig } from "@/stores/config";
 
 export class VaunchSetColor extends VaunchCommand {
@@ -134,19 +135,24 @@ export class VaunchSetColor extends VaunchCommand {
     return `hsla(${hsl[0]},${hsl[1]}%,${hsl[2]}%, 0.75)`;
   }
 
-  execute(args: string[]): void {
+  execute(args: string[]): VaunchResponse {
     const config = useConfigStore();
     const newWindowColor = args[0];
     const newTextColor = args[1];
     const newHighlightColor = args[2];
+
+    const changedComponents: string[] = [];
+
     // If first arg is 'default' set back to default variables
     if (newWindowColor == "default") {
       config.color = defaultconfig.color;
+      changedComponents.push(`to default`);
     } else {
       // Set the new window color
       if (newWindowColor != "*") {
         config.color.window = this.calcWindowColor(newWindowColor);
         config.color.windowOpaque = this.calcWindowColor(newWindowColor, 1);
+        changedComponents.push(`Window colour to ${newWindowColor}`);
       }
 
       // If a second color is provided, set the text color to that
@@ -154,6 +160,7 @@ export class VaunchSetColor extends VaunchCommand {
       if (newTextColor) {
         if (newTextColor != "*") {
           config.color.text = newTextColor;
+          changedComponents.push(`Text colour to ${newTextColor}`);
         }
         // Calculate the 'best' highlight color for this text color
         config.color.autocomplete = this.calcAutocompleteColor(newTextColor);
@@ -161,8 +168,13 @@ export class VaunchSetColor extends VaunchCommand {
       if (newHighlightColor) {
         if (newHighlightColor != "*") {
           config.color.highlight = newHighlightColor;
+          changedComponents.push(`Highlight colour to ${newHighlightColor}`);
         }
       }
     }
+    return this.makeResponse(
+      ResponseType.Success,
+      `Edited colour scheme: ${changedComponents.join(", ")}`
+    );
   }
 }

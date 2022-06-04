@@ -1,5 +1,6 @@
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { Example } from "@/models/VaunchManual";
+import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useConfigStore } from "@/stores/config";
 
 export class VaunchToggleGui extends VaunchCommand {
@@ -19,8 +20,12 @@ export class VaunchToggleGui extends VaunchCommand {
   }
   description = "Toggles if Folders/Commands are visible";
 
-  execute(args: string[]): void {
+  execute(args: string[]): VaunchResponse {
     const config = useConfigStore();
     config.showGUI = !config.showGUI;
+    return this.makeResponse(
+      ResponseType.Success,
+      `Toggle GUI visibility to: ${config.showGUI}`
+    );
   }
 }

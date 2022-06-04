@@ -1,5 +1,6 @@
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { Example } from "@/models/VaunchManual";
+import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useConfigStore } from "@/stores/config";
 
 export class VaunchToggleFuzzy extends VaunchCommand {
@@ -21,8 +22,12 @@ export class VaunchToggleFuzzy extends VaunchCommand {
   }
   description = "Toggles if fuzzy search is enabled";
 
-  execute(args: string[]): void {
+  execute(args: string[]): VaunchResponse {
     const config = useConfigStore();
     config.fuzzy = !config.fuzzy;
+    return this.makeResponse(
+      ResponseType.Success,
+      `Using fuzzy search: ${config.fuzzy}`
+    );
   }
 }
