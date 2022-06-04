@@ -162,6 +162,7 @@ export default defineComponent({
 
       switch (response.type) {
         case ResponseType.Error:
+        case ResponseType.Info:
           this.sessionConfig.showResponse = true;
           break;
         case ResponseType.UpdateInput:
