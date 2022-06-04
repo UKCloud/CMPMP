@@ -35,13 +35,11 @@ export default defineComponent({
 .file {
   display: flex;
   justify-content: space-between;
-  width: auto;
   min-width: 20%;
   max-width: 100%;
   padding: 1em;
   margin: 0.5em;
   box-shadow: none;
-  overflow-wrap: break-word;
   border: solid thin rgba(100, 100, 100, 0.25);
   user-select: none;
 }
