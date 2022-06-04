@@ -64,23 +64,21 @@ export default defineComponent({
       <span
         v-if="response.type == 'error'"
         id="error-title"
-        class="folder-title"
-      >
+        class="folder-title">
         <i class="fa-solid fa-circle-exclamation"></i>
         <span id="man-title-text">Error</span>
       </span>
       <span
         v-if="response.type == 'info'"
         id="error-title"
-        class="folder-title"
-      >
-        <i class="fa-solid fa-circle-info"></i>
+        class="folder-title">
+        <i class="fa-solid fa-circle-information"></i>
         <span id="man-title-text">Info</span>
       </span>
       <div id="response-inner">
         {{ response.message }}
         <div v-if="response.filetype == 'VaunchCommand'">
-          For usage information, use: <code>help {{ response.name }}</code>
+          For usage information, use: <code>man {{ response.name }}</code>
         </div>
       </div>
     </div>
