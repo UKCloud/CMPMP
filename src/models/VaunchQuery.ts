@@ -55,9 +55,10 @@ export class VaunchQuery extends VaunchUrlFile {
       let encodedargs = encodeURIComponent(combinedArgs).replace(/%20/g, "+");
       newLocation = this.content.replace(/\${}/g, encodedargs)
     }
-
+    console.log(newLocation);
     // Ensure the final file content is "linkable"
     let linkUrl:URL|undefined = this.createUrl(newLocation);
+    console.log(linkUrl);
     if (linkUrl) {
       this.hits++;
       if (newTab){

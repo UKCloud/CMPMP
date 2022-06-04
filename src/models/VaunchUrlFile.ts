@@ -31,7 +31,7 @@ export abstract class VaunchUrlFile extends VaunchFile {
       } else url = this.prependHttps(url);
       
       // Now with https:// prepended, run an additional URL test against the string
-      let fullUrlTest:RegExp = /^(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/g
+      let fullUrlTest:RegExp = /^(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=\(\)]*)$/g
       if (fullUrlTest.test(url)) {
         return new URL(url);
       } else return undefined;
