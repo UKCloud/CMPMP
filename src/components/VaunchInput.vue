@@ -137,7 +137,7 @@ export default defineComponent({
   methods: {
     setInput(input: string) {
       this.vaunchInput = input;
-      (this.$refs.inputBox as any).focus();
+      (this.$refs.inputBox as HTMLInputElement).focus();
     },
     complete() {
       // Only complete if there is something to complete
