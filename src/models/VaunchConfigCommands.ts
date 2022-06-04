@@ -297,17 +297,35 @@ export class VaunchExport extends VaunchCommand {
     let longDescription:string[] = ["Exports your Vaunch data/config to a file to download. This file can then be imported to other Vaunch instances.",
     "The export format is in a standard, editable JSON file. The exported config can be modified in an external editor and re-imported if desired."]
     let parameters:Parameter[] = [{
-      name: "exportFileName",
+      name: "-n filename",
+      optional: true,
+      repeatable: false
+    },
+    {
+      name: "-f folder",
+      optional: true,
+      repeatable: true
+    },
+    {
+      name: "-c",
       optional: true,
       repeatable: false
     }]
     let examples:Example[] = [{
       args: [],
-      description: ["Exports your current Vaunch instance to a file called 'vaunch.json'"]
+      description: ["Exports your current Vaunch instance to a file called 'vaunch.json', includes all folders and excludes personalisation config"]
     },
     {
-      args: ["myExport"],
-      description: ["Exports your current Vaunch instance to a file called 'myExport.json'"]
+      args: ["-n myExport"],
+      description: ["Exports your current Vaunch instance to a file called 'myExport.json', includes all folders and excludes personalisation config"]
+    },
+    {
+      args: ["-f sites foo "],
+      description: ["Exports your current Vaunch instance to a file called 'myExport.json', includes only the folders 'sites' and 'foo'"]
+    },
+    {
+      args: ["-c"],
+      description: ["Exports your current Vaunch instance to a file called 'myExport.json', includes all folders and personalisation config"]
     }]
     super("export", longDescription, parameters, examples);
   }
@@ -316,11 +334,41 @@ export class VaunchExport extends VaunchCommand {
   execute(args: string[]): void {
     const config = useConfigStore();
     const folders = useFolderStore();
-    let exportFile = args[0] ? args[0] : "vaunch"
 
-    let exportedConfig: string = exportVaunch(folders.items, config.currentConfig);
+    // Setup variables to export
+    let foldersToExport:VaunchFolder[] = [];
+    let configToExport:any = undefined;
+    let exportFile:string = "vaunch"
+
+    // Check if config wil be exported. config is not exported by default
+    let exportConfig:boolean = args.includes("-c") ? true:false;
+    args = args.filter(e => e !== '-c')
+    if (exportConfig) {
+      configToExport = config.currentConfig
+    }
+
+    // Set custom export filename if -n flag is passed
+    let nameIndex:number = args.indexOf("-n");
+    if (nameIndex != -1) {
+      exportFile = args[nameIndex+1]
+      args.slice(nameIndex)
+      args.slice(nameIndex+1)
+    }
+
+    // If -f is passed, export the provided folders, else export them all
+    let exportSetFolders:boolean = args.includes("-f") ? true:false;
+    args = args.filter(e => e !== '-f')
+    if (exportSetFolders){
+      for (let name of args) {
+        let folderName:string = name.split("/")[0];
+        let folder:VaunchFolder = folders.getFolderByName(folderName)
+        if (folder) foldersToExport.push(folder);
+      }
+    } else foldersToExport = folders.items;
+
+    let exportedConfig: string = exportVaunch(foldersToExport, configToExport);
+    
     var hiddenElement = document.createElement('a');
-
     hiddenElement.href = 'data:attachment/text,' + encodeURIComponent(exportedConfig);
     hiddenElement.target = '_blank';
     hiddenElement.download = `${exportFile}.json`;
@@ -363,7 +411,7 @@ export class VaunchImport extends VaunchCommand {
       description: ["Functionally equivalent to running 'import' with no arguments"]
     },
     {
-      args: ["config"],
+      args: ["-c"],
       description: ["Imports only the config from the exported file, such as the colour scheme, GUI visibility, and default search file."]
     },
     {
@@ -425,8 +473,8 @@ export class VaunchImport extends VaunchCommand {
             }
           }
 
-          // Only import config if importConfig is true
-          if (importConfig) {
+          // Only import config if importConfig is true, and the export actually has config to import
+          if (importConfig && (importData as any).config) {
             config.newConfig((importData as any).config);
           }
         })

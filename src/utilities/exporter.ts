@@ -3,7 +3,11 @@ import type { VaunchFolder } from "@/models/VaunchFolder";
 export function exportVaunch(folders:VaunchFolder[], config:any):string {
   let vaunchData = {
     folders: [] as any[],
-    config: {
+    config: {},
+  };
+
+  if (config) {
+    vaunchData["config"] = {
       background: config.background,
       showGUI: config.showGUI,
       titleCase: config.titleCase,
@@ -22,7 +26,7 @@ export function exportVaunch(folders:VaunchFolder[], config:any):string {
         highlight: config.color.highlight,
       },
     }
-  };
+  }
 
   for (let folder of folders) {
     vaunchData.folders.push(folder.info())
