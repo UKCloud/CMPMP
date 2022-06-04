@@ -49,7 +49,15 @@ export class VaunchSetDescription extends VaunchCommand {
 
     if (folder) {
       const file: VaunchFile | undefined = folder.getFile(fileName);
-      if (file) file.description = args.join(" ");
+      if (file) {
+        file.description = args.join(" ");
+      } else {
+        return this.makeResponse(
+          ResponseType.Error,
+          `The file ${fullPath} does not exist`
+        );
+      }
+      
       return this.makeResponse(
         ResponseType.Success,
         `Edited description of file ${filePath}`
