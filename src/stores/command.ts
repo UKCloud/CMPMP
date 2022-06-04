@@ -36,4 +36,4 @@ export const commands = [
   new VaunchExport(),
   new VaunchImport(),
   new VaunchHelp(),
-]
+];

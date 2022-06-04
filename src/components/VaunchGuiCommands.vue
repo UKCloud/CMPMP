@@ -8,13 +8,13 @@ export default defineComponent({
   name: "VaunchGuiCommands",
   setup() {
     return {
-      commands
-    }
+      commands,
+    };
   },
   components: {
-    VaunchGuiCommand
+    VaunchGuiCommand,
   },
-})
+});
 </script>
 
 <style scoped>
@@ -36,7 +36,12 @@ export default defineComponent({
       <span>Commands</span>
     </span>
     <div class="file-container commands-container">
-      <VaunchGuiCommand v-for="file in commands" :file="file" :parent-folder-name="'commands'" />
+      <VaunchGuiCommand
+        v-for="file in commands"
+        :file="file"
+        :key="file.fileName"
+        :parent-folder-name="'commands'"
+      />
     </div>
   </div>
 </template>

@@ -1,66 +1,81 @@
-export abstract class VaunchFile {
-  fileName: string
-  aliases: string[];
-  content:string;
-  icon:string;
-  iconClass:string;
-  hits:number;
-  extension:string = "";
-  description:string = "";
-  filetype:string = "VaunchFile";
+import type { VaunchResponse, ResponseType } from "./VaunchResponse";
 
-  constructor(name:string, icon:string = "file", iconClass:string = "solid", hits:number = 0) {
-    this.fileName = name
+export abstract class VaunchFile {
+  fileName: string;
+  aliases: string[];
+  content: string;
+  icon: string;
+  iconClass: string;
+  hits: number;
+  extension = "";
+  description = "";
+  filetype = "VaunchFile";
+
+  constructor(name: string, icon = "file", iconClass = "solid", hits = 0) {
+    this.fileName = name;
     this.aliases = [];
     this.content = "";
     this.icon = icon;
     this.iconClass = iconClass;
-    this.hits = hits
+    this.hits = hits;
   }
 
   titleCase(): string {
-    let prettyString = this.getBaseName().replace(/[-_]/g, ' ');
-    return prettyString.toLowerCase().split(' ').map(function(word) {
-      return (word.charAt(0).toUpperCase() + word.slice(1));
-    }).join(' ');
+    const prettyString = this.getBaseName().replace(/[-_]/g, " ");
+    return prettyString
+      .toLowerCase()
+      .split(" ")
+      .map(function (word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(" ");
   }
 
-  getNames():string[] {
-    let allNames:string[] = [this.fileName, ...this.aliases]
+  getNames(): string[] {
+    const allNames: string[] = [this.fileName, ...this.aliases];
     return allNames;
   }
 
-  namesStartWith(search:string):boolean {
-    for (let name of this.getNames()) {
-      if (name.startsWith(search)) return true
+  namesStartWith(search: string): boolean {
+    for (const name of this.getNames()) {
+      if (name.startsWith(search)) return true;
     }
-    return false
+    return false;
   }
 
-  setIcon(newIcon:string = this.icon, iconClass:string = "solid") {
+  setIcon(newIcon: string = this.icon, iconClass = "solid") {
     this.icon = newIcon;
     this.iconClass = iconClass;
   }
 
-  abstract execute(args:string[]): string|void
+  abstract execute(args: string[]): VaunchResponse;
 
-  getBaseName(): string {
-    return this.fileName.split('.')[0]
+  makeResponse(type: ResponseType, message: string) {
+    return {
+      type: type,
+      message: message,
+      name: this.fileName,
+      filetype: this.filetype,
+    };
   }
 
-  getIdSafeName():string {
-    return this.fileName.replace('.','-')
+  getBaseName(): string {
+    return this.fileName.split(".")[0];
+  }
+
+  getIdSafeName(): string {
+    return this.fileName.replace(".", "-");
   }
 
   getDescription(): string {
     return this.content;
   }
 
-  setName(newName:string) {
+  setName(newName: string) {
     this.fileName = newName;
   }
 
   abstract info(): any;
-  
-  abstract edit(args:string[]): void;
+
+  abstract edit(args: string[]): void;
 }

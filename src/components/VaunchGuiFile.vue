@@ -4,31 +4,32 @@ import { useConfigStore } from "@/stores/config";
 import VaunchTooltip from "./VaunchTooltip.vue";
 import { extend } from "@vue/shared";
 import { VaunchUrlFile } from "@/models/VaunchUrlFile";
+import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 
 export default defineComponent({
   name: "VaunchGuiFile",
   setup() {
     const config = useConfigStore();
     return {
-      config
-    }
+      config,
+    };
   },
   props: {
-    file: {type: extend(VaunchUrlFile)},
-    parentFolderName: {type: String, required: true},
-    isFuzzy: {type: Boolean, default: false}
+    file: { type: extend(VaunchUrlFile) },
+    parentFolderName: { type: String, required: true },
+    isFuzzy: { type: Boolean, default: false },
   },
   methods: {
-    execute(file:VaunchUrlFile, args:string[]) {
-      let response = file.execute(args);
-      if (response) {
-        this.$emit('set-input', response)
+    execute(file: VaunchUrlFile, args: string[]) {
+      let response: VaunchResponse = file.execute(args);
+      if ((response.type = ResponseType.UpdateInput)) {
+        this.$emit("set-input", response.message);
       }
-    }
+    },
   },
   components: { VaunchTooltip },
-  emits: ['set-input']
-})
+  emits: ["set-input"],
+});
 </script>
 
 <style scoped>
@@ -63,30 +64,42 @@ export default defineComponent({
 }
 
 @media (max-width: 768px) {
-  .description { 
+  .description {
     display: none;
   }
   .fuzzyInfo {
-  width: auto;
+    width: auto;
+  }
 }
-}
-
 </style>
 
 <template>
-<div :key="file.fileName" class="file vaunch-window" 
-@click.exact="execute(file, [])"
-@click.ctrl="execute(file, ['_blank'])"
-@click.middle="execute(file, ['_blank'])"
-:id="parentFolderName+'-'+file.getIdSafeName()">
-  <div :class="{fuzzyInfo: isFuzzy}">
-    <i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'file-icon']"></i>
-    <span v-if="isFuzzy" class="filename">{{ file.getParentName(config.titleCase) }}: </span>
-    <span v-if="config.titleCase" :class="{filename: !isFuzzy}">{{ file.titleCase() }}</span>
-    <span v-if="!config.titleCase" :class="{filename: !isFuzzy}">{{ file.fileName }}</span>
+  <div
+    :key="file.fileName"
+    class="file vaunch-window"
+    @click.exact="execute(file, [])"
+    @click.ctrl="execute(file, ['_blank'])"
+    @click.middle="execute(file, ['_blank'])"
+    :id="parentFolderName + '-' + file.getIdSafeName()"
+  >
+    <div :class="{ fuzzyInfo: isFuzzy }">
+      <i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'file-icon']"></i>
+      <span v-if="isFuzzy" class="filename"
+        >{{ file.getParentName(config.titleCase) }}:
+      </span>
+      <span v-if="config.titleCase" :class="{ filename: !isFuzzy }">{{
+        file.titleCase()
+      }}</span>
+      <span v-if="!config.titleCase" :class="{ filename: !isFuzzy }">{{
+        file.fileName
+      }}</span>
+    </div>
+    <span v-if="isFuzzy" class="description"> {{ file.getDescription() }}</span>
+    <span v-if="isFuzzy">Hits: {{ file.hits }}</span>
+    <VaunchTooltip
+      v-if="!isFuzzy"
+      :tip-for="parentFolderName + '-' + file.getIdSafeName()"
+      :tip-file="file"
+    />
   </div>
-  <span v-if="isFuzzy" class="description"> {{ file.getDescription() }}</span>
-  <span v-if="isFuzzy">Hits: {{ file.hits }}</span>
-  <VaunchTooltip v-if="!isFuzzy" :tip-for="parentFolderName+'-'+file.getIdSafeName()" :tip-file="file"/>
-</div>
 </template>

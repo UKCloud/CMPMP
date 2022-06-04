@@ -1,9 +1,9 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 
-import Vaunch from "./Vaunch.vue";
+import VaunchApp from "./VaunchApp.vue";
 
-const app = createApp(Vaunch);
+const app = createApp(VaunchApp);
 
 app.use(createPinia());
 
