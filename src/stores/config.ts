@@ -8,7 +8,7 @@ export const defaultconfig = {
   titleCase: true,
   defaultFile: "",
   fuzzy: false,
-  showCommands: false,
+  showCommands: true,
   prefix: {
     class: "solid",
     name: "chevron-right",
