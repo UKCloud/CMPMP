@@ -7,6 +7,7 @@ export const useSessionStore = defineStore("session", {
       helpCommand: "",
       history: [] as string[],
       historyIndex: -1,
+      showResponse: false,
     };
   },
 });

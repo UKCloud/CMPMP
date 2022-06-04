@@ -14,9 +14,11 @@ import VaunchGuiCommands from "./components/VaunchGuiCommands.vue";
 import VaunchMan from "./components/VaunchMan.vue";
 import { VaunchLink } from "./models/VaunchLink";
 
-import { useSessionStore } from "./stores/sessionState";
+import { useSessionStore } from "@/stores/sessionState";
 import type { VaunchResponse } from "./models/VaunchResponse";
 import { ResponseType } from "./models/VaunchResponse";
+import VaunchGuiResponse from "./components/VaunchGuiResponse.vue";
+
 export default defineComponent({
   name: "VaunchApp",
   components: {
@@ -25,6 +27,7 @@ export default defineComponent({
     VaunchFuzzy,
     VaunchGuiCommands,
     VaunchMan,
+    VaunchGuiResponse,
   },
   setup() {
     // Load config store for Vaunch configuration options, e/.g background image
@@ -156,10 +159,19 @@ export default defineComponent({
     },
     handleResponse(response: VaunchResponse) {
       let newInputValue = "";
-      if (response.type == ResponseType.UpdateInput) {
-        newInputValue = response.message;
+
+      switch (response.type) {
+        case ResponseType.Error:
+          this.sessionConfig.showResponse = true;
+          break;
+        case ResponseType.UpdateInput:
+          newInputValue = response.message;
+          this.sessionConfig.showResponse = false;
+          break;
+        default:
+          this.sessionConfig.showResponse = false;
       }
-      console.log(response);
+
       this.currentResponse = response;
       this.passInput(newInputValue);
     },
@@ -256,9 +268,6 @@ export default defineComponent({
 
 <template>
   <main :style="{ 'background-image': 'url(' + config.background + ')' }">
-    <div v-if="currentResponse.type == 'error'">
-      Response: {{ currentResponse }}
-    </div>
     <VaunchInput
       v-on:command="executeCommand"
       v-on:fuzzy="fuzzy"
@@ -268,6 +277,11 @@ export default defineComponent({
       :prefix-name="prefixName"
       :prefix-class="prefixClass"
       ref="vaunchInput"
+    />
+
+    <VaunchGuiResponse
+      v-if="sessionConfig.showResponse"
+      :response="currentResponse"
     />
 
     <div id="bottom-half">

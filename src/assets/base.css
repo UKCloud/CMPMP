@@ -184,6 +184,10 @@ main {
   display: none !important;
 }
 
+.fade-out {
+  opacity: 0;
+}
+
 @media (max-width: 768px) {
   #commands-folders-container {
     display: block;
@@ -194,5 +198,9 @@ main {
   #commands-container, .vaunch-command-folder {
     display: block;
     min-width: 100%;
+  }
+  .response-window-container {
+    left: 2.5vw !important;
+    width: 95vw !important;
   }
 }
