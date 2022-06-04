@@ -269,16 +269,17 @@ export default defineComponent({
       <input
         id="vaunch-input"
         type="text"
+        autocapitalize="none"
         v-model="vaunchInput"
         @keydown.tab.prevent="complete"
         @keydown.enter.exact.prevent="sendCommand()"
         @keydown.enter.ctrl.exact.prevent="sendCommand(true)"
         @keydown.down.exact.prevent="downKeyAction"
-        @keydown.up.exact.prevent="upKeyAction"
+        @keyup.up.exact.prevent="upKeyAction"
         @keydown.esc.exact.prevent="vaunchInput = ''"
         ref="inputBox"
       />
-      <input id="vaunch-autocomplete" type="text" :value="autocomplete" />
+      <input disabled id="vaunch-autocomplete" type="text" :value="autocomplete" />
     </div>
   </div>
 </div>
