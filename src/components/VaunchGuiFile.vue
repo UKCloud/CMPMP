@@ -35,7 +35,6 @@ export default defineComponent({
 .file {
   display: flex;
   justify-content: space-between;
-  width: auto;
   min-width: 20%;
   max-width: 100%;
   padding: 1em;
