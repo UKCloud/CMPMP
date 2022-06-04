@@ -1,5 +1,6 @@
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { Parameter, Example } from "@/models/VaunchManual";
+import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useFolderStore } from "@/stores/folder";
 
 export class VaunchRmdir extends VaunchCommand {
@@ -45,7 +46,10 @@ export class VaunchRmdir extends VaunchCommand {
 
   aliases: string[] = ["remove-folder", "delete-folder"];
 
-  execute(args: string[]): void {
+  execute(args: string[]): VaunchResponse {
+    if (args.length == 0) {
+      return this.makeResponse(ResponseType.Error, "Not enough arguments");
+    }
     const folders = useFolderStore();
     let force = false;
     if (args[0] == "-f") {
@@ -63,5 +67,9 @@ export class VaunchRmdir extends VaunchCommand {
         }
       }
     });
+    return this.makeResponse(
+      ResponseType.Success,
+      `Deleted folder: ${args.join(", ")}`
+    );
   }
 }

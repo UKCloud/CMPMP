@@ -90,7 +90,7 @@ export class VaunchEditFile extends VaunchCommand {
     } else {
       return this.makeResponse(
         ResponseType.Error,
-        `Could not find folder: ${folderName}`
+        `Folder: ${folderName} does not exist`
       );
     }
   }

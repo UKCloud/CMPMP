@@ -4,6 +4,7 @@ import type { VaunchFolder } from "@/models/VaunchFolder";
 import { VaunchLink } from "@/models/VaunchLink";
 import type { Parameter, Example } from "@/models/VaunchManual";
 import { VaunchQuery } from "@/models/VaunchQuery";
+import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useFolderStore } from "@/stores/folder";
 
 export class VaunchTouch extends VaunchCommand {
@@ -53,7 +54,7 @@ export class VaunchTouch extends VaunchCommand {
   aliases: string[] = ["make-file"];
   description = "Creates new files";
 
-  execute(args: string[]): void {
+  execute(args: string[]): VaunchResponse {
     const folders = useFolderStore();
     const newFileName: string = args[0];
 
@@ -75,6 +76,11 @@ export class VaunchTouch extends VaunchCommand {
           // Icon name/class is the fourth/fith arg provided for VaunchLink
           iconName = args[3];
           iconClass = args[4];
+        } else {
+          return this.makeResponse(
+            ResponseType.Error,
+            `Failed to create file ${filePath}. Not enough arguments`
+          );
         }
       } else {
         const fileContent: string = args[1];
@@ -88,7 +94,15 @@ export class VaunchTouch extends VaunchCommand {
         // Set the file icon if a custom icon was provided
         if (iconName) newFile.setIcon(iconName, iconClass);
         folder.addFile(newFile);
+        return this.makeResponse(
+          ResponseType.Success,
+          `Successfully created file: ${folderName}/${newFile.fileName}`
+        );
       }
     }
+    return this.makeResponse(
+      ResponseType.Error,
+      `Folder: ${folderName} does not exist`
+    );
   }
 }

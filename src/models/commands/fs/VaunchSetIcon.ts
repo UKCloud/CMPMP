@@ -1,6 +1,7 @@
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { VaunchFolder } from "@/models/VaunchFolder";
 import type { Parameter, Example } from "@/models/VaunchManual";
+import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useFolderStore } from "@/stores/folder";
 
 export class VaunchSetIcon extends VaunchCommand {
@@ -52,7 +53,7 @@ export class VaunchSetIcon extends VaunchCommand {
   }
   description = "Changes the icon of an existing file/folder";
 
-  execute(args: string[]): void {
+  execute(args: string[]): VaunchResponse {
     const folders = useFolderStore();
     const fullPath: string = args[0];
     const newIcon: string = args[1];
@@ -67,10 +68,23 @@ export class VaunchSetIcon extends VaunchCommand {
       const file = folder.getFile(fileName);
       if (file) {
         file.setIcon(newIcon, newIconClass);
+        return this.makeResponse(
+          ResponseType.Success,
+          `Changed the icon of ${fullPath}`
+        );
+      } else {
+        return this.makeResponse(
+          ResponseType.Error,
+          `File: ${fullPath} does not exist`
+        );
       }
     } else if (folder) {
       // Assume we're attempting to set the folder's icon
       folder.setIcon(newIcon, newIconClass);
     }
+    return this.makeResponse(
+      ResponseType.Error,
+      `Folder: ${folderName} does not exist`
+    );
   }
 }

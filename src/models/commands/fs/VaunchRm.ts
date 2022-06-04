@@ -1,6 +1,7 @@
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { VaunchFolder } from "@/models/VaunchFolder";
 import type { Parameter, Example } from "@/models/VaunchManual";
+import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useFolderStore } from "@/stores/folder";
 
 export class VaunchRm extends VaunchCommand {
@@ -34,7 +35,10 @@ export class VaunchRm extends VaunchCommand {
   aliases: string[] = ["remove-file", "delete-file"];
   description = "Deletes files";
 
-  execute(args: string[]): void {
+  execute(args: string[]): VaunchResponse {
+    if (args.length == 0) {
+      return this.makeResponse(ResponseType.Error, "Not enough arguments");
+    }
     const folders = useFolderStore();
     for (const filepath of args) {
       const filePath = filepath.split("/");
@@ -43,5 +47,9 @@ export class VaunchRm extends VaunchCommand {
       const folder: VaunchFolder = folders.getFolderByName(folderName);
       if (folder) folder.removeFile(fileToDelete);
     }
+    return this.makeResponse(
+      ResponseType.Success,
+      `Deleted files: ${args.join(", ")}`
+    );
   }
 }

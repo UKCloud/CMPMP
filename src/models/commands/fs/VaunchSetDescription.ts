@@ -2,6 +2,7 @@ import { VaunchCommand } from "@/models/VaunchCommand";
 import type { VaunchFile } from "@/models/VaunchFile";
 import type { VaunchFolder } from "@/models/VaunchFolder";
 import type { Parameter, Example } from "@/models/VaunchManual";
+import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useFolderStore } from "@/stores/folder";
 
 export class VaunchSetDescription extends VaunchCommand {
@@ -35,7 +36,7 @@ export class VaunchSetDescription extends VaunchCommand {
   aliases: string[] = ["set-desc"];
   description = "Sets the description of a file's tooltip";
 
-  execute(args: string[]): void {
+  execute(args: string[]): VaunchResponse {
     const folders = useFolderStore();
     const fullPath: string | undefined = args.shift();
     if (fullPath) {
@@ -46,7 +47,18 @@ export class VaunchSetDescription extends VaunchCommand {
       if (folder) {
         const file: VaunchFile | undefined = folder.getFile(fileName);
         if (file) file.description = args.join(" ");
+        return this.makeResponse(
+          ResponseType.Success,
+          `Edited description of file ${filePath}`
+        );
+      } else {
+        return this.makeResponse(
+          ResponseType.Error,
+          `Folder: ${folderName} does not exist`
+        );
       }
+    } else {
+      return this.makeResponse(ResponseType.Error, "No filepath was provided");
     }
   }
 }
