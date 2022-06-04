@@ -258,6 +258,9 @@ export default defineComponent({
   #vaunch-input-container {
     width: 95vw;
   }
+  #vaunch-autocomplete{
+    display: none;
+  }
 }
 </style>
 
