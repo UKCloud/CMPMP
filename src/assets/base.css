@@ -102,7 +102,7 @@ body, html, #app {
 
 main {
   display: flex;
-  /* Horizontal ailgnment */
+  /* Horizontal alignment */
   align-items: center;
   
   /* Vertical alignment */
@@ -129,7 +129,6 @@ main {
 
 .folder-title {
   position: relative;
-  width: 100%;
   padding-left: 0.75rem;
   padding-right: 0.75rem;
   font-size: 1.2rem;

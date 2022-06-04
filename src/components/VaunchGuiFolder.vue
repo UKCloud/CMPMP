@@ -35,7 +35,6 @@ export default defineComponent({
   margin: 0.75rem;
   min-width: 20vw;
   max-width: 30vw;
-  width: auto;
   height: 27.5vh;
   backdrop-filter: unset !important;
 }
