@@ -39,26 +39,26 @@ export class VaunchSetDescription extends VaunchCommand {
   execute(args: string[]): VaunchResponse {
     const folders = useFolderStore();
     const fullPath: string | undefined = args.shift();
-    if (fullPath) {
-      const filePath = fullPath.split("/");
-      const folderName: string = filePath[0];
-      const fileName: string = filePath[1];
-      const folder: VaunchFolder = folders.getFolderByName(folderName);
-      if (folder) {
-        const file: VaunchFile | undefined = folder.getFile(fileName);
-        if (file) file.description = args.join(" ");
-        return this.makeResponse(
-          ResponseType.Success,
-          `Edited description of file ${filePath}`
-        );
-      } else {
-        return this.makeResponse(
-          ResponseType.Error,
-          `Folder: ${folderName} does not exist`
-        );
-      }
+    if (!fullPath)
+      return this.makeResponse(ResponseType.Error, `Please provide a file`);
+
+    const filePath = fullPath.split("/");
+    const folderName: string = filePath[0];
+    const fileName: string = filePath[1];
+    const folder: VaunchFolder = folders.getFolderByName(folderName);
+
+    if (folder) {
+      const file: VaunchFile | undefined = folder.getFile(fileName);
+      if (file) file.description = args.join(" ");
+      return this.makeResponse(
+        ResponseType.Success,
+        `Edited description of file ${filePath}`
+      );
     } else {
-      return this.makeResponse(ResponseType.Error, "No filepath was provided");
+      return this.makeResponse(
+        ResponseType.Error,
+        `The folder ${folderName} does not exist`
+      );
     }
   }
 }

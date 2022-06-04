@@ -40,16 +40,30 @@ export class VaunchRm extends VaunchCommand {
       return this.makeResponse(ResponseType.Error, "Not enough arguments");
     }
     const folders = useFolderStore();
+    const failedToDelete: string[] = [];
     for (const filepath of args) {
       const filePath = filepath.split("/");
       const folderName: string = filePath[0];
       const fileToDelete: string = filePath[1];
       const folder: VaunchFolder = folders.getFolderByName(folderName);
-      if (folder) folder.removeFile(fileToDelete);
+      if (folder) {
+        folder.removeFile(fileToDelete);
+      } else failedToDelete.push(fileToDelete);
     }
-    return this.makeResponse(
-      ResponseType.Success,
-      `Deleted files: ${args.join(", ")}`
-    );
+
+    if (failedToDelete.length == 0) {
+      return this.makeResponse(
+        ResponseType.Success,
+        `Deleted files: ${args.join(", ")}`
+      );
+    } else {
+      const plural = failedToDelete.length > 1 ? true : false;
+      return this.makeResponse(
+        ResponseType.Error,
+        `The file${plural ? "s" : ""}: ${failedToDelete.join(", ")} do${
+          plural ? "" : "es"
+        } not exist and were not deleted`
+      );
+    }
   }
 }

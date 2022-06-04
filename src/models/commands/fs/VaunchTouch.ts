@@ -102,7 +102,7 @@ export class VaunchTouch extends VaunchCommand {
     }
     return this.makeResponse(
       ResponseType.Error,
-      `Folder: ${folderName} does not exist`
+      `The folder ${folderName} does not exist`
     );
   }
 }
