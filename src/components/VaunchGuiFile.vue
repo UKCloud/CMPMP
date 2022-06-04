@@ -22,7 +22,8 @@ export default defineComponent({
   methods: {
     execute(file: VaunchUrlFile, args: string[]) {
       let response: VaunchResponse = file.execute(args);
-      if ((response.type = ResponseType.UpdateInput)) {
+      console.log(response);
+      if (response.type == ResponseType.UpdateInput) {
         this.$emit("set-input", response.message);
       }
     },
@@ -79,7 +80,7 @@ export default defineComponent({
     class="file vaunch-window"
     @click.exact="execute(file, [])"
     @click.ctrl="execute(file, ['_blank'])"
-    @click.middle="execute(file, ['_blank'])"
+    @click.middle.exact="execute(file, ['_blank'])"
     :id="parentFolderName + '-' + file.getIdSafeName()"
   >
     <div :class="{ fuzzyInfo: isFuzzy }">
