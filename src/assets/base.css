@@ -98,7 +98,7 @@ body {
 
 body, html, #app {
   height: 100vh;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
 }
 
 main {
@@ -182,4 +182,17 @@ main {
 
 .hidden {
   display: none !important;
+}
+
+@media (max-width: 768px) {
+  #commands-folders-container {
+    display: block;
+    width: 100%;
+    flex-direction: column;
+    overflow-y: scroll;
+  }
+  #commands-container, .vaunch-command-folder {
+    display: block;
+    min-width: 100%;
+  }
 }

@@ -38,9 +38,9 @@ export default defineComponent({
         return;
       } else this.sessionConfig.historyIndex = -1;
       // Emit out what we're typing to fuzzy, to build a list of potential files this matches
-      this.$emit('fuzzy', val)
+      this.$emit('fuzzy', val.trim());
 
-      // Annoyingly if input overflows autcomplete falls apart, so just disable it after a while...
+      // Annoyingly if input overflows autocomplete falls apart, so just disable it after a while...
       if (val.length > 50) {
         this.autocomplete = ""
         return
@@ -273,6 +273,8 @@ export default defineComponent({
         id="vaunch-input"
         type="text"
         autocapitalize="none"
+        autocomplete="off"
+        enterkeyhint="go"
         v-model="vaunchInput"
         @keydown.tab.prevent="complete"
         @keydown.enter.exact.prevent="sendCommand()"
