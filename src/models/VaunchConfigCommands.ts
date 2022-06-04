@@ -317,15 +317,15 @@ export class VaunchExport extends VaunchCommand {
     },
     {
       args: ["-n myExport"],
-      description: ["Exports your current Vaunch instance to a file called 'myExport.json', includes all folders and excludes personalisation config"]
+      description: ["Exports your current Vaunch instance to a file called 'vaunch.json', includes all folders and excludes personalisation config"]
     },
     {
       args: ["-f sites foo "],
-      description: ["Exports your current Vaunch instance to a file called 'myExport.json', includes only the folders 'sites' and 'foo'"]
+      description: ["Exports your current Vaunch instance to a file called 'vaunch.json', includes only the folders 'sites' and 'foo'"]
     },
     {
       args: ["-c"],
-      description: ["Exports your current Vaunch instance to a file called 'myExport.json', includes all folders and personalisation config"]
+      description: ["Exports your current Vaunch instance to a file called 'vaunch.json', includes all folders and personalisation config"]
     }]
     super("export", longDescription, parameters, examples);
   }
