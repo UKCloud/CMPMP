@@ -68,6 +68,7 @@ export class VaunchRmdir extends VaunchCommand {
         }
       } else failedToDelete.push(toDelete);
     });
+
     if (failedToDelete.length == 0) {
       return this.makeResponse(
         ResponseType.Success,
@@ -77,9 +78,9 @@ export class VaunchRmdir extends VaunchCommand {
       const plural = failedToDelete.length > 1 ? true : false;
       return this.makeResponse(
         ResponseType.Error,
-        `Folder${plural ? "s" : ""}: ${failedToDelete.join(", ")} do${
+        `The folder${plural ? "s" : ""}: ${failedToDelete.join(", ")} do${
           plural ? "" : "es"
-        } not exist`
+        } not exist and were not deleted`
       );
     }
   }

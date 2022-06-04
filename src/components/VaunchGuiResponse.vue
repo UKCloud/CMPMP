@@ -12,8 +12,8 @@ export default defineComponent({
     };
   },
   mounted() {
-    // Fade out and dismiss the window after two seconds
-    setTimeout(this.dismiss, 2000);
+    // Fade out and dismiss the window after three seconds
+    setTimeout(this.dismiss, 3000);
   },
   methods: {
     dismiss() {
@@ -61,14 +61,26 @@ export default defineComponent({
 <template>
   <div class="response-window-container" ref="responseWindow">
     <div class="vaunch-window" id="response-window">
-      <span id="error-title" class="folder-title">
+      <span
+        v-if="response.type == 'error'"
+        id="error-title"
+        class="folder-title"
+      >
         <i class="fa-solid fa-circle-exclamation"></i>
         <span id="man-title-text">Error</span>
+      </span>
+      <span
+        v-if="response.type == 'info'"
+        id="error-title"
+        class="folder-title"
+      >
+        <i class="fa-solid fa-circle-info"></i>
+        <span id="man-title-text">Info</span>
       </span>
       <div id="response-inner">
         {{ response.message }}
         <div v-if="response.filetype == 'VaunchCommand'">
-          For usage information, use: <code>man {{ response.name }}</code>
+          For usage information, use: <code>help {{ response.name }}</code>
         </div>
       </div>
     </div>

@@ -84,13 +84,13 @@ export class VaunchEditFile extends VaunchCommand {
       } else {
         return this.makeResponse(
           ResponseType.Error,
-          `Could not find file: ${fullPath}`
+          `The file ${fullPath} does not exist`
         );
       }
     } else {
       return this.makeResponse(
         ResponseType.Error,
-        `Folder: ${folderName} does not exist`
+        `The folder ${folderName} does not exist`
       );
     }
   }

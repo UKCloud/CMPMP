@@ -75,7 +75,7 @@ export class VaunchSetIcon extends VaunchCommand {
       } else {
         return this.makeResponse(
           ResponseType.Error,
-          `File: ${fullPath} does not exist`
+          `The file ${fullPath} does not exist`
         );
       }
     } else if (folder) {
@@ -84,7 +84,7 @@ export class VaunchSetIcon extends VaunchCommand {
     }
     return this.makeResponse(
       ResponseType.Error,
-      `Folder: ${folderName} does not exist`
+      `The folder ${folderName} does not exist`
     );
   }
 }
