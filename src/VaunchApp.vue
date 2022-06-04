@@ -18,7 +18,7 @@ import { useSessionStore } from "./stores/sessionState";
 import type { VaunchResponse } from "./models/VaunchResponse";
 import { ResponseType } from "./models/VaunchResponse";
 export default defineComponent({
-  name: "Vaunch",
+  name: "VaunchApp",
   components: {
     VaunchInput,
     VaunchGuiFolder,
@@ -33,6 +33,12 @@ export default defineComponent({
     const folders = useFolderStore();
     const fuzzyFiles = useFuzzyStore();
     const sessionConfig = useSessionStore();
+    let currentResponse: VaunchResponse = {
+      type: ResponseType.Info,
+      message: "Vaunch Initialised",
+      filetype: "none",
+      name: "vaunch",
+    };
     return {
       commands,
       config,
@@ -41,6 +47,7 @@ export default defineComponent({
       folders,
       prefixName: config.prefix.name,
       prefixClass: config.prefix.class,
+      currentResponse,
     };
   },
   methods: {
@@ -147,23 +154,12 @@ export default defineComponent({
     sortByHits(files: VaunchFile[]) {
       return files.sort((a, b) => (a.hits < b.hits ? 1 : -1));
     },
-    handleResponse(response: VaunchResponse | any) {
+    handleResponse(response: VaunchResponse) {
       let newInputValue = "";
-      if (response) {
-        switch (response.type) {
-          case ResponseType.UpdateInput:
-            newInputValue = response.message;
-            break;
-          case ResponseType.Error:
-            console.log("Error", response.message);
-            break;
-          case ResponseType.Success:
-            console.log("Success", response.message);
-            break;
-          default:
-            break;
-        }
+      if (response.type == ResponseType.UpdateInput) {
+        newInputValue = response.message;
       }
+      this.currentResponse = response;
       this.passInput(newInputValue);
     },
     passInput(input: string | void) {
@@ -289,6 +285,7 @@ export default defineComponent({
         >
           <VaunchGuiFolder
             v-for="folder in folders.items"
+            :key="folder.name"
             v-on:set-input="passInput"
             :folder="folder"
           />
