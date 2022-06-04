@@ -135,6 +135,7 @@ export default defineComponent({
         <VaunchManualEntry
           v-for="command in commands"
           :command="command"
+          :key="command.fileName"
           ref="manualItems"
         />
       </div>

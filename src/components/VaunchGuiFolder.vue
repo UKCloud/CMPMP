@@ -68,6 +68,7 @@ export default defineComponent({
         v-on:set-input="passInput"
         v-for="file in folder.getFiles()"
         :file="file"
+        :key="file.fileName"
         :parent-folder-name="folder.name"
       />
     </div>

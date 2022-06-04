@@ -56,13 +56,13 @@ h2 {
     <h1 class="command-title">{{ command.fileName }}</h1>
     <div v-if="command.aliases.length" class="command-ailiases">
       Alias{{ command.aliases.length > 1 ? "es" : "" }}:
-      <span v-for="(ailias, index) in command.aliases">{{
-        ailias + (index != command.aliases.length - 1 ? ", " : "")
+      <span v-for="(alias, index) in command.aliases" :key="alias">{{
+        alias + (index != command.aliases.length - 1 ? ", " : "")
       }}</span>
     </div>
     <!-- Print out the description, separating indices as new paragraphs -->
     <div class="description">
-      <p v-for="descriptionLine in manual.description">
+      <p v-for="descriptionLine in manual.description" :key="descriptionLine">
         {{ descriptionLine }}
       </p>
     </div>
@@ -72,7 +72,11 @@ h2 {
       <h2>Synopsis</h2>
       <code>
         {{ command.fileName }}
-        <span class="parameter" v-for="(parameter, index) in manual.parameters">
+        <span
+          class="parameter"
+          v-for="(parameter, index) in manual.parameters"
+          :key="index"
+        >
           {{
             (parameter.optional ? "[" : "") +
             parameter.name +
@@ -88,15 +92,22 @@ h2 {
     <div v-if="manual.examples.length">
       <h2>Examples</h2>
       <ul class="example-list">
-        <li v-for="example in manual.examples">
+        <li v-for="(example, index) in manual.examples" :key="index">
           <code>
             {{ command.fileName }}
-            <span class="parameter" v-for="(argument, index) in example.args">
+            <span
+              class="parameter"
+              v-for="(argument, index) in example.args"
+              :key="index"
+            >
               {{ argument + (index != example.args.length - 1 ? " " : "") }}
             </span>
           </code>
           <div class="description">
-            <p v-for="descriptionLine in example.description">
+            <p
+              v-for="descriptionLine in example.description"
+              :key="descriptionLine"
+            >
               {{ descriptionLine }}
             </p>
           </div>

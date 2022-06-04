@@ -59,5 +59,3 @@ export default defineComponent({
   filter: contrast(1.5);
 }
 </style>
-
-<template></template>

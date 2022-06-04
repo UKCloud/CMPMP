@@ -98,6 +98,7 @@ export default defineComponent({
         :class="{ highlight: file === fuzzyMatches[currentIndex] }"
         v-on:set-input="passInput"
         v-for="file in fuzzyMatches"
+        :key="file.fileName"
         :file="file"
         :parent-folder-name="'fuzzy'"
         :is-fuzzy="true"

@@ -39,6 +39,7 @@ export default defineComponent({
       <VaunchGuiCommand
         v-for="file in commands"
         :file="file"
+        :key="file.fileName"
         :parent-folder-name="'commands'"
       />
     </div>
