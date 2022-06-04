@@ -59,3 +59,6 @@ export default defineComponent({
   filter: contrast(1.5);
 }
 </style>
+
+// eslint-disable-next-line vue/valid-template-root
+<template></template>
