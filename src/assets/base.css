@@ -203,4 +203,11 @@ main {
     left: 2.5vw !important;
     width: 95vw !important;
   }
+
+  #vaunch-man-container {
+    top: 2.5vh !important;
+    left: 2.5vw !important;
+    width: 95vw !important;
+    height: 95vh !important;
+  }
 }
