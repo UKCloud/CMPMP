@@ -40,7 +40,6 @@ export default defineComponent({
   padding: 1em;
   margin: 0.5em;
   box-shadow: none;
-  overflow-wrap: break-word;
   border: solid thin rgba(100, 100, 100, 0.25);
   user-select: none;
 }

@@ -146,7 +146,6 @@ main {
 
 .file-container {
   display: flex;
-  justify-content: start;
   padding: 0.5em;
   flex-wrap: wrap;
   overflow-y: auto;
