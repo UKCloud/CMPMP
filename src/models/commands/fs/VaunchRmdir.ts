@@ -56,6 +56,7 @@ export class VaunchRmdir extends VaunchCommand {
       force = true;
       args.shift();
     }
+    const failedToDelete: string[] = [];
     args.forEach((toDelete) => {
       // Strip slashes from folder names, if running from autocompleted value
       toDelete = toDelete.replace("/", "");
@@ -65,11 +66,21 @@ export class VaunchRmdir extends VaunchCommand {
         } else if (folders.getFolderByName(toDelete).files.size == 0) {
           folders.remove(toDelete);
         }
-      }
+      } else failedToDelete.push(toDelete);
     });
-    return this.makeResponse(
-      ResponseType.Success,
-      `Deleted folder: ${args.join(", ")}`
-    );
+    if (failedToDelete.length == 0) {
+      return this.makeResponse(
+        ResponseType.Success,
+        `Deleted folder: ${args.join(", ")}`
+      );
+    } else {
+      const plural = failedToDelete.length > 1 ? true : false;
+      return this.makeResponse(
+        ResponseType.Error,
+        `Folder${plural ? "s" : ""}: ${failedToDelete.join(", ")} do${
+          plural ? "" : "es"
+        } not exist`
+      );
+    }
   }
 }

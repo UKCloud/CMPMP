@@ -1,8 +1,8 @@
 export enum ResponseType {
-  Error,
-  Success,
-  UpdateInput,
-  Info,
+  Error = "error",
+  Success = "success",
+  UpdateInput = "update",
+  Info = "info",
 }
 
 export type VaunchResponse = {

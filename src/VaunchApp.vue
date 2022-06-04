@@ -159,6 +159,7 @@ export default defineComponent({
       if (response.type == ResponseType.UpdateInput) {
         newInputValue = response.message;
       }
+      console.log(response);
       this.currentResponse = response;
       this.passInput(newInputValue);
     },
@@ -255,6 +256,9 @@ export default defineComponent({
 
 <template>
   <main :style="{ 'background-image': 'url(' + config.background + ')' }">
+    <div v-if="currentResponse.type == 'error'">
+      Response: {{ currentResponse }}
+    </div>
     <VaunchInput
       v-on:command="executeCommand"
       v-on:fuzzy="fuzzy"
