@@ -274,6 +274,7 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   align-items: center;
+  backdrop-filter: blur(10px);
 }
 
 #input-wrapper {

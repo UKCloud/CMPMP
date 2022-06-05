@@ -36,7 +36,6 @@ export default defineComponent({
   min-width: 20vw;
   max-width: 30vw;
   height: 27.5vh;
-  backdrop-filter: unset !important;
 }
 
 /* Medium devices (tablets, 768px and up) */
