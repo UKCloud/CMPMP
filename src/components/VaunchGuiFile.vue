@@ -34,18 +34,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.file {
-  display: flex;
-  justify-content: space-between;
-  min-width: 20%;
-  max-width: 100%;
-  padding: 1em;
-  margin: 0.5em;
-  box-shadow: none;
-  border: solid thin rgba(100, 100, 100, 0.25);
-  user-select: none;
-  transition: filter 0.15s;
-}
 
 .file:hover {
   cursor: pointer;

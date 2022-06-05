@@ -41,18 +41,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.file {
-  display: flex;
-  justify-content: space-between;
-  width: auto;
+
+.command-file {
   min-width: 95%;
   max-width: 95%;
-  padding: 1em;
-  margin: 0.5em;
-  box-shadow: none;
-  overflow-wrap: break-word;
-  border: solid thin rgba(100, 100, 100, 0.1);
-  user-select: none;
 }
 
 .file:hover {
@@ -99,7 +91,7 @@ export default defineComponent({
 <template>
   <div
     :key="file.fileName"
-    class="file vaunch-window"
+    class="file command-file vaunch-window"
     @click.exact="handleClick(file, [])"
     :id="parentFolderName + '-' + file.getIdSafeName()"
   >
