@@ -318,8 +318,8 @@ export default defineComponent({
           @keydown.tab.prevent="complete"
           @keydown.enter.exact.prevent="sendCommand()"
           @keydown.enter.ctrl.exact.prevent="sendCommand(true)"
-          @keydown.down.exact.prevent="downKeyAction"
-          @keyup.up.exact.prevent="upKeyAction"
+          @keydown.down.prevent="downKeyAction"
+          @keydown.up.prevent="upKeyAction"
           @keydown.esc.exact.prevent="vaunchInput = ''"
           ref="inputBox"
         />

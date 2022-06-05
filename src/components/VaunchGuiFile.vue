@@ -44,6 +44,7 @@ export default defineComponent({
   box-shadow: none;
   border: solid thin rgba(100, 100, 100, 0.25);
   user-select: none;
+  transition: filter 0.15s;
 }
 
 .file:hover {
