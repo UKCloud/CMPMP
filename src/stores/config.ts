@@ -7,7 +7,7 @@ export const defaultconfig = {
   showGUI: true,
   titleCase: true,
   defaultFile: "",
-  fuzzy: false,
+  fuzzy: true,
   showCommands: true,
   prefix: {
     class: "solid",
