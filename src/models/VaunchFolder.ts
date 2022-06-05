@@ -15,9 +15,10 @@ export class VaunchFolder {
     this.iconClass = iconClass;
   }
 
-  public addFile(newFile: VaunchFile): void {
-    if (this.getFile(newFile.fileName)) return;
+  public addFile(newFile: VaunchFile): boolean {
+    if (this.getFile(newFile.fileName)) return false;
     this.files.set(newFile.fileName, newFile);
+    return true;
   }
 
   titleCase(): string {

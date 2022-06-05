@@ -93,11 +93,18 @@ export class VaunchTouch extends VaunchCommand {
       if (newFile) {
         // Set the file icon if a custom icon was provided
         if (iconName) newFile.setIcon(iconName, iconClass);
-        folder.addFile(newFile);
-        return this.makeResponse(
-          ResponseType.Success,
-          `Successfully created file: ${folderName}/${newFile.fileName}`
-        );
+        let fileMade = folder.addFile(newFile);
+        if (!fileMade) {
+          return this.makeResponse(
+            ResponseType.Error,
+            `The file ${folderName}/${newFile.fileName} already exists`
+          );
+        } else {
+          return this.makeResponse(
+            ResponseType.Success,
+            `Successfully created file: ${folderName}/${newFile.fileName}`
+          );
+        }
       }
     }
     return this.makeResponse(
