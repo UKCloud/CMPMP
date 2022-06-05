@@ -231,7 +231,6 @@ export default defineComponent({
   border-radius: 5px;
   background: v-bind("config.color.window");
   color: v-bind("config.color.text");
-  backdrop-filter: blur(10px);
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 #vaunch-autocomplete {

@@ -25,7 +25,6 @@ export default defineComponent({
   max-width: 20vw;
   width: auto;
   height: 100%;
-  backdrop-filter: unset !important;
 }
 </style>
 
