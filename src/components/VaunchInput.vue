@@ -239,7 +239,6 @@ export default defineComponent({
   justify-content: space-around;
   position: relative;
   width: 75vw;
-  backdrop-filter: blur(10px);
 }
 
 /* Common styles for both inputs */
@@ -275,6 +274,7 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   align-items: center;
+  backdrop-filter: blur(10px);
 }
 
 #input-wrapper {
