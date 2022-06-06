@@ -58,7 +58,6 @@ export class VaunchFolder {
   }
 
   setFilePosition(fileName:string, position:number):boolean {
-    console.log("a new loop...")
     // Set the folder's position
     let currentFile:VaunchFile|undefined = this.getFile(fileName);
     if (currentFile){
