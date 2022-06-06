@@ -83,7 +83,7 @@ export const useFolderStore: StoreDefinition = defineStore({
       // Set the folder's position
       let currentFolder:VaunchFolder = this.getFolderByName(folderName);
       if (currentFolder){
-        let positionGoingDown = position > currentFolder.position;
+        let positionGoingDown = (position > currentFolder.position && currentFolder.position != -1);
         currentFolder.position = position;
         if (position == -1) return true;
 

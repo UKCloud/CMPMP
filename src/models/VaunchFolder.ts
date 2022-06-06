@@ -62,7 +62,7 @@ export class VaunchFolder {
     let currentFile:VaunchFile|undefined = this.getFile(fileName);
     if (currentFile){
 
-      let positionGoingDown = position > currentFile.position;
+      let positionGoingDown = (position > currentFile.position && currentFile.position != -1);
       currentFile.position = position;
       if (position == -1) return true;
       

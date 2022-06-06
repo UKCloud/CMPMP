@@ -43,7 +43,7 @@ export class VaunchSetPosition extends VaunchCommand {
 
   execute(args: string[]): VaunchResponse {
     const folders = useFolderStore();
-    if (args.length < 2) {
+    if (args.length < 1) {
       return this.makeResponse(
         ResponseType.Error,
         `Not enough arguments`
