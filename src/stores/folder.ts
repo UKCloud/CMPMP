@@ -46,7 +46,7 @@ export const useFolderStore: StoreDefinition = defineStore({
         (state.rawFolders.get(path.split("/")[0]) as VaunchFolder)?.getFile(
           path.split("/")[1]
         );
-    },
+    }
   },
   actions: {
     add(name: string) {
@@ -69,5 +69,43 @@ export const useFolderStore: StoreDefinition = defineStore({
       }
       return matchingFiles;
     },
+    sortedItems() {
+      let sortable:VaunchFolder[] = [];
+      let unsorted:VaunchFolder[] = [];
+      // Separate out sortable and un-sortable folders
+      (this.items as VaunchFolder[]).forEach((x:VaunchFolder) => (x.position != -1 ? sortable : unsorted).push(x));
+      // Sort the sortable folders by their position value
+      sortable = sortable.sort((a, b) => ((a as VaunchFolder).position > (b as VaunchFolder).position ? 1 : -1));
+      let final = [...sortable, ...unsorted]
+      return final;
+    },
+    setPosition(folderName:string, position:number):boolean {
+      // Set the folder's position
+      let currentFolder:VaunchFolder = this.getFolderByName(folderName);
+      if (currentFolder){
+        let positionGoingDown = position > currentFolder.position;
+        console.log(currentFolder.name,"old",currentFolder.position,"new",position,"going down",positionGoingDown);
+        currentFolder.position = position;
+        if (position == -1) return true;
+
+        this.fixOrder(folderName, currentFolder.position, positionGoingDown)
+
+      } else return false;
+      return true;
+    },
+    fixOrder(foldername:string, position:number, movingDown:boolean):void {
+      // Recurse through all other folders, if they have this folder's new position, shift it back
+      for (let folder of (this.items as VaunchFolder[])) {
+        if (folder.name != foldername && folder.position == position) {
+          if (movingDown) {
+            folder.position = folder.position - 1;
+            return this.fixOrder(folder.name, position-1, movingDown);
+          } else {
+            folder.position = folder.position + 1;
+            return this.fixOrder(folder.name, position+1, movingDown);
+          }
+        }
+      }
+    }
   },
 });

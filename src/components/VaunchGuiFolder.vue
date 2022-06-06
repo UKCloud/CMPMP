@@ -65,7 +65,7 @@ export default defineComponent({
     <div v-if="folder.getFiles().length > 0" class="file-container">
       <VaunchGuiFile
         v-on:set-input="passInput"
-        v-for="file in folder.getFiles()"
+        v-for="file in folder.sortFiles()"
         :file="file"
         :key="file.fileName"
         :parent-folder-name="folder.name"

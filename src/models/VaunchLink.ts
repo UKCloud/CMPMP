@@ -13,12 +13,13 @@ export class VaunchLink extends VaunchUrlFile {
     icon = "file",
     iconClass = "solid",
     hits = 0,
-    description = ""
+    description = "",
+    position=-1
   ) {
     if (!name.endsWith(".lnk")) {
       name = name + ".lnk";
     }
-    super(name, parent, icon, iconClass, hits, description);
+    super(name, parent, icon, iconClass, hits, description, position);
     this.content = content;
   }
 
@@ -63,6 +64,7 @@ export class VaunchLink extends VaunchUrlFile {
       type: this.filetype,
       hits: this.hits,
       description: this.description,
+      position: this.position,
     };
   }
 

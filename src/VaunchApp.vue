@@ -302,7 +302,7 @@ export default defineComponent({
           id="vaunch-folder-container"
         >
           <VaunchGuiFolder
-            v-for="folder in folders.items"
+            v-for="folder in folders.sortedItems()"
             :key="folder.name"
             v-on:set-input="passInput"
             :folder="folder"
