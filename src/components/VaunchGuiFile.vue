@@ -22,7 +22,6 @@ export default defineComponent({
   methods: {
     execute(file: VaunchUrlFile, args: string[]) {
       let response: VaunchResponse = file.execute(args);
-      console.log(response);
       if (response.type == ResponseType.UpdateInput) {
         this.$emit("set-input", response.message);
       }
