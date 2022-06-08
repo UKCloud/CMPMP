@@ -67,6 +67,15 @@ export default defineComponent({
         }
       }
 
+      // If a fuzzy file has been chosen, let's execute that
+      if (this.fuzzyFiles.items.length > 0 && this.config.fuzzy) {
+        // Also shift this entry off the history, in case it was a qry file
+        this.sessionConfig.history.shift();
+        let response =
+          this.fuzzyFiles.items[this.fuzzyFiles.index].execute(commandArgs);
+        return this.handleResponse(response);
+      }
+
       // From here on, the folder store is needed
       const folders = useFolderStore();
 
@@ -89,15 +98,6 @@ export default defineComponent({
         if (file) {
           return this.handleResponse(file.execute(commandArgs));
         }
-      }
-
-      // If a fuzzy file has been chosen, let's execute that
-      if (this.fuzzyFiles.items.length > 0 && this.config.fuzzy) {
-        // Also shift this entry off the history, in case it was a qry file
-        this.sessionConfig.history.shift();
-        let response =
-          this.fuzzyFiles.items[this.fuzzyFiles.index].execute(commandArgs);
-        return this.handleResponse(response);
       }
 
       // If the input is a valid URL, navigate to it. Create a temporary VaunchLink with the operator and commandArgs
