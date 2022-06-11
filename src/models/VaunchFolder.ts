@@ -1,6 +1,7 @@
-import { VaunchFile } from "./VaunchFile";
+import type { VaunchFile } from "./VaunchFile";
 import { VaunchLink } from "./VaunchLink";
 import { VaunchQuery } from "./VaunchQuery";
+import { VaunchUrlFile } from "./VaunchUrlFile";
 
 export class VaunchFolder {
   name: string;
@@ -34,9 +35,9 @@ export class VaunchFolder {
       .join(" ");
   }
 
-  getFile(fileName: string): VaunchFile | undefined {
+  getFile(fileName: string): VaunchUrlFile | undefined {
     const file = this.files.get(fileName);
-    if (file instanceof VaunchFile) {
+    if (file instanceof VaunchUrlFile) {
       return file;
     }
     return undefined;

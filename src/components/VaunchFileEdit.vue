@@ -1,12 +1,37 @@
 <script setup lang="ts">
 import VaunchWindow from "./VaunchWindow.vue";
 import VaunchButton from "./VaunchButton.vue";
+import { ref } from "vue";
+import { VaunchMv } from "@/models/commands/fs/VaunchMv";
+import type { VaunchResponse } from "@/models/VaunchResponse";
   const props = defineProps(['file'])
 
   const emit = defineEmits(['closeEdit'])
 
+  const newName = ref();
+  const newFolder = ref();
+  const newPrefix = ref();
+  const newContent = ref();
+  const newIcon = ref();
+  const newIconClass = ref();
+
   const closeWindow = () => {
     emit('closeEdit');
+  }
+
+  const saveFile = () => {
+    console.log("saving...");
+    // .value.value is used here to get the .value of the reference,
+    // a HTMLInputElement, which itself has a .value property
+    
+    // If the name/folder of the file has changed, attempt to move it
+    if (newFolder.value.value != props.file.parent.name || newName.value.value != props.file.fileName ) {
+      let originalPath = props.file.getFilePath();
+      let newPath = `${newFolder.value.value}/${newName.value.value}`
+      let mv = new VaunchMv();
+      let response:VaunchResponse = mv.execute([originalPath, newPath]);
+      console.log(response);
+    }
   }
 
 </script>
@@ -91,7 +116,7 @@ import VaunchButton from "./VaunchButton.vue";
           <span>Edit the name of the file</span>
           <div>
             <label class="edit-label" :for="file.getIdSafeName() + '-filename'">Name: </label>
-            <input class="edit-input" type="text" :id="file.getIdSafeName() + '-filename'" :value=" file.fileName " />
+            <input ref="newName" class="edit-input" type="text" :id="file.getIdSafeName() + '-filename'" :value=" file.fileName " />
           </div>
         </div>
 
@@ -99,7 +124,7 @@ import VaunchButton from "./VaunchButton.vue";
           <div>Edit the folder the file is in</div>
           <div>
             <label class="edit-label" :for="file.getIdSafeName() + '-folder'">Folder: </label>
-            <input class="edit-input" type="text" :id="file.getIdSafeName() + '-filename'" :value=" file.parent.name " />
+            <input ref="newFolder" class="edit-input" type="text" :id="file.getIdSafeName() + '-filename'" :value=" file.parent.name " />
           </div>
         </div>
   
@@ -107,7 +132,7 @@ import VaunchButton from "./VaunchButton.vue";
           <span>Edit the prefix used of the file</span>
           <div>
             <label class="edit-label" :for="file.getIdSafeName() + '-prefix'">Prefix: </label>
-            <input class="edit-input" type="text" :id="file.getIdSafeName() + '-prefix'" :value=" file.prefix " />
+            <input ref="newPrefix" class="edit-input" type="text" :id="file.getIdSafeName() + '-prefix'" :value=" file.prefix " />
           </div>
         </div>
     
@@ -115,7 +140,7 @@ import VaunchButton from "./VaunchButton.vue";
           <span>Edit the link content of the file</span>
           <div>
             <label class="edit-label" :for="file.getIdSafeName() + '-content'">Content: </label>
-            <input class="edit-input" type="text" :id="file.getIdSafeName() + '-content'" :value=" file.content " />
+            <input ref="newContent" class="edit-input" type="text" :id="file.getIdSafeName() + '-content'" :value=" file.content " />
           </div>
         </div>
       </div>
@@ -129,14 +154,14 @@ import VaunchButton from "./VaunchButton.vue";
             <span>Edit the icon name for the file</span>
             <div>
               <label class="edit-label" :for="file.getIdSafeName() + '-icon-name'">Icon Name: </label>
-              <input class="edit-input" type="text" :id="file.getIdSafeName() + '-icon-name'" :value=" file.icon " />
+              <input ref="newIcon" class="edit-input" type="text" :id="file.getIdSafeName() + '-icon-name'" :value=" file.icon " />
             </div>
           </div>
           <div class="edit-attr">
             <span>Edit the icon class for the file</span>
             <div>
               <label class="edit-label" :for="file.getIdSafeName() + '-icon-class'">Icon Class: </label>
-              <input class="edit-input" type="text" :id="file.getIdSafeName() + '-icon-class'" :value=" file.iconClass " />
+              <input ref="newIconClass" class="edit-input" type="text" :id="file.getIdSafeName() + '-icon-class'" :value=" file.iconClass " />
             </div>
           </div>
         </div>
@@ -146,7 +171,7 @@ import VaunchButton from "./VaunchButton.vue";
     </div>
     <div class="edit-buttons">
       <div>
-        <VaunchButton icon="save" text="Save" />
+        <VaunchButton icon="save" text="Save" @click="saveFile" />
       </div>
       <div>
         <VaunchButton icon="close" text="Close" @click="closeWindow" />
