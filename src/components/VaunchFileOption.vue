@@ -1,8 +1,9 @@
 <script setup lang="ts">
-  import { VaunchRm } from '@/models/commands/fs/VaunchRm';
+import { VaunchRm } from '@/models/commands/fs/VaunchRm';
 import { type VaunchResponse, ResponseType } from '@/models/VaunchResponse';
-  import { ref, onMounted, onUpdated, reactive } from 'vue'
+import { ref, onMounted, onUpdated, reactive } from 'vue'
 import VaunchFileEdit from './VaunchFileEdit.vue'
+import VaunchConfirm from './VaunchConfirm.vue'
 
   const props = defineProps(['file', 'xPos', 'yPos'])
   const emit = defineEmits(["dismissSelf", "set-input", "sendResponse"]);
@@ -10,7 +11,8 @@ import VaunchFileEdit from './VaunchFileEdit.vue'
   const optionContainer = ref()
 
   const state = reactive({
-    showEdit:false
+    showEdit:false,
+    showDelete:false,
   })
 
   onMounted(() => {
@@ -44,8 +46,16 @@ import VaunchFileEdit from './VaunchFileEdit.vue'
     state.showEdit = true;
     (optionContainer.value as HTMLElement).style.display = "none";
   }
+  const showDeleteWindow = () => {
+    state.showDelete = true;
+    (optionContainer.value as HTMLElement).style.display = "none";
+  }
   const hideEditWindow = () => {
     state.showEdit = false;
+    emit('dismissSelf');
+  }
+  const hideDeleteWindow = () => {
+    state.showDelete = false;
     emit('dismissSelf');
   }
 
@@ -133,11 +143,18 @@ import VaunchFileEdit from './VaunchFileEdit.vue'
     </div>
     <div class="selectable-entries">
       <div class="option-entry" @click="showEditWindow()"><i class="fa-solid fa-pencil option-icon" />Edit File</div>
-      <div class="option-entry" @click="deleteFile()"><i class="fa-solid fa-trash option-icon" />Delete File</div>
+      <div class="option-entry" @click="showDeleteWindow()"><i class="fa-solid fa-trash option-icon" />Delete File</div>
     </div>
 
   </div>
   </div>
   <VaunchFileEdit v-if="state.showEdit" :file="file" v-on:close-edit="hideEditWindow()" v-on:send-response="sendResponse"/>
+  <VaunchConfirm v-if="state.showDelete"
+    v-on:close-window="hideDeleteWindow()" 
+    v-on:answer-yes="deleteFile()"
+    v-on:answer-no="hideDeleteWindow()"
+    title="Are You Sure?"
+    icon="trash"
+    :ask-text="'Are you sure you want to delete '+file.titleCase()+'?'" />
 </div>
 </template>

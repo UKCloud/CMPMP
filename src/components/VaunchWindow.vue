@@ -1,7 +1,8 @@
 <script setup lang="ts">
 const props = defineProps([
   "title",
-  "icon"
+  "icon",
+  "small"
 ])
 
 const emit = defineEmits(['closeWindow'])
@@ -39,10 +40,17 @@ const closeWindow = () => {
   cursor: pointer;
 }
 
+.popup-window-small {
+  top: 45vh;
+  left: 42.5vw;
+  height: 15vh;
+  width: 20vw;
+}
+
 </style>
 
 <template>
-<div class="popup-window vaunch-window vaunch-solid-bg"
+<div :class="{'popup-window':true, 'vaunch-window':true, 'vaunch-solid-bg':true, 'popup-window-small':props.small}"
   tabindex="0"
   @keydown.esc="closeWindow">
   <span ref="titlebar" class="window-title folder-title greyscale-title">
