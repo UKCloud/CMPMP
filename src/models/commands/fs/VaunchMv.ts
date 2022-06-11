@@ -107,6 +107,11 @@ export class VaunchMv extends VaunchCommand {
         folder.removeFile(fileToMove);
         newFolder.addFile(file);
         file.parent = newFolder;
+      } else {
+        return this.makeResponse(
+          ResponseType.Error,
+          `The folder ${newFolderDest} does not exist`
+        );
       }
       return this.makeResponse(
         ResponseType.Success,
