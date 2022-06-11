@@ -23,6 +23,10 @@ const closeWindow = () => {
   display: flex;
   flex-direction: column;
 }
+.window-inner {
+  overflow-y: auto;
+  height: 100%;
+}
 </style>
 
 <template>
@@ -32,9 +36,9 @@ const closeWindow = () => {
   <span ref="titlebar" class="window-title folder-title greyscale-title">
     <span><i :class="['fa-solid', 'fa-'+props.icon]"></i></span>
     <span class="window-title-text">{{ props.title }}</span>
-    <span v-on:click="closeWindow" class="window-close"
-      ><i class="fa-solid fa-circle-xmark"></i
-    ></span>
+    <span v-on:click="closeWindow" class="window-close">
+    <i class="fa-solid fa-close"></i>
+    </span>
   </span>
 
   <div class="window-inner">

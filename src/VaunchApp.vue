@@ -268,6 +268,10 @@ main {
   border-bottom: solid thin v-bind("config.color.text") !important;
   color: v-bind("config.color.text");
 }
+.edit-input {
+  border-bottom: solid thin v-bind("config.color.text") !important;
+  color: v-bind("config.color.text");
+}
 .vaunch-solid-bg {
   background: v-bind("config.color.windowOpaque") !important;
 }

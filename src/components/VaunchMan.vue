@@ -48,6 +48,9 @@ export default defineComponent({
 </script>
 
 <style scoped>
+#help-container {
+  padding: 0 1rem;
+}
 
 .manual-container {
   display: flex;
@@ -84,6 +87,7 @@ export default defineComponent({
 
 <template>
 <VaunchWindow :title="'Help'" :icon="'info'" v-on:close-window="closeWindow">
+<div id="help-container">
   <div id="search-container">
     <div id="search-box">
       <label id="manual-search-label" for="manual-search-input">Search:</label>
@@ -104,5 +108,6 @@ export default defineComponent({
       :key="command.fileName"
       ref="manualItems"/>
   </div>
+</div>
 </VaunchWindow>
 </template>

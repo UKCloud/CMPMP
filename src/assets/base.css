@@ -113,6 +113,15 @@ main {
   background-size: cover;
 }
 
+h1,
+h2 {
+  font-weight: normal;
+  text-decoration: underline;
+}
+h2 {
+  margin-top: 0.5rem;
+}
+
 #vaunch-folder-container {
   position: relative;
   display: flex;
@@ -204,12 +213,6 @@ main {
   cursor: pointer;
 }
 
-.window-inner {
-  padding: 0 1rem;
-  overflow-y: auto;
-  height: 100%;
-}
-
 .hidden {
   display: none !important;
 }
@@ -243,6 +246,9 @@ main {
 }
 .vaunch-button-text {
   font-size: 1rem;
+}
+.vaunch-button-icon {
+  padding-right: 0.5rem;
 }
 
 .vaunch-button:hover {
