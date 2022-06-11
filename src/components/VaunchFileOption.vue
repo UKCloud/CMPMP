@@ -5,7 +5,7 @@ import { type VaunchResponse, ResponseType } from '@/models/VaunchResponse';
 import VaunchFileEdit from './VaunchFileEdit.vue'
 
   const props = defineProps(['file', 'xPos', 'yPos'])
-  const emit = defineEmits(["dismissSelf", "set-input"]);
+  const emit = defineEmits(["dismissSelf", "set-input", "sendResponse"]);
   const option = ref()
   const optionContainer = ref()
 
@@ -47,6 +47,10 @@ import VaunchFileEdit from './VaunchFileEdit.vue'
   const hideEditWindow = () => {
     state.showEdit = false;
     emit('dismissSelf');
+  }
+
+  const sendResponse = (response:VaunchResponse) => {
+    emit("sendResponse", response)
   }
 
   const dismiss = () => {
@@ -134,6 +138,6 @@ import VaunchFileEdit from './VaunchFileEdit.vue'
 
   </div>
   </div>
-  <VaunchFileEdit v-if="state.showEdit" :file="file" v-on:close-edit="hideEditWindow()"/>
+  <VaunchFileEdit v-if="state.showEdit" :file="file" v-on:close-edit="hideEditWindow()" v-on:send-response="sendResponse"/>
 </div>
 </template>
