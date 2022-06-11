@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import VaunchWindow from "./VaunchWindow.vue";
+import VaunchButton from "./VaunchButton.vue";
   const props = defineProps(['file'])
 
   const emit = defineEmits(['closeEdit'])
@@ -33,6 +34,8 @@ import VaunchWindow from "./VaunchWindow.vue";
 .edit-buttons {
   display: flex;
   justify-content: center;
+  border-top: solid thin rgba(0, 0, 0, 0.25);
+  padding-top: 0.5rem;
 }
 .edit-buttons div {
   margin: 0 0.5rem;
@@ -113,15 +116,11 @@ import VaunchWindow from "./VaunchWindow.vue";
     </div>
     <div class="edit-buttons">
       <div>
-        <div class="vaunch-button">
-          <i class="vaunch-button-icon fa-solid fa-save"></i>
-          <span class="vaunch-button-text">Save</span>
-        </div>
+        <VaunchButton icon="save" text="Save" />
       </div>
-        <div class="vaunch-button" @click="closeWindow">
-          <i class="vaunch-button-icon fa-solid fa-close"></i>
-          <span class="vaunch-button-text" >Close</span>
-        </div>
+      <div>
+        <VaunchButton icon="close" text="Close" @click="closeWindow" />
+      </div>
     </div>
   </div>
 </VaunchWindow>
