@@ -5,16 +5,19 @@ import type { VaunchFile } from "@/models/VaunchFile";
 import type { VaunchFolder } from "@/models/VaunchFolder";
 import { useFolderStore } from "@/stores/folder";
 import { useSessionStore } from "@/stores/sessionState";
+import { useConfigStore } from "@/stores/config";
 
 export default defineComponent({
   name: "VaunchInput",
   setup() {
     const folders = useFolderStore();
     const sessionConfig = useSessionStore();
+    const config = useConfigStore();
     return {
       commands,
       folders,
       sessionConfig,
+      config
     };
   },
   data() {
@@ -44,7 +47,9 @@ export default defineComponent({
         return;
       } else this.sessionConfig.historyIndex = -1;
       // Emit out what we're typing to fuzzy, to build a list of potential files this matches
-      this.$emit("fuzzy", val.trim());
+      if (this.config.fuzzy) {
+        this.$emit("fuzzy", val.trim());
+      }
 
       // Annoyingly if input overflows autocomplete falls apart, so just disable it after a while...
       if (val.length > 50) {

@@ -75,17 +75,6 @@ export default defineComponent({
   width: 100%;
   flex: 1;
 }
-
-.commandInput {
-  border: none;
-  background: none;
-  font-size: 1rem;
-  width: 100%;
-  flex: 1;
-}
-.commandInput:focus {
-  outline: none;
-}
 </style>
 
 <template>

@@ -3,6 +3,7 @@ import type { VaunchFile } from "@/models/VaunchFile";
 import type { VaunchFolder } from "@/models/VaunchFolder";
 import type { Parameter, Example } from "@/models/VaunchManual";
 import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
+import type { VaunchUrlFile } from "@/models/VaunchUrlFile";
 import { useFolderStore } from "@/stores/folder";
 
 export class VaunchMv extends VaunchCommand {
@@ -80,7 +81,7 @@ export class VaunchMv extends VaunchCommand {
     }
 
     // If a source file was supplied, we're moving a file
-    const file: VaunchFile | undefined = folder.getFile(fileToMove);
+    const file: VaunchUrlFile | undefined = folder.getFile(fileToMove);
     if (file) {
       // If no new filename is provided, set it to the same as the file
       if (!newFileName) newFileName = file.fileName;
@@ -105,6 +106,12 @@ export class VaunchMv extends VaunchCommand {
         file.setName(newFileName);
         folder.removeFile(fileToMove);
         newFolder.addFile(file);
+        file.parent = newFolder;
+      } else {
+        return this.makeResponse(
+          ResponseType.Error,
+          `The folder ${newFolderDest} does not exist`
+        );
       }
       return this.makeResponse(
         ResponseType.Success,

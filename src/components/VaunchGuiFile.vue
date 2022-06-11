@@ -5,6 +5,7 @@ import VaunchTooltip from "./VaunchTooltip.vue";
 import { extend } from "@vue/shared";
 import { VaunchUrlFile } from "@/models/VaunchUrlFile";
 import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
+import VaunchFileOption from "./VaunchFileOption.vue";
 
 export default defineComponent({
   name: "VaunchGuiFile",
@@ -13,6 +14,16 @@ export default defineComponent({
     return {
       config,
     };
+  },
+  data() {
+    let showOptions:boolean = false;
+    let optionX:number = 0;
+    let optionY:number = 0;
+    return {
+      showOptions,
+      optionX,
+      optionY,
+    }
   },
   props: {
     file: { type: extend(VaunchUrlFile) },
@@ -26,9 +37,12 @@ export default defineComponent({
         this.$emit("set-input", response.message);
       }
     },
+    toggleOptions(event:any) {
+      this.$emit('showFileOption', this.file, event.clientX, event.clientY)
+    }
   },
-  components: { VaunchTooltip },
-  emits: ["set-input"],
+  components: { VaunchTooltip, VaunchFileOption },
+  emits: ["set-input","showFileOption"],
 });
 </script>
 
@@ -69,19 +83,19 @@ export default defineComponent({
     @click.exact="execute(file, [])"
     @click.ctrl="execute(file, ['_blank'])"
     @click.middle.exact="execute(file, ['_blank'])"
+    @click.right.prevent="toggleOptions($event)"
     :id="parentFolderName + '-' + file.getIdSafeName()"
   >
     <div :class="{ fuzzyInfo: isFuzzy }">
       <i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'file-icon']"></i>
-      <span v-if="isFuzzy" class="filename"
-        >{{ file.getParentName(config.titleCase) }}:
+      <span v-if="isFuzzy" class="filename">{{ file.getParentName(config.titleCase) }}:
       </span>
-      <span v-if="config.titleCase" :class="{ filename: !isFuzzy }">{{
-        file.titleCase()
-      }}</span>
-      <span v-if="!config.titleCase" :class="{ filename: !isFuzzy }">{{
-        file.fileName
-      }}</span>
+      <span v-if="config.titleCase" :class="{ filename: !isFuzzy }">
+        {{ file.titleCase() }}
+      </span>
+      <span v-if="!config.titleCase" :class="{ filename: !isFuzzy }">
+        {{ file.fileName }}
+      </span>
     </div>
     <span v-if="isFuzzy" class="description"> {{ file.getDescription() }}</span>
     <span v-if="isFuzzy">Hits: {{ file.hits }}</span>

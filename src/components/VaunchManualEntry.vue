@@ -23,14 +23,6 @@ export default defineComponent({
   border: solid thin rgba(0, 0, 0, 0.25);
   border-radius: 5px;
 }
-h1,
-h2 {
-  font-weight: normal;
-  text-decoration: underline;
-}
-h2 {
-  margin-top: 0.5rem;
-}
 
 .parameter * {
   white-space: no-wrap;
