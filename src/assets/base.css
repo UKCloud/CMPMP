@@ -204,6 +204,11 @@ main {
   cursor: pointer;
 }
 
+.window-inner {
+  padding: 1rem;
+  overflow-y: auto;
+}
+
 .hidden {
   display: none !important;
 }

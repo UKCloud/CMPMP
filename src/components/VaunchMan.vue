@@ -57,11 +57,6 @@ export default defineComponent({
   flex-direction: column;
 }
 
-#manual-inner {
-  padding: 1rem;
-  overflow-y: auto;
-}
-
 .manual-container {
   display: flex;
   flex-direction: column;
@@ -106,7 +101,7 @@ export default defineComponent({
         ><i class="fa-solid fa-circle-xmark"></i
       ></span>
     </span>
-    <div id="manual-inner">
+    <div class="window-inner">
       <div id="search-container">
         <label id="manual-search-label" for="manual-search-input"
           >Search:</label

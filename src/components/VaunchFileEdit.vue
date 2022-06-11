@@ -20,6 +20,7 @@
   display: flex;
   flex-direction: column;
 }
+
 </style>
 
 <template>
@@ -33,6 +34,12 @@
       ><i class="fa-solid fa-circle-xmark"></i
     ></span>
   </span>
-  <input type="text" :value=" file.fileName " />
+
+  <div class="window-inner">
+    <div>
+      <label :for="file.getIdSafeName() + '-filename'">Name: </label><input type="text" :id="file.getIdSafeName() + '-filename'" :value=" file.fileName " />
+    </div>
+  </div>
+
 </div>
 </template>
