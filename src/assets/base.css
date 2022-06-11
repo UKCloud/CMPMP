@@ -98,7 +98,6 @@ body {
 
 body, html, #app {
   height: 100vh;
-  /* overflow-y: hidden; */
 }
 
 main {
@@ -242,7 +241,7 @@ h2 {
     width: 95vw !important;
   }
 
-  #vaunch-man-container {
+  .popup-window {
     top: 2.5vh !important;
     left: 2.5vw !important;
     width: 95vw !important;
