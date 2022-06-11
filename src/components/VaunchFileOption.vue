@@ -103,7 +103,7 @@ import VaunchFileEdit from './VaunchFileEdit.vue'
     <div class="options-title option-entry"><i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'option-icon']"></i>{{ file.titleCase() }}</div>
     <div class="selectable-entries">
       <div class="option-entry" @click="showEditWindow()"><i class="fa-solid fa-pencil option-icon" />Edit File</div>
-      <div class="option-entry" @click="hideEditWindow()"><i class="fa-solid fa-trash option-icon" />Delete File</div>
+      <div class="option-entry" @click="deleteFile()"><i class="fa-solid fa-trash option-icon" />Delete File</div>
     </div>
 
   </div>

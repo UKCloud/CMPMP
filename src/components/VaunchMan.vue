@@ -75,17 +75,24 @@ export default defineComponent({
   border: solid thin rgba(0, 0, 0, 0.25);
   border-radius: 5px;
 }
+
+#search-box {
+  display: flex;
+  width: 20rem;
+}
 </style>
 
 <template>
 <VaunchWindow :title="'Help'" :icon="'info'" v-on:close-window="closeWindow">
-    <div id="search-container">
-    <label id="manual-search-label" for="manual-search-input">Search:</label>
-    <input
-      id="manual-search-input"
-      class="commandInput"
-      type="text"
-      v-model="searchInput"/>
+  <div id="search-container">
+    <div id="search-box">
+      <label id="manual-search-label" for="manual-search-input">Search:</label>
+      <input
+        id="manual-search-input"
+        class="commandInput"
+        type="text"
+        v-model="searchInput"/>
+    </div>
     <div v-if="matches != 0 || searchInput != ''">
       Matches: {{ matches }}
     </div>
