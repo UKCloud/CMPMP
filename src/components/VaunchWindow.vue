@@ -42,7 +42,7 @@ const closeWindow = () => {
 
 .popup-window-small {
   top: 45vh;
-  left: 42.5vw;
+  left: 40vw;
   height: 15vh;
   width: 20vw;
 }
