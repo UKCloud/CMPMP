@@ -5,6 +5,7 @@ import { extend } from "@vue/shared";
 
 import VaunchGuiFile from "./VaunchGuiFile.vue";
 import { VaunchFolder } from "@/models/VaunchFolder";
+import type { VaunchUrlFile } from "@/models/VaunchUrlFile";
 
 export default defineComponent({
   name: "VaunchGuiFolder",
@@ -22,9 +23,12 @@ export default defineComponent({
     passInput(input: string) {
       this.$emit("set-input", input);
     },
+    passFileOption(file: VaunchUrlFile, xPos:number, yPos:number) {
+      this.$emit("showFileOption", file, xPos, yPos)
+    }
   },
   components: { VaunchGuiFile },
-  emits: ["set-input"],
+  emits: ["set-input", "showFileOption"],
 });
 </script>
 
@@ -65,6 +69,7 @@ export default defineComponent({
     <div v-if="folder.getFiles().length > 0" class="file-container">
       <VaunchGuiFile
         v-on:set-input="passInput"
+        v-on:show-file-option="passFileOption"
         v-for="file in folder.sortFiles()"
         :file="file"
         :key="file.fileName"

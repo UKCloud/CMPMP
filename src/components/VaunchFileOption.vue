@@ -1,0 +1,113 @@
+<script setup lang="ts">
+  import { VaunchRm } from '@/models/commands/fs/VaunchRm';
+  import { ref, onMounted, onUpdated, reactive } from 'vue'
+import VaunchFileEdit from './VaunchFileEdit.vue'
+
+  const props = defineProps(['file', 'xPos', 'yPos'])
+  const emit = defineEmits(["dismissSelf"]);
+  const option = ref()
+  const optionContainer = ref()
+
+  const state = reactive({
+    showEdit:false
+  })
+
+  onMounted(() => {
+    let element:HTMLElement = option.value;
+    element.style.top = `${props.yPos}px`;
+    element.style.left = `${props.xPos}px`;
+  })
+
+  onUpdated(() => {
+    let element:HTMLElement = option.value;
+    element.style.top = `${props.yPos}px`;
+    element.style.left = `${props.xPos}px`;
+  })
+
+  const deleteFile = () => {
+    let rm = new VaunchRm();
+    let filePath = `${props.file.getParentName()}/${props.file.fileName}`;
+    rm.execute([filePath])
+    dismiss();
+  }
+
+  const showEditWindow = () => {
+    state.showEdit = true;
+    (optionContainer.value as HTMLElement).style.display = "none";
+  }
+  const hideEditWindow = () => {
+    state.showEdit = false;
+    emit('dismissSelf');
+  }
+
+  const dismiss = () => {
+    emit('dismissSelf');
+  }
+</script>
+
+<style scoped>
+.option-outer {
+  position: absolute;
+}
+.vaunch-option {
+  max-width: 15em;
+  min-width: 7em;
+  word-break: break-all;
+  height: 7em;
+  z-index: 10;
+  border: solid thin rgba(100, 100, 100, 0.25);
+  overflow: visible;
+}
+
+.options-container {
+  border-radius: inherit;
+  background-color: inherit;
+  padding: 0.5em 0;
+}
+
+.options-container div {
+  background-color: inherit;
+}
+
+.options-title {
+  border-bottom: solid 1px rgba(0, 0, 0, 0.25);
+}
+
+.option-icon {
+  padding-right: 0.5em;
+  width: 1.5rem;
+}
+
+.selectable-entries{
+  margin-top: 0.5em;
+}
+
+.selectable-entries * {
+  transition: filter 0.25s;
+}
+.selectable-entries *:hover {
+  filter: hue-rotate(30deg) invert(20%);
+  cursor: pointer;
+}
+
+.option-entry {
+  padding: 0 0.5em;
+}
+</style>
+
+<template>
+<div class="option-outer" v-click-away="dismiss" ref="option">
+  <div class="vaunch-option vaunch-window vaunch-solid-bg" ref="optionContainer">
+  <div class="options-container">
+
+    <div class="options-title option-entry"><i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'option-icon']"></i>{{ file.titleCase() }}</div>
+    <div class="selectable-entries">
+      <div class="option-entry" @click="showEditWindow()"><i class="fa-solid fa-pencil option-icon" />Edit File</div>
+      <div class="option-entry" @click="hideEditWindow()"><i class="fa-solid fa-trash option-icon" />Delete File</div>
+    </div>
+
+  </div>
+  </div>
+  <VaunchFileEdit v-if="state.showEdit" :file="file" v-on:close-edit="hideEditWindow()"/>
+</div>
+</template>

@@ -18,6 +18,8 @@ import { useSessionStore } from "@/stores/sessionState";
 import type { VaunchResponse } from "./models/VaunchResponse";
 import { ResponseType } from "./models/VaunchResponse";
 import VaunchGuiResponse from "./components/VaunchGuiResponse.vue";
+import VaunchFileOption from "./components/VaunchFileOption.vue";
+import type { VaunchUrlFile } from "./models/VaunchUrlFile";
 
 export default defineComponent({
   name: "VaunchApp",
@@ -28,6 +30,19 @@ export default defineComponent({
     VaunchGuiCommands,
     VaunchMan,
     VaunchGuiResponse,
+    VaunchFileOption,
+  },
+  data() {
+    const config = useConfigStore();
+    const optionFile:any = null;
+    return {
+      optionFile,
+      optionX:0,
+      optionY:0,
+      showOptions:false,
+      prefixName: config.prefix.name,
+      prefixClass: config.prefix.class,
+    }
   },
   setup() {
     // Load config store for Vaunch configuration options, e/.g background image
@@ -48,8 +63,6 @@ export default defineComponent({
       sessionConfig,
       fuzzyFiles,
       folders,
-      prefixName: config.prefix.name,
-      prefixClass: config.prefix.class,
       currentResponse,
     };
   },
@@ -218,6 +231,12 @@ export default defineComponent({
         this.prefixClass = this.config.prefix.class;
       }
     },
+    showFileOption(file:VaunchUrlFile, xPos:number, yPos:number) {
+      this.optionFile = file;
+      this.optionX = xPos;
+      this.optionY = yPos;
+      this.showOptions = true;
+    }
   },
 });
 </script>
@@ -227,10 +246,13 @@ export default defineComponent({
 @import "@/assets/base.css";
 
 /* Set vaunch-wide colors, defaults to --color-vaunch-window */
+main {
+  color: v-bind("config.color.text");
+}
+
 .vaunch-window {
   border-radius: 5px;
   background: v-bind("config.color.window");
-  color: v-bind("config.color.text");
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 #vaunch-autocomplete {
@@ -305,6 +327,7 @@ export default defineComponent({
             v-for="folder in folders.sortedItems()"
             :key="folder.name"
             v-on:set-input="passInput"
+            v-on:show-file-option="showFileOption"
             :folder="folder"
           />
         </div>
@@ -313,4 +336,7 @@ export default defineComponent({
 
     <VaunchMan v-if="sessionConfig.showHelp" :commands="commands" />
   </main>
+  <!-- <div> -->
+    <VaunchFileOption v-if="showOptions" v-on:dismiss-self="showOptions = false;" :file="optionFile" :x-pos="optionX" :y-pos="optionY"/>
+  <!-- </div> -->
 </template>

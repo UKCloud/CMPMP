@@ -67,17 +67,6 @@ export default defineComponent({
   flex-direction: column;
 }
 
-#man-title {
-  display: flex;
-  flex-direction: row;
-}
-#man-title-text {
-  flex: 1;
-}
-#man-close:hover {
-  cursor: pointer;
-}
-
 #manual-search-label {
   font-size: 1.25rem;
   padding-right: 0.5rem;
@@ -105,14 +94,15 @@ export default defineComponent({
   <div
     tabindex="0"
     @keydown.esc="closeWindow"
+    v-click-away="closeWindow"
     ref="window"
     id="vaunch-man-container"
     class="vaunch-window vaunch-solid-bg"
   >
-    <span ref="titlebar" id="man-title" class="folder-title greyscale-title">
-      <span id="man-icon"><i class="fa-solid fa-info"></i></span>
-      <span id="man-title-text">Help</span>
-      <span v-on:click="closeWindow" id="man-close"
+    <span ref="titlebar" class="window-title folder-title greyscale-title">
+      <span><i class="fa-solid fa-info"></i></span>
+      <span class="window-title-text">Help</span>
+      <span v-on:click="closeWindow" class="window-close"
         ><i class="fa-solid fa-circle-xmark"></i
       ></span>
     </span>

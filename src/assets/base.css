@@ -193,6 +193,17 @@ main {
   align-items: center;
 }
 
+.window-title {
+  display: flex;
+  flex-direction: row;
+}
+.window-title-text {
+  flex: 1;
+}
+.window-close:hover {
+  cursor: pointer;
+}
+
 .hidden {
   display: none !important;
 }
