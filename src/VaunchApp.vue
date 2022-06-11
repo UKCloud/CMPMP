@@ -339,6 +339,7 @@ main {
     </div>
 
     <VaunchMan v-if="sessionConfig.showHelp" :commands="commands" />
-    <VaunchFileOption v-if="showOptions" v-on:dismiss-self="showOptions = false;" :file="optionFile" :x-pos="optionX" :y-pos="optionY"/>
+    <VaunchFileOption v-if="showOptions" v-on:dismiss-self="showOptions = false;" v-on:set-input="passInput"
+    :file="optionFile" :x-pos="optionX" :y-pos="optionY"/>
   </main>
 </template>

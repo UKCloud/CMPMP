@@ -10,7 +10,7 @@ const props = defineProps(["text","icon"])
   margin: 0.5rem;
   text-align: center;
   color: inherit;
-  background: rgba(100, 100, 100, 0.25);
+  background: rgba(150, 150, 150, 0.25);
   transition: background-color 0.25s;
   border: solid thin rgba(100, 100, 100, 0.25);
   border-radius: 5px;

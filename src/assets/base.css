@@ -113,8 +113,7 @@ main {
   background-size: cover;
 }
 
-h1,
-h2 {
+h1,h2,h3 {
   font-weight: normal;
   text-decoration: underline;
 }
@@ -200,17 +199,6 @@ h2 {
   flex-wrap: wrap;
   padding: 1em;
   align-items: center;
-}
-
-.window-title {
-  display: flex;
-  flex-direction: row;
-}
-.window-title-text {
-  flex: 1;
-}
-.window-close:hover {
-  cursor: pointer;
 }
 
 .hidden {

@@ -1,10 +1,11 @@
 <script setup lang="ts">
   import { VaunchRm } from '@/models/commands/fs/VaunchRm';
+import { type VaunchResponse, ResponseType } from '@/models/VaunchResponse';
   import { ref, onMounted, onUpdated, reactive } from 'vue'
 import VaunchFileEdit from './VaunchFileEdit.vue'
 
   const props = defineProps(['file', 'xPos', 'yPos'])
-  const emit = defineEmits(["dismissSelf"]);
+  const emit = defineEmits(["dismissSelf", "set-input"]);
   const option = ref()
   const optionContainer = ref()
 
@@ -29,6 +30,14 @@ import VaunchFileEdit from './VaunchFileEdit.vue'
     let filePath = `${props.file.getParentName()}/${props.file.fileName}`;
     rm.execute([filePath])
     dismiss();
+  }
+
+  const executeFile = (args:string[]) => {
+    let response: VaunchResponse = props.file.execute(args);
+    if (response.type == ResponseType.UpdateInput) {
+      emit("set-input", response.message);
+    }
+    hideEditWindow();
   }
 
   const showEditWindow = () => {
@@ -69,7 +78,13 @@ import VaunchFileEdit from './VaunchFileEdit.vue'
   background-color: inherit;
 }
 
+.options-container .selectable-entries:not(:last-child) {
+  padding-bottom: 0.5rem;
+  border-bottom: solid 1px rgba(0, 0, 0, 0.25);
+}
+
 .options-title {
+  padding-bottom: 0.5rem !important;
   border-bottom: solid 1px rgba(0, 0, 0, 0.25);
 }
 
@@ -101,6 +116,17 @@ import VaunchFileEdit from './VaunchFileEdit.vue'
   <div class="options-container">
 
     <div class="options-title option-entry"><i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'option-icon']"></i>{{ file.titleCase() }}</div>
+    <div class="selectable-entries">
+      <div v-if="file.filetype == 'VaunchLink'" class="option-entry" @click="executeFile([])">
+        <i class="fa-solid fa-link option-icon" />Open
+      </div>
+      <div v-if="file.filetype == 'VaunchLink'" class="option-entry" @click="executeFile(['_blank'])">
+        <i class="fa-solid fa-up-right-from-square option-icon" />Open in New Tab
+      </div>
+      <div v-if="file.filetype == 'VaunchQuery'" class="option-entry" @click="executeFile([])">
+        <i class="fa-solid fa-ellipsis option-icon" />Autofill Input
+      </div>
+    </div>
     <div class="selectable-entries">
       <div class="option-entry" @click="showEditWindow()"><i class="fa-solid fa-pencil option-icon" />Edit File</div>
       <div class="option-entry" @click="deleteFile()"><i class="fa-solid fa-trash option-icon" />Delete File</div>

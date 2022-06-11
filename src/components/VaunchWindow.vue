@@ -27,6 +27,18 @@ const closeWindow = () => {
   overflow-y: auto;
   height: 100%;
 }
+
+.window-title {
+  display: flex;
+  flex-direction: row;
+}
+.window-title-text {
+  flex: 1;
+}
+.window-close:hover {
+  cursor: pointer;
+}
+
 </style>
 
 <template>
