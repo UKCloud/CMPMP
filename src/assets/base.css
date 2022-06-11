@@ -111,6 +111,7 @@ main {
   height: 100vh;
   flex-flow: column;
   background-size: cover;
+  overflow-y: hidden;
 }
 
 h1,h2,h3 {
