@@ -197,8 +197,6 @@ import { VaunchSetDescription } from "@/models/commands/fs/VaunchSetDescription"
 
       <div class="edit-segment">
         <h2>File Customisation</h2>
-
-        <h3>Icon</h3>
         <div>
           <div class="edit-attr">
             <span>Edit the icon name for the file</span>
