@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import VaunchWindow from "./VaunchWindow.vue";
   const props = defineProps(['file'])
 
   const emit = defineEmits(['closeEdit'])
@@ -24,22 +25,9 @@
 </style>
 
 <template>
-<div class="edit-window vaunch-window vaunch-solid-bg"
-  tabindex="0"
-  @keydown.esc="closeWindow">
-  <span ref="titlebar" class="window-title folder-title greyscale-title">
-    <span><i class="fa-solid fa-pencil"></i></span>
-    <span class="window-title-text">Edit - {{ file.titleCase() }}</span>
-    <span v-on:click="closeWindow" class="window-close"
-      ><i class="fa-solid fa-circle-xmark"></i
-    ></span>
-  </span>
-
-  <div class="window-inner">
-    <div>
-      <label :for="file.getIdSafeName() + '-filename'">Name: </label><input type="text" :id="file.getIdSafeName() + '-filename'" :value=" file.fileName " />
-    </div>
+<VaunchWindow :title="'Edit - ' + file.titleCase()" :icon="'pencil'" v-on:close-window="closeWindow">
+  <div>
+    <label :for="file.getIdSafeName() + '-filename'">Name: </label><input type="text" :id="file.getIdSafeName() + '-filename'" :value=" file.fileName " />
   </div>
-
-</div>
+</VaunchWindow>
 </template>

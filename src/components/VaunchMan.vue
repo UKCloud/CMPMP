@@ -3,13 +3,15 @@ import { defineComponent } from "vue";
 import VaunchManualEntry from "./VaunchManualEntry.vue";
 
 import { useSessionStore } from "@/stores/sessionState";
+import VaunchWindow from "./VaunchWindow.vue";
 
 export default defineComponent({
   name: "VaunchMan",
   props: ["commands"],
   components: {
     VaunchManualEntry,
-  },
+    VaunchWindow
+},
   data() {
     return {
       searchInput: "",
@@ -46,16 +48,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#vaunch-man-container {
-  position: absolute;
-  top: 25vh;
-  left: 25vw;
-  height: 50vh;
-  width: 50vw;
-
-  display: flex;
-  flex-direction: column;
-}
 
 .manual-container {
   display: flex;
@@ -86,44 +78,24 @@ export default defineComponent({
 </style>
 
 <template>
-  <div
-    tabindex="0"
-    @keydown.esc="closeWindow"
-    v-click-away="closeWindow"
-    ref="window"
-    id="vaunch-man-container"
-    class="vaunch-window vaunch-solid-bg"
-  >
-    <span ref="titlebar" class="window-title folder-title greyscale-title">
-      <span><i class="fa-solid fa-info"></i></span>
-      <span class="window-title-text">Help</span>
-      <span v-on:click="closeWindow" class="window-close"
-        ><i class="fa-solid fa-circle-xmark"></i
-      ></span>
-    </span>
-    <div class="window-inner">
-      <div id="search-container">
-        <label id="manual-search-label" for="manual-search-input"
-          >Search:</label
-        >
-        <input
-          id="manual-search-input"
-          class="commandInput"
-          type="text"
-          v-model="searchInput"
-        />
-        <div v-if="matches != 0 || searchInput != ''">
-          Matches: {{ matches }}
-        </div>
-      </div>
-      <div class="manual-container">
-        <VaunchManualEntry
-          v-for="command in commands"
-          :command="command"
-          :key="command.fileName"
-          ref="manualItems"
-        />
-      </div>
+<VaunchWindow :title="'Help'" :icon="'info'" v-on:close-window="closeWindow">
+    <div id="search-container">
+    <label id="manual-search-label" for="manual-search-input">Search:</label>
+    <input
+      id="manual-search-input"
+      class="commandInput"
+      type="text"
+      v-model="searchInput"/>
+    <div v-if="matches != 0 || searchInput != ''">
+      Matches: {{ matches }}
     </div>
   </div>
+  <div class="manual-container">
+    <VaunchManualEntry
+      v-for="command in commands"
+      :command="command"
+      :key="command.fileName"
+      ref="manualItems"/>
+  </div>
+</VaunchWindow>
 </template>
