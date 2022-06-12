@@ -17,7 +17,13 @@ import VaunchConfirm from './VaunchConfirm.vue'
 
   onMounted(() => {
     let element:HTMLElement = option.value;
-    element.style.top = `${props.yPos}px`;
+    let lowerSixth = window.innerHeight - (window.outerHeight / 6);
+    if (props.yPos > lowerSixth) {
+      let bottomPos = window.innerHeight - props.yPos;
+      element.style.bottom = `${bottomPos}px`;
+    } else {
+      element.style.top = `${props.yPos}px`;
+    }
     element.style.left = `${props.xPos}px`;
   })
 
@@ -76,7 +82,7 @@ import VaunchConfirm from './VaunchConfirm.vue'
   max-width: 15em;
   min-width: 7em;
   word-break: break-all;
-  height: 7em;
+  height: auto;
   z-index: 10;
   border: solid thin rgba(100, 100, 100, 0.25);
   overflow: visible;
