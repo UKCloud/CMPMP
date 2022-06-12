@@ -7,9 +7,11 @@ import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { VaunchEditFile } from "@/models/commands/fs/VaunchEditFile";
 import { VaunchSetIcon } from "@/models/commands/fs/VaunchSetIcon";
 import { VaunchSetDescription } from "@/models/commands/fs/VaunchSetDescription";
+import { useConfigStore } from "@/stores/config";
   const props = defineProps(['file'])
 
   const emit = defineEmits(['closeEdit','sendResponse'])
+  const config = useConfigStore();
 
   const newName = ref();
   const newFolder = ref();
@@ -149,6 +151,8 @@ import { VaunchSetDescription } from "@/models/commands/fs/VaunchSetDescription"
   min-width: 30%;
   max-width: 50%;
   flex-shrink: 1;
+  border-bottom: solid thin v-bind("config.color.text") !important;
+  color: v-bind("config.color.text");
 }
 .edit-input:focus {
   outline: none;

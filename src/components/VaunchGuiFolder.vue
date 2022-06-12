@@ -42,6 +42,10 @@ export default defineComponent({
   height: 27.5vh;
 }
 
+.folder-title {
+  background: v-bind("config.color.window");
+}
+
 /* Medium devices (tablets, 768px and up) */
 @media (max-width: 768px) {
   .vaunch-folder {
