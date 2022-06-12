@@ -4,11 +4,13 @@ import { type VaunchResponse, ResponseType } from '@/models/VaunchResponse';
 import { ref, onMounted, onUpdated, reactive } from 'vue'
 import VaunchFileEdit from './VaunchFileEdit.vue'
 import VaunchConfirm from './VaunchConfirm.vue'
+import { useConfigStore } from '@/stores/config';
 
   const props = defineProps(['file', 'xPos', 'yPos'])
   const emit = defineEmits(["dismissSelf", "set-input", "sendResponse"]);
   const option = ref()
   const optionContainer = ref()
+  const config = useConfigStore();
 
   const state = reactive({
     showEdit:false,
@@ -113,16 +115,16 @@ import VaunchConfirm from './VaunchConfirm.vue'
   width: 1.5rem;
 }
 
-.selectable-entries{
+.selectable-entries {
   margin-top: 0.5em;
 }
 
 .selectable-entries * {
-  transition: filter 0.25s;
+  transition: background-color 0.25s;
 }
 .selectable-entries *:hover {
-  filter: hue-rotate(30deg) invert(20%);
   cursor: pointer;
+  background: v-bind("config.color.highlight");
 }
 
 .option-entry {

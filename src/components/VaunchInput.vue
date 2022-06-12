@@ -273,8 +273,8 @@ export default defineComponent({
 
   /* color: var(--color-autocomplete); */
   background: none;
+  color: v-bind("config.color.autocomplete");
 }
-
 #input-inner {
   display: flex;
   flex-direction: row;

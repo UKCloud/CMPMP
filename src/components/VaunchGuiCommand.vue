@@ -75,6 +75,19 @@ export default defineComponent({
   width: 100%;
   flex: 1;
 }
+
+.command-input {
+  border: none;
+  background: none;
+  font-size: 1rem;
+  width: 100%;
+  flex: 1;
+  border-bottom: solid thin v-bind("config.color.text") !important;
+  color: v-bind("config.color.text");
+}
+.command-input:focus {
+  outline: none;
+}
 </style>
 
 <template>
@@ -89,7 +102,7 @@ export default defineComponent({
       <span class="command-name">{{ file.titleCase() }}</span>
       <input
         v-if="file.hasArgs"
-        class="commandInput"
+        class="command-input"
         @keydown.enter.prevent="execute(file, commandInput.split(' '))"
         v-model="commandInput"
         type="text"

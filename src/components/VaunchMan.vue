@@ -4,6 +4,7 @@ import VaunchManualEntry from "./VaunchManualEntry.vue";
 
 import { useSessionStore } from "@/stores/sessionState";
 import VaunchWindow from "./VaunchWindow.vue";
+import { useConfigStore } from "@/stores/config";
 
 export default defineComponent({
   name: "VaunchMan",
@@ -11,11 +12,13 @@ export default defineComponent({
   components: {
     VaunchManualEntry,
     VaunchWindow
-},
+  },
   data() {
+    const config = useConfigStore();
     return {
       searchInput: "",
       matches: 0,
+      config,
     };
   },
   methods: {
@@ -66,6 +69,13 @@ export default defineComponent({
   background-color: unset;
   font-size: 1.25rem;
   border: solid thin rgba(0, 0, 0, 0);
+  border: none;
+  background: none;
+  font-size: 1rem;
+  width: 100%;
+  flex: 1;
+  border-bottom: solid thin v-bind("config.color.text");
+  color: v-bind("config.color.text");
 }
 
 #manual-search-input:focus {
@@ -93,7 +103,6 @@ export default defineComponent({
       <label id="manual-search-label" for="manual-search-input">Search:</label>
       <input
         id="manual-search-input"
-        class="commandInput"
         type="text"
         v-model="searchInput"/>
     </div>

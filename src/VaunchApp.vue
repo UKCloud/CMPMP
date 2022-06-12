@@ -255,28 +255,14 @@ main {
   background: v-bind("config.color.window");
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
-#vaunch-autocomplete {
-  color: v-bind("config.color.autocomplete");
-}
 ::selection {
-  background: v-bind("config.color.highlight"); /* WebKit/Blink Browsers */
-}
-.folder-title {
-  background: v-bind("config.color.window");
-}
-.commandInput {
-  border-bottom: solid thin v-bind("config.color.text") !important;
-  color: v-bind("config.color.text");
-}
-.edit-input {
-  border-bottom: solid thin v-bind("config.color.text") !important;
-  color: v-bind("config.color.text");
+  background: v-bind("config.color.highlight");
 }
 .vaunch-solid-bg {
   background: v-bind("config.color.windowOpaque") !important;
 }
 
-/* Scrollbar themeing */
+/* Scrollbar theming */
 ::-webkit-scrollbar {
   width: 3px;
 }
