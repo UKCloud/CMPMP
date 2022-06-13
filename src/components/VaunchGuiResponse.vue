@@ -1,34 +1,24 @@
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
 import { useSessionStore } from "@/stores/sessionState";
 
-export default defineComponent({
-  name: "VaunchGuiResponse",
-  props: ["response"],
-  setup() {
-    const sessionConfig = useSessionStore();
-    return {
-      sessionConfig,
-    };
-  },
-  mounted() {
-    // Fade out and dismiss the window after three seconds
-    setTimeout(this.dismiss, 3000);
-  },
-  methods: {
-    dismiss() {
-      let responseWindow: HTMLElement = this.$refs
-        .responseWindow as HTMLElement;
+defineProps(["response"])
+const sessionConfig = useSessionStore();
 
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      let self = this;
-      responseWindow.classList.add("fade-out");
-      responseWindow.addEventListener("transitionend", function () {
-        self.sessionConfig.showResponse = false;
-      });
-    },
-  },
-});
+const responseWindow = ref();
+
+onMounted(() => {
+  // Fade out and dismiss the window after three seconds
+  setTimeout(dismiss, 3000);
+})
+
+const dismiss = () => {
+  let responseWindowEle: HTMLElement = responseWindow.value as HTMLElement;
+  responseWindowEle.classList.add("fade-out");
+  responseWindowEle.addEventListener("transitionend", function () {
+    sessionConfig.showResponse = false;
+  });
+}
 </script>
 
 <style scoped>
