@@ -1,35 +1,21 @@
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import { useConfigStore } from "@/stores/config";
-import { extend } from "@vue/shared";
 
 import VaunchGuiFile from "./VaunchGuiFile.vue";
-import { VaunchFolder } from "@/models/VaunchFolder";
 import type { VaunchUrlFile } from "@/models/VaunchUrlFile";
 
-export default defineComponent({
-  name: "VaunchGuiFolder",
-  setup() {
-    // Load config store to get Vaunch configuration options
-    const config = useConfigStore();
-    return {
-      config,
-    };
-  },
-  props: {
-    folder: { type: extend(VaunchFolder) },
-  },
-  methods: {
-    passInput(input: string) {
-      this.$emit("set-input", input);
-    },
-    passFileOption(file: VaunchUrlFile, xPos:number, yPos:number) {
-      this.$emit("showFileOption", file, xPos, yPos)
-    }
-  },
-  components: { VaunchGuiFile },
-  emits: ["set-input", "showFileOption"],
-});
+const config = useConfigStore();
+
+defineProps(["folder"]);
+const emit = defineEmits(["set-input", "showFileOption"]);
+
+const passInput = (input:string) => {
+  emit("set-input", input);
+}
+
+const passFileOption = (file: VaunchUrlFile, xPos:number, yPos:number) => {
+  emit("showFileOption", file, xPos, yPos)
+}
 </script>
 
 <style scoped>
