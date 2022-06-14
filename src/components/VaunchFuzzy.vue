@@ -1,33 +1,27 @@
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { ref, watch } from "vue";
 import VaunchGuiFile from "./VaunchGuiFile.vue";
 
-export default defineComponent({
-  name: "VaunchFuzzy",
-  props: ["fuzzyMatches", "currentIndex"],
-  emits: ["set-input"],
-  components: {
-    VaunchGuiFile,
-  },
-  methods: {
-    passInput(input: string) {
-      this.$emit("set-input", input);
-    },
-  },
-  watch: {
-    currentIndex: function (newIndex) {
-      let fileElement = this.$refs.files as typeof VaunchGuiFile[];
-      let elem: HTMLElement = fileElement[newIndex].$el as HTMLElement;
-      let parent: HTMLElement | null = elem.parentElement;
-      if (parent) {
-        let topPos = elem.offsetTop - parent.offsetTop;
-        parent.scroll({
-          top: topPos,
-          behavior: "smooth",
-        });
-      }
-    },
-  },
+const props = defineProps(["fuzzyMatches", "currentIndex"])
+const emit = defineEmits(["set-input"])
+
+const files = ref();
+
+const getCurrentIndex = () => props.currentIndex;
+
+const passInput = (input:string) => emit("set-input", input);
+
+watch(getCurrentIndex, (newIndex:number) => {
+  let fileElement = files.value as typeof VaunchGuiFile[];
+  let elem: HTMLElement = fileElement[newIndex].$el as HTMLElement;
+  let parent: HTMLElement | null = elem.parentElement;
+  if (parent) {
+    let topPos = elem.offsetTop - parent.offsetTop;
+    parent.scroll({
+      top: topPos,
+      behavior: "smooth",
+    });
+  }
 });
 </script>
 
@@ -88,11 +82,7 @@ export default defineComponent({
       <i class="fa-solid fa-magnifying-glass"></i>
       <span class="folder-name">Fuzzy Search</span>
     </span>
-    <div
-      class="file-container"
-      id="fuzzy-file-container"
-      ref="fuzzyFileContainer"
-    >
+    <div class="file-container" id="fuzzy-file-container">
       <VaunchGuiFile
         ref="files"
         :class="{ highlight: file === fuzzyMatches[currentIndex] }"

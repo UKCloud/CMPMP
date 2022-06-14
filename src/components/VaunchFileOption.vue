@@ -6,74 +6,74 @@ import VaunchFileEdit from './VaunchFileEdit.vue'
 import VaunchConfirm from './VaunchConfirm.vue'
 import { useConfigStore } from '@/stores/config';
 
-  const props = defineProps(['file', 'xPos', 'yPos'])
-  const emit = defineEmits(["dismissSelf", "set-input", "sendResponse"]);
-  const option = ref()
-  const optionContainer = ref()
-  const config = useConfigStore();
+const props = defineProps(['file', 'xPos', 'yPos'])
+const emit = defineEmits(["dismissSelf", "set-input", "sendResponse"]);
+const option = ref()
+const optionContainer = ref()
+const config = useConfigStore();
 
-  const state = reactive({
-    showEdit:false,
-    showDelete:false,
-  })
+const state = reactive({
+  showEdit:false,
+  showDelete:false,
+})
 
-  onMounted(() => {
-    let element:HTMLElement = option.value;
-    let lowerSixth = window.innerHeight - (window.outerHeight / 6);
-    if (props.yPos > lowerSixth) {
-      let bottomPos = window.innerHeight - props.yPos;
-      element.style.bottom = `${bottomPos}px`;
-    } else {
-      element.style.top = `${props.yPos}px`;
-    }
-    element.style.left = `${props.xPos}px`;
-  })
-
-  onUpdated(() => {
-    let element:HTMLElement = option.value;
+onMounted(() => {
+  let element:HTMLElement = option.value;
+  let lowerSixth = window.innerHeight - (window.outerHeight / 6);
+  if (props.yPos > lowerSixth) {
+    let bottomPos = window.innerHeight - props.yPos;
+    element.style.bottom = `${bottomPos}px`;
+  } else {
     element.style.top = `${props.yPos}px`;
-    element.style.left = `${props.xPos}px`;
-  })
+  }
+  element.style.left = `${props.xPos}px`;
+})
 
-  const deleteFile = () => {
-    let rm = new VaunchRm();
-    let filePath = `${props.file.getParentName()}/${props.file.fileName}`;
-    rm.execute([filePath])
-    dismiss();
-  }
+onUpdated(() => {
+  let element:HTMLElement = option.value;
+  element.style.top = `${props.yPos}px`;
+  element.style.left = `${props.xPos}px`;
+})
 
-  const executeFile = (args:string[]) => {
-    let response: VaunchResponse = props.file.execute(args);
-    if (response.type == ResponseType.UpdateInput) {
-      emit("set-input", response.message);
-    }
-    hideEditWindow();
-  }
+const deleteFile = () => {
+  let rm = new VaunchRm();
+  let filePath = `${props.file.getParentName()}/${props.file.fileName}`;
+  rm.execute([filePath])
+  dismiss();
+}
 
-  const showEditWindow = () => {
-    state.showEdit = true;
-    (optionContainer.value as HTMLElement).style.display = "none";
+const executeFile = (args:string[]) => {
+  let response: VaunchResponse = props.file.execute(args);
+  if (response.type == ResponseType.UpdateInput) {
+    emit("set-input", response.message);
   }
-  const showDeleteWindow = () => {
-    state.showDelete = true;
-    (optionContainer.value as HTMLElement).style.display = "none";
-  }
-  const hideEditWindow = () => {
-    state.showEdit = false;
-    emit('dismissSelf');
-  }
-  const hideDeleteWindow = () => {
-    state.showDelete = false;
-    emit('dismissSelf');
-  }
+  hideEditWindow();
+}
 
-  const sendResponse = (response:VaunchResponse) => {
-    emit("sendResponse", response)
-  }
+const showEditWindow = () => {
+  state.showEdit = true;
+  (optionContainer.value as HTMLElement).style.display = "none";
+}
+const showDeleteWindow = () => {
+  state.showDelete = true;
+  (optionContainer.value as HTMLElement).style.display = "none";
+}
+const hideEditWindow = () => {
+  state.showEdit = false;
+  emit('dismissSelf');
+}
+const hideDeleteWindow = () => {
+  state.showDelete = false;
+  emit('dismissSelf');
+}
 
-  const dismiss = () => {
-    emit('dismissSelf');
-  }
+const sendResponse = (response:VaunchResponse) => {
+  emit("sendResponse", response)
+}
+
+const dismiss = () => {
+  emit('dismissSelf');
+}
 </script>
 
 <style scoped>

@@ -1,20 +1,6 @@
-<script lang="ts">
-import { VaunchFile } from "@/models/VaunchFile";
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import VaunchGuiCommand from "./VaunchGuiCommand.vue";
 import { commands } from "@/stores/command";
-
-export default defineComponent({
-  name: "VaunchGuiCommands",
-  setup() {
-    return {
-      commands,
-    };
-  },
-  components: {
-    VaunchGuiCommand,
-  },
-});
 </script>
 
 <style scoped>

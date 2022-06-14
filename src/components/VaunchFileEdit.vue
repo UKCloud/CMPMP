@@ -8,84 +8,83 @@ import { VaunchEditFile } from "@/models/commands/fs/VaunchEditFile";
 import { VaunchSetIcon } from "@/models/commands/fs/VaunchSetIcon";
 import { VaunchSetDescription } from "@/models/commands/fs/VaunchSetDescription";
 import { useConfigStore } from "@/stores/config";
-  const props = defineProps(['file'])
+const props = defineProps(['file'])
 
-  const emit = defineEmits(['closeEdit','sendResponse'])
-  const config = useConfigStore();
+const emit = defineEmits(['closeEdit','sendResponse'])
+const config = useConfigStore();
 
-  const newName = ref();
-  const newFolder = ref();
-  const newPrefix = ref();
-  const newContent = ref();
-  const newIcon = ref();
-  const newIconClass = ref();
-  const newDescription = ref();
+const newName = ref();
+const newFolder = ref();
+const newPrefix = ref();
+const newContent = ref();
+const newIcon = ref();
+const newIconClass = ref();
+const newDescription = ref();
 
-  const closeWindow = () => {
-    emit('closeEdit');
+const closeWindow = () => {
+  emit('closeEdit');
+}
+
+const saveFile = () => {
+  // .value.value is used here to get the .value of the reference,
+  // a HTMLInputElement, which itself has a .value property
+  
+  let originalPath = props.file.getFilePath();
+
+  // Edit the content of the file, if prefix is present, it is a query file
+  // and should be the firs arg after the filename
+  let editArgs:string[] = [];
+  if (newPrefix.value) {
+    // If prefix has changed, add it to the editArgs
+    if (newPrefix.value.value != props.file.prefix) editArgs.push(newPrefix.value.value);
+  }
+  // If the link content has changed, add it to the editArgs
+  if (newContent.value.value != props.file.content) editArgs.push(newContent.value.value);
+  if (editArgs.length > 0) {
+    // Edit the file, using the originalPath to get to the file
+    let edit = new VaunchEditFile();
+    let response:VaunchResponse = edit.execute([originalPath, ...editArgs]);
+    if (response.type == ResponseType.Error) {
+      emit("sendResponse", response);
+      return;
+    }
   }
 
-  const saveFile = () => {
-    // .value.value is used here to get the .value of the reference,
-    // a HTMLInputElement, which itself has a .value property
-    
-    let originalPath = props.file.getFilePath();
-
-    // Edit the content of the file, if prefix is present, it is a query file
-    // and should be the firs arg after the filename
-    let editArgs:string[] = [];
-    if (newPrefix.value) {
-      // If prefix has changed, add it to the editArgs
-      if (newPrefix.value.value != props.file.prefix) editArgs.push(newPrefix.value.value);
+  // Edit the icon of the file
+  if (newIcon.value.value != props.file.icon || newIconClass.value.value != props.file.iconClass ) {
+    let setIcon = new VaunchSetIcon();
+    let response:VaunchResponse = setIcon.execute([originalPath, newIcon.value.value, newIconClass.value.value])
+    if (response.type == ResponseType.Error) {
+      emit("sendResponse", response);
+      return;
     }
-    // If the link content has changed, add it to the editArgs
-    if (newContent.value.value != props.file.content) editArgs.push(newContent.value.value);
-    if (editArgs.length > 0) {
-      // Edit the file, using the originalPath to get to the file
-      let edit = new VaunchEditFile();
-      let response:VaunchResponse = edit.execute([originalPath, ...editArgs]);
-      if (response.type == ResponseType.Error) {
-        emit("sendResponse", response);
-        return;
-      }
-    }
-
-    // Edit the icon of the file
-    if (newIcon.value.value != props.file.icon || newIconClass.value.value != props.file.iconClass ) {
-      let setIcon = new VaunchSetIcon();
-      let response:VaunchResponse = setIcon.execute([originalPath, newIcon.value.value, newIconClass.value.value])
-      if (response.type == ResponseType.Error) {
-        emit("sendResponse", response);
-        return;
-      }
-    }
-
-    // Edit the description of the file
-    if (newDescription.value.value != props.file.description ) {
-      let setDesc = new VaunchSetDescription();
-      let response:VaunchResponse = setDesc.execute([originalPath, newDescription.value.value])
-      if (response.type == ResponseType.Error) {
-        emit("sendResponse", response);
-        return;
-      }
-    }
-
-    // If the name/folder of the file has changed, attempt to move it
-    // Do this last so the originalPath variable can be used for all other commands
-    if (newFolder.value.value != props.file.parent.name || newName.value.value != props.file.fileName ) {
-      let newPath = `${newFolder.value.value}/${newName.value.value}`
-      let mv = new VaunchMv();
-      let response:VaunchResponse = mv.execute([originalPath, newPath]);
-      if (response.type == ResponseType.Error) {
-        emit("sendResponse", response);
-        return;
-      }
-    }
-
-    // Once all edits are made, close the window
-    closeWindow();
   }
 
+  // Edit the description of the file
+  if (newDescription.value.value != props.file.description ) {
+    let setDesc = new VaunchSetDescription();
+    let response:VaunchResponse = setDesc.execute([originalPath, newDescription.value.value])
+    if (response.type == ResponseType.Error) {
+      emit("sendResponse", response);
+      return;
+    }
+  }
+
+  // If the name/folder of the file has changed, attempt to move it
+  // Do this last so the originalPath variable can be used for all other commands
+  if (newFolder.value.value != props.file.parent.name || newName.value.value != props.file.fileName ) {
+    let newPath = `${newFolder.value.value}/${newName.value.value}`
+    let mv = new VaunchMv();
+    let response:VaunchResponse = mv.execute([originalPath, newPath]);
+    if (response.type == ResponseType.Error) {
+      emit("sendResponse", response);
+      return;
+    }
+  }
+
+  // Once all edits are made, close the window
+  closeWindow();
+}
 </script>
 
 <style scoped>

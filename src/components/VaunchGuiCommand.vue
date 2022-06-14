@@ -1,43 +1,32 @@
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import { useConfigStore } from "@/stores/config";
 import VaunchTooltip from "./VaunchTooltip.vue";
-import { extend } from "@vue/shared";
-import { VaunchCommand } from "@/models/VaunchCommand";
+import { ref } from "vue";
+import type { VaunchCommand } from "@/models/VaunchCommand";
 
-export default defineComponent({
-  name: "VaunchGuiCommand",
-  setup() {
-    const config = useConfigStore();
-    return {
-      config,
-      commandInput: "",
-    };
-  },
-  props: {
-    file: { type: extend(VaunchCommand) },
-    parentFolderName: { type: String, required: true },
-    isFuzzy: { type: Boolean, default: false },
-  },
-  methods: {
-    execute(file: VaunchCommand, args: string[]) {
-      file.execute(args);
-      // Clear the input for this command after executing
-      if (file.hasArgs) {
-        (this.$refs.commandInputBox as HTMLInputElement).value = "";
-      }
-    },
-    handleClick(file: VaunchCommand, args: string[]) {
-      if (file.hasArgs) {
-        (this.$refs.commandInputBox as HTMLInputElement).focus();
-      } else {
-        this.execute(file, args);
-      }
-    },
-  },
-  components: { VaunchTooltip },
-  emits: ["set-input"],
-});
+const config = useConfigStore();
+const commandInput = "";
+
+defineProps(["file", "parentFolderName", "isFuzzy"]);
+
+const commandInputBox = ref();
+
+const execute = (file:VaunchCommand, args:string[]) => {
+  file.execute(args);
+  // Clear the input for this command after executing
+  if (file.hasArgs) {
+    (commandInputBox.value as HTMLInputElement).value = "";
+  }
+}
+
+const handleClick = (file: VaunchCommand, args: string[]) => {
+  if (file.hasArgs) {
+    (commandInputBox.value as HTMLInputElement).focus();
+  } else {
+    execute(file, args);
+  }
+}
+
 </script>
 
 <style scoped>

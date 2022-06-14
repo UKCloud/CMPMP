@@ -2,7 +2,7 @@
 import VaunchWindow from './VaunchWindow.vue';
 import VaunchButton from './VaunchButton.vue';
 
-const props = defineProps(["askText","title","icon"])
+defineProps(["askText","title","icon"])
 
 const emit = defineEmits(["closeWindow", "answerYes", "answerNo"])
 

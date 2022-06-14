@@ -1,52 +1,44 @@
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { onMounted, reactive, ref, watch } from "vue";
 import VaunchManualEntry from "./VaunchManualEntry.vue";
 
 import { useSessionStore } from "@/stores/sessionState";
 import VaunchWindow from "./VaunchWindow.vue";
 import { useConfigStore } from "@/stores/config";
 
-export default defineComponent({
-  name: "VaunchMan",
-  props: ["commands"],
-  components: {
-    VaunchManualEntry,
-    VaunchWindow
-  },
-  data() {
-    const config = useConfigStore();
-    return {
-      searchInput: "",
-      matches: 0,
-      config,
-    };
-  },
-  methods: {
-    closeWindow() {
-      const sessionConfig = useSessionStore();
-      sessionConfig.helpCommand = "";
-      sessionConfig.showHelp = false;
-    },
-  },
-  mounted() {
-    const sessionConfig = useSessionStore();
-    if (sessionConfig.helpCommand) {
-      this.searchInput = sessionConfig.helpCommand;
+defineProps(["commands"]);
+const sessionConfig = useSessionStore();
+
+const config = useConfigStore();
+const data = reactive({
+  searchInput: "",
+  matches: 0,
+})
+
+const manualItems = ref();
+
+const closeWindow = () => {
+  sessionConfig.helpCommand = "";
+  sessionConfig.showHelp = false;
+}
+
+onMounted(() => {
+  if (sessionConfig.helpCommand) {
+    data.searchInput = sessionConfig.helpCommand;
+  }
+});
+
+const getSearchInput = () => data.searchInput;
+watch(getSearchInput, (val: string) => {
+  data.matches = 0;
+  (manualItems.value as any[]).forEach((item) => {
+    if (item.command.fileName.toLowerCase().includes(val.toLowerCase())) {
+      item.$el.classList.remove("hidden");
+      if (val != "") data.matches++;
+    } else {
+      item.$el.classList.add("hidden");
     }
-  },
-  watch: {
-    searchInput(val: string) {
-      this.matches = 0;
-      (this.$refs.manualItems as any[]).forEach((item) => {
-        if (item.command.fileName.toLowerCase().includes(val.toLowerCase())) {
-          item.$el.classList.remove("hidden");
-          if (val != "") this.matches++;
-        } else {
-          item.$el.classList.add("hidden");
-        }
-      });
-    },
-  },
+  });
 });
 </script>
 
@@ -104,10 +96,10 @@ export default defineComponent({
       <input
         id="manual-search-input"
         type="text"
-        v-model="searchInput"/>
+        v-model="data.searchInput"/>
     </div>
-    <div v-if="matches != 0 || searchInput != ''">
-      Matches: {{ matches }}
+    <div v-if="data.matches != 0 || data.searchInput != ''">
+      Matches: {{ data.matches }}
     </div>
   </div>
   <div class="manual-container">
