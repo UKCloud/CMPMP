@@ -1,4 +1,4 @@
-<script lang="ts">
+<script setup lang="ts">
 import VaunchInput from "@/components/VaunchInput.vue";
 import VaunchGuiFolder from "./components/VaunchGuiFolder.vue";
 
@@ -7,7 +7,7 @@ import { useConfigStore } from "@/stores/config";
 import { useFolderStore } from "@/stores/folder";
 import type { VaunchFolder } from "./models/VaunchFolder";
 import type { VaunchFile } from "./models/VaunchFile";
-import { defineComponent } from "vue";
+import { reactive, ref } from "vue";
 import { useFuzzyStore } from "./stores/fuzzy";
 import VaunchFuzzy from "./components/VaunchFuzzy.vue";
 import VaunchGuiCommands from "./components/VaunchGuiCommands.vue";
@@ -21,224 +21,204 @@ import VaunchGuiResponse from "./components/VaunchGuiResponse.vue";
 import VaunchFileOption from "./components/VaunchFileOption.vue";
 import type { VaunchUrlFile } from "./models/VaunchUrlFile";
 
-export default defineComponent({
-  name: "VaunchApp",
-  components: {
-    VaunchInput,
-    VaunchGuiFolder,
-    VaunchFuzzy,
-    VaunchGuiCommands,
-    VaunchMan,
-    VaunchGuiResponse,
-    VaunchFileOption,
-  },
-  data() {
-    const config = useConfigStore();
-    const optionFile:any = null;
-    return {
-      optionFile,
-      optionX:0,
-      optionY:0,
-      showOptions:false,
-      prefixName: config.prefix.name,
-      prefixClass: config.prefix.class,
-    }
-  },
-  setup() {
-    // Load config store for Vaunch configuration options, e/.g background image
-    const config = useConfigStore();
-    // Load folders in to iterate over them and display in GUI if wanted
-    const folders = useFolderStore();
-    const fuzzyFiles = useFuzzyStore();
-    const sessionConfig = useSessionStore();
-    let currentResponse: VaunchResponse = {
-      type: ResponseType.Info,
-      message: "Vaunch Initialised",
-      filetype: "none",
-      name: "vaunch",
-    };
-    return {
-      commands,
-      config,
-      sessionConfig,
-      fuzzyFiles,
-      folders,
-      currentResponse,
-    };
-  },
-  methods: {
-    executeCommand(commandArgs: string[], newTab = false) {
-      // Before all else, push this command to Vaunch's history
-      this.sessionConfig.history.unshift(commandArgs.join(" "));
-      let operator = commandArgs[0];
-      commandArgs.shift();
+const config = useConfigStore();
+const folders = useFolderStore();
+const fuzzyFiles = useFuzzyStore();
+const sessionConfig = useSessionStore();
 
-      // Check if we're running a command, if we find it in commands, execute it
-      for (let command of commands) {
-        if (command.getNames().includes(operator)) {
-          return this.handleResponse(command.execute(commandArgs));
-        }
-      }
+const vaunchInput = ref();
 
-      // If a fuzzy file has been chosen, let's execute that
-      if (this.fuzzyFiles.items.length > 0 && this.config.fuzzy) {
-        // Also shift this entry off the history, in case it was a qry file
-        this.sessionConfig.history.shift();
-        let response =
-          this.fuzzyFiles.items[this.fuzzyFiles.index].execute(commandArgs);
-        return this.handleResponse(response);
-      }
-
-      // From here on, the folder store is needed
-      const folders = useFolderStore();
-
-      // If ctrl was held, append _black to commandArgs
-      if (newTab) commandArgs.push("_blank");
-
-      // If no command was found, could it be a qry file?
-      let file = this.findQryFile(operator);
-      if (file) {
-        // If the first parmeter was supplied in the same 'word' as the prefix, unshift
-        // it into the commandArgs. This deals with a multi ${} file, executed like:
-        // prefix:firstArg secondArg
-        if (operator.split(":")[1]) commandArgs.unshift(operator.split(":")[1]);
-        return this.handleResponse(file.execute(commandArgs));
-      }
-
-      // If no command was found, let's check if we're running a file
-      if (operator.includes("/")) {
-        let file: VaunchFile = folders.getFileByPath(operator);
-        if (file) {
-          return this.handleResponse(file.execute(commandArgs));
-        }
-      }
-
-      // If the input is a valid URL, navigate to it. Create a temporary VaunchLink with the operator and commandArgs
-      // then attempt to run the file. If it isn't a valid URL nothing will happen, if it is, the url is navigated to.
-      let urlValue: string = [operator, ...commandArgs].join(" ");
-      let tempLink: VaunchLink = new VaunchLink("temp", urlValue);
-      if (tempLink.hasValidURL()) {
-        return tempLink.execute([]);
-      }
-
-      // Failing everything else, pass the input to the default file
-      // Push the first word back into commandArgs, as there is no operator
-      let defaultFile: string = this.config.defaultFile;
-      if (defaultFile) {
-        commandArgs.unshift(operator);
-        let file: VaunchFile | undefined = folders.getFileByPath(defaultFile);
-        // If the defaultfile is not a filepath, check if it's just the prefix
-        if (!file) {
-          file = this.findQryFile(defaultFile);
-        }
-        // If a default file was found, execute it with the commandArgs, returning the response to vaunchInput
-        if (file) {
-          return this.handleResponse(file.execute(commandArgs));
-        }
-      }
-      // If everything fails, i.e no default search, just clear the input
-      this.passInput("");
-    },
-    findQryFile(operator: string): VaunchFile | undefined {
-      if (operator.includes(":")) {
-        operator = operator.split(":")[0];
-      }
-      const folders = useFolderStore();
-      for (let folder of folders.items as VaunchFolder[]) {
-        for (let file of folder.getFiles()) {
-          if (file.filetype == "VaunchQuery") {
-            if (file.getNames().includes(operator)) {
-              return file;
-            }
-          }
-        }
-      }
-      return undefined;
-    },
-    fuzzy(input: string) {
-      if (input.length > 0) {
-        // If fuzzy is enabled, search for files matching
-        const folders = useFolderStore();
-        let matches: VaunchFile[] = folders.findFiles(input);
-        this.fuzzyFiles.setFuzzy(this.sortByHits(matches));
-        if (this.config.fuzzy) this.setInputIcon(matches[0]);
-      } else {
-        this.fuzzyFiles.clear();
-      }
-      this.fuzzyFiles.index = 0;
-    },
-    sortByHits(files: VaunchFile[]) {
-      return files.sort((a, b) => (a.hits < b.hits ? 1 : -1));
-    },
-    handleResponse(response: VaunchResponse) {
-      let newInputValue = "";
-
-      switch (response.type) {
-        case ResponseType.Error:
-        case ResponseType.Info:
-          this.sessionConfig.showResponse = true;
-          break;
-        case ResponseType.UpdateInput:
-          newInputValue = response.message;
-          this.sessionConfig.showResponse = false;
-          break;
-        default:
-          this.sessionConfig.showResponse = false;
-      }
-
-      this.currentResponse = response;
-      this.passInput(newInputValue);
-    },
-    passInput(input: string | void) {
-      let newInput: string = input ? input : "";
-      (this.$refs["vaunchInput"] as typeof VaunchInput).setInput(newInput);
-    },
-    updateFuzzyIndex(increment: boolean) {
-      if (increment) {
-        // If incrementing, check if index is in range
-        // If not, loop back to index 0
-        if (this.fuzzyFiles.index + 1 < this.fuzzyFiles.items.length) {
-          this.fuzzyFiles.index++;
-        } else this.fuzzyFiles.index = 0;
-      } else {
-        // If decrementing, check if index is in range
-        // If not, loop to max index
-        if (this.fuzzyFiles.index - 1 != -1) {
-          this.fuzzyFiles.index--;
-        } else this.fuzzyFiles.index = this.fuzzyFiles.items.length - 1;
-      }
-      if (this.fuzzyFiles.items[this.fuzzyFiles.index]) {
-        this.setInputIcon(this.fuzzyFiles.items[this.fuzzyFiles.index]);
-      } else {
-        this.setInputIcon(undefined);
-      }
-    },
-    setIconIfQuery(input: string) {
-      let file = this.findQryFile(input);
-      if (file) {
-        this.setInputIcon(file);
-      }
-    },
-    setInputIcon(file: VaunchFile | undefined) {
-      // Set the prefix icon in VaunchInput. If nothing is passed
-      // the icon will stay the same if there are fuzzy files in case
-      // VaunchInput thinks it should be reset but fuzzy matches shows otherwise
-      if (file) {
-        this.prefixName = file.icon;
-        this.prefixClass = file.iconClass;
-      } else if (this.fuzzyFiles.items.length == 0) {
-        this.prefixName = this.config.prefix.name;
-        this.prefixClass = this.config.prefix.class;
-      }
-    },
-    showFileOption(file:VaunchUrlFile, xPos:number, yPos:number) {
-      this.optionFile = file;
-      this.optionX = xPos;
-      this.optionY = yPos;
-      this.showOptions = true;
-    }
-  },
+let optionFile:VaunchFile = reactive(new VaunchLink("default", "default"));
+const data = reactive({
+  optionFile,
+  optionX: 0,
+  optionY: 0,
+  showOptions: false,
+  prefixName: config.prefix.name,
+  prefixClass: config.prefix.class,
+  currentResponse: {
+    type: ResponseType.Info,
+    message: "Vaunch Initialised",
+    filetype: "none",
+    name: "vaunch",
+  }
 });
+
+const executeCommand = (commandArgs: string[], newTab = false) => {
+  // Before all else, push this command to Vaunch's history
+  sessionConfig.history.unshift(commandArgs.join(" "));
+  let operator = commandArgs[0];
+  commandArgs.shift();
+
+  // Check if we're running a command, if we find it in commands, execute it
+  for (let command of commands) {
+    if (command.getNames().includes(operator)) {
+      return handleResponse(command.execute(commandArgs));
+    }
+  }
+
+  // If a fuzzy file has been chosen, let's execute that
+  if (fuzzyFiles.items.length > 0 && config.fuzzy) {
+    // Also shift this entry off the history, in case it was a qry file
+    sessionConfig.history.shift();
+    let response =
+      fuzzyFiles.items[fuzzyFiles.index].execute(commandArgs);
+    return handleResponse(response);
+  }
+
+  // If ctrl was held, append _black to commandArgs
+  if (newTab) commandArgs.push("_blank");
+
+  // If no command was found, could it be a qry file?
+  let file = findQryFile(operator);
+  if (file) {
+    // If the first parameter was supplied in the same 'word' as the prefix, unshift
+    // it into the commandArgs. This deals with a multi ${} file, executed like:
+    // prefix:firstArg secondArg
+    if (operator.split(":")[1]) commandArgs.unshift(operator.split(":")[1]);
+    return handleResponse(file.execute(commandArgs));
+  }
+
+  // If no command was found, let's check if we're running a file
+  if (operator.includes("/")) {
+    let file: VaunchFile = folders.getFileByPath(operator);
+    if (file) {
+      return handleResponse(file.execute(commandArgs));
+    }
+  }
+
+  // If the input is a valid URL, navigate to it. Create a temporary VaunchLink with the operator and commandArgs
+  // then attempt to run the file. If it isn't a valid URL nothing will happen, if it is, the url is navigated to.
+  let urlValue: string = [operator, ...commandArgs].join(" ");
+  let tempLink: VaunchLink = new VaunchLink("temp", urlValue);
+  if (tempLink.hasValidURL()) {
+    return tempLink.execute([]);
+  }
+
+  // Failing everything else, pass the input to the default file
+  // Push the first word back into commandArgs, as there is no operator
+  let defaultFile: string = config.defaultFile;
+  if (defaultFile) {
+    commandArgs.unshift(operator);
+    let file: VaunchFile | undefined = folders.getFileByPath(defaultFile);
+    // If the default file is not a filepath, check if it's just the prefix
+    if (!file) {
+      file = findQryFile(defaultFile);
+    }
+    // If a default file was found, execute it with the commandArgs, returning the response to vaunchInput
+    if (file) {
+      return handleResponse(file.execute(commandArgs));
+    }
+  }
+  // If everything fails, i.e no default search, just clear the input
+  passInput("");
+}
+
+const findQryFile = (operator: string): VaunchFile | undefined => {
+  if (operator.includes(":")) {
+    operator = operator.split(":")[0];
+  }
+  for (let folder of folders.items as VaunchFolder[]) {
+    for (let file of folder.getFiles()) {
+      if (file.filetype == "VaunchQuery") {
+        if (file.getNames().includes(operator)) {
+          return file;
+        }
+      }
+    }
+  }
+  return undefined;
+}
+
+const fuzzy = (input: string) => {
+  if (input.length > 0) {
+    // If fuzzy is enabled, search for files matching
+    const folders = useFolderStore();
+    let matches: VaunchFile[] = folders.findFiles(input);
+    fuzzyFiles.setFuzzy(sortByHits(matches));
+    if (config.fuzzy) setInputIcon(matches[0]);
+  } else {
+    fuzzyFiles.clear();
+  }
+  fuzzyFiles.index = 0;
+}
+
+const sortByHits = (files: VaunchFile[]) => {
+  return files.sort((a, b) => (a.hits < b.hits ? 1 : -1));
+}
+
+const handleResponse = (response: VaunchResponse) => {
+  let newInputValue = "";
+
+  switch (response.type) {
+    case ResponseType.Error:
+    case ResponseType.Info:
+      sessionConfig.showResponse = true;
+      break;
+    case ResponseType.UpdateInput:
+      newInputValue = response.message;
+      sessionConfig.showResponse = false;
+      break;
+    default:
+      sessionConfig.showResponse = false;
+  }
+
+  data.currentResponse = response;
+  passInput(newInputValue);
+}
+
+const passInput = (input: string | void) => {
+  let newInput: string = input ? input : "";
+  (vaunchInput.value as typeof VaunchInput).setInput(newInput);
+}
+
+const updateFuzzyIndex = (increment: boolean) => {
+  if (increment) {
+    // If incrementing, check if index is in range
+    // If not, loop back to index 0
+    if (fuzzyFiles.index + 1 < fuzzyFiles.items.length) {
+      fuzzyFiles.index++;
+    } else fuzzyFiles.index = 0;
+  } else {
+    // If decrementing, check if index is in range
+    // If not, loop to max index
+    if (fuzzyFiles.index - 1 != -1) {
+      fuzzyFiles.index--;
+    } else fuzzyFiles.index = fuzzyFiles.items.length - 1;
+  }
+  if (fuzzyFiles.items[fuzzyFiles.index]) {
+    setInputIcon(fuzzyFiles.items[fuzzyFiles.index]);
+  } else {
+    setInputIcon(undefined);
+  }
+}
+
+const setIconIfQuery = (input: string) => {
+  let file = findQryFile(input);
+  if (file) {
+    setInputIcon(file);
+  }
+}
+
+const setInputIcon = (file: VaunchFile | undefined) =>  {
+  // Set the prefix icon in VaunchInput. If nothing is passed
+  // the icon will stay the same if there are fuzzy files in case
+  // VaunchInput thinks it should be reset but fuzzy matches shows otherwise
+  if (file) {
+    data.prefixName = file.icon;
+    data.prefixClass = file.iconClass;
+  } else if (fuzzyFiles.items.length == 0) {
+    data.prefixName = config.prefix.name;
+    data.prefixClass = config.prefix.class;
+  }
+}
+
+const showFileOption = (file:VaunchUrlFile, xPos:number, yPos:number) => {
+  data.optionFile = file;
+  data.optionX = xPos;
+  data.optionY = yPos;
+  data.showOptions = true;
+}
 </script>
 
 <style>
@@ -286,14 +266,14 @@ main {
       v-on:fuzzy-increment="updateFuzzyIndex"
       v-on:set-input-icon="setInputIcon"
       v-on:query-check="setIconIfQuery"
-      :prefix-name="prefixName"
-      :prefix-class="prefixClass"
+      :prefix-name="data.prefixName"
+      :prefix-class="data.prefixClass"
       ref="vaunchInput"
     />
 
     <VaunchGuiResponse
       v-if="sessionConfig.showResponse"
-      :response="currentResponse"
+      :response="data.currentResponse"
     />
 
     <div id="bottom-half">
@@ -325,9 +305,9 @@ main {
     </div>
 
     <VaunchMan v-if="sessionConfig.showHelp" :commands="commands" />
-    <VaunchFileOption v-if="showOptions" v-on:dismiss-self="showOptions = false;" 
+    <VaunchFileOption v-if="data.showOptions" v-on:dismiss-self="data.showOptions = false;" 
     v-on:set-input="passInput"
     v-on:send-response="handleResponse"
-    :file="optionFile" :x-pos="optionX" :y-pos="optionY"/>
+    :file="data.optionFile" :x-pos="data.optionX" :y-pos="data.optionY"/>
   </main>
 </template>
