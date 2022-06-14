@@ -171,7 +171,7 @@ h2 {
   box-shadow: none !important;
   border: solid thin rgba(100, 100, 100, 0.25);
   user-select: none;
-  transition: filter 0.15s;
+  transition: background-color 0.15s;
 }
 
 #bottom-half {

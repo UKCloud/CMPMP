@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { useConfigStore } from '@/stores/config';
+
 const props = defineProps(["text","icon"])
+const config = useConfigStore();
 </script>
 
 <style scoped>
@@ -23,7 +26,7 @@ const props = defineProps(["text","icon"])
 }
 
 .vaunch-button:hover {
-  background: rgba(100, 100, 100, 0.5);
+  background: v-bind("config.color.highlight");
   cursor: pointer;
 }
 

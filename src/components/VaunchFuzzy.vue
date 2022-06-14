@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import { useConfigStore } from "@/stores/config";
 import { ref, watch } from "vue";
 import VaunchGuiFile from "./VaunchGuiFile.vue";
 
 const props = defineProps(["fuzzyMatches", "currentIndex"])
 const emit = defineEmits(["set-input"])
-
+const config = useConfigStore();
 const files = ref();
 
 const getCurrentIndex = () => props.currentIndex;
@@ -59,7 +60,7 @@ watch(getCurrentIndex, (newIndex:number) => {
 }
 
 .highlight {
-  filter: hue-rotate(30deg) invert(20%);
+  background-color: v-bind("config.color.highlight") !important;
 }
 
 @media (max-width: 768px) {
