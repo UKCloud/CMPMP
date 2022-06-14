@@ -18,7 +18,7 @@ const data = reactive({
   vaunchInput: "",
   autocomplete: "",
   isAutocompletePartial: true,
-  traversingHistory: true,
+  traversingHistory: false,
 });
 
 onMounted(() => {
