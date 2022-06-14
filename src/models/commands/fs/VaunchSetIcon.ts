@@ -81,10 +81,15 @@ export class VaunchSetIcon extends VaunchCommand {
     } else if (folder) {
       // Assume we're attempting to set the folder's icon
       folder.setIcon(newIcon, newIconClass);
+    } else {
+      return this.makeResponse(
+        ResponseType.Error,
+        `The folder ${folderName} does not exist`
+      );
     }
     return this.makeResponse(
-      ResponseType.Error,
-      `The folder ${folderName} does not exist`
+      ResponseType.Success,
+      `Changed the icon of ${fullPath}`
     );
   }
 }
