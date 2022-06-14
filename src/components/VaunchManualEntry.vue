@@ -1,17 +1,12 @@
-<script lang="ts">
+<script setup lang="ts">
 import type { VaunchManual } from "@/models/VaunchManual";
-import { defineComponent } from "vue";
+import { reactive } from "vue";
 
-export default defineComponent({
-  name: "VaunchMan",
-  props: ["command"],
-  data() {
-    let manual: VaunchManual = this.$props.command.manual;
-    return {
-      manual,
-    };
-  },
-});
+const props = defineProps(["command"]);
+const command = props.command;
+defineExpose({command})
+
+const manual:VaunchManual = reactive({...props.command.manual});
 </script>
 
 <style scoped>
