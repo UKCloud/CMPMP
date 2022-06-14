@@ -120,7 +120,7 @@ const dismiss = () => {
 }
 
 .selectable-entries * {
-  transition: background-color 0.25s;
+  transition: background-color 0.15s;
 }
 .selectable-entries *:hover {
   cursor: pointer;

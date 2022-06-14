@@ -38,7 +38,7 @@ const handleClick = (file: VaunchCommand, args: string[]) => {
 
 .file:hover {
   cursor: pointer;
-  filter: hue-rotate(30deg) invert(20%);
+  background-color: v-bind("config.color.highlight");
 }
 
 .command-inner {
