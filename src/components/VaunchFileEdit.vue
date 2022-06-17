@@ -10,7 +10,7 @@ import { VaunchSetDescription } from "@/models/commands/fs/VaunchSetDescription"
 import { useConfigStore } from "@/stores/config";
 const props = defineProps(['file'])
 
-const emit = defineEmits(['closeEdit','sendResponse'])
+const emit = defineEmits(['closeEdit', 'sendResponse'])
 const config = useConfigStore();
 
 const newName = ref();
@@ -28,12 +28,12 @@ const closeWindow = () => {
 const saveFile = () => {
   // .value.value is used here to get the .value of the reference,
   // a HTMLInputElement, which itself has a .value property
-  
+
   let originalPath = props.file.getFilePath();
 
   // Edit the content of the file, if prefix is present, it is a query file
   // and should be the firs arg after the filename
-  let editArgs:string[] = [];
+  let editArgs: string[] = [];
   if (newPrefix.value) {
     // If prefix has changed, add it to the editArgs
     if (newPrefix.value.value != props.file.prefix) editArgs.push(newPrefix.value.value);
@@ -43,7 +43,7 @@ const saveFile = () => {
   if (editArgs.length > 0) {
     // Edit the file, using the originalPath to get to the file
     let edit = new VaunchEditFile();
-    let response:VaunchResponse = edit.execute([originalPath, ...editArgs]);
+    let response: VaunchResponse = edit.execute([originalPath, ...editArgs]);
     if (response.type == ResponseType.Error) {
       emit("sendResponse", response);
       return;
@@ -51,9 +51,9 @@ const saveFile = () => {
   }
 
   // Edit the icon of the file
-  if (newIcon.value.value != props.file.icon || newIconClass.value.value != props.file.iconClass ) {
+  if (newIcon.value.value != props.file.icon || newIconClass.value.value != props.file.iconClass) {
     let setIcon = new VaunchSetIcon();
-    let response:VaunchResponse = setIcon.execute([originalPath, newIcon.value.value, newIconClass.value.value])
+    let response: VaunchResponse = setIcon.execute([originalPath, newIcon.value.value, newIconClass.value.value])
     if (response.type == ResponseType.Error) {
       emit("sendResponse", response);
       return;
@@ -61,9 +61,9 @@ const saveFile = () => {
   }
 
   // Edit the description of the file
-  if (newDescription.value.value != props.file.description ) {
+  if (newDescription.value.value != props.file.description) {
     let setDesc = new VaunchSetDescription();
-    let response:VaunchResponse = setDesc.execute([originalPath, newDescription.value.value])
+    let response: VaunchResponse = setDesc.execute([originalPath, newDescription.value.value])
     if (response.type == ResponseType.Error) {
       emit("sendResponse", response);
       return;
@@ -72,10 +72,10 @@ const saveFile = () => {
 
   // If the name/folder of the file has changed, attempt to move it
   // Do this last so the originalPath variable can be used for all other commands
-  if (newFolder.value.value != props.file.parent.name || newName.value.value != props.file.fileName ) {
+  if (newFolder.value.value != props.file.parent.name || newName.value.value != props.file.fileName) {
     let newPath = `${newFolder.value.value}/${newName.value.value}`
     let mv = new VaunchMv();
-    let response:VaunchResponse = mv.execute([originalPath, newPath]);
+    let response: VaunchResponse = mv.execute([originalPath, newPath]);
     if (response.type == ResponseType.Error) {
       emit("sendResponse", response);
       return;
@@ -88,22 +88,11 @@ const saveFile = () => {
 </script>
 
 <style scoped>
-.edit-window {
-  position: fixed;
-  top: 25vh;
-  left: 25vw;
-  height: 50vh;
-  width: 50vw;
-
-  display: flex;
-  flex-direction: column;
-}
-
 #edit-container {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  height: 100%;
+  flex-grow: 1;
 }
 
 .edit-buttons {
@@ -112,6 +101,7 @@ const saveFile = () => {
   border-top: solid thin rgba(0, 0, 0, 0.25);
   padding: 0.5rem 0;
 }
+
 .edit-buttons div {
   margin: 0 0.5rem;
 }
@@ -121,11 +111,17 @@ const saveFile = () => {
   padding: 0 1rem;
 }
 
+#edit-form {
+  display: flex;
+  flex-direction: row;
+}
+
 .edit-segment {
   padding: 0.5rem;
-  margin: 0.5rem 0;
+  margin: 0.5rem;
   border: solid thin rgba(0, 0, 0, 0.25);
   border-radius: 5px;
+  flex: 1;
 }
 
 .edit-attr {
@@ -137,97 +133,108 @@ const saveFile = () => {
   justify-content: left;
 }
 
+.edit-input-container {
+  display: flex;
+  justify-content: left;
+}
+
 .edit-label {
-  min-width: 10%;
-  max-width: 15%;
+  padding-right: 0.5em;
 }
 
 .edit-input {
   border: none;
   background: none;
   font-size: 1rem;
-  min-width: 30%;
-  max-width: 50%;
-  flex-shrink: 1;
+  flex-grow: 1;
   border-bottom: solid thin v-bind("config.color.text") !important;
   color: v-bind("config.color.text");
 }
+
 .edit-input:focus {
   outline: none;
 }
 </style>
 
 <template>
-<VaunchWindow :title="'Edit - ' + file.titleCase()" :icon="'pencil'" v-on:close-window="closeWindow">
-  <div id="edit-container">
-    <div class="edit-attributes">
+  <VaunchWindow :title="'Edit - ' + file.titleCase()" :icon="'pencil'" v-on:close-window="closeWindow">
+    <div id="edit-container">
+      <div class="edit-attributes">
         <form id="edit-form" @submit.prevent="saveFile">
-        
-        <div class="edit-segment">
-          <h2>File Content</h2>
-          <div class="edit-attr">
-            <span>Edit the name of the file</span>
-            <div>
-              <label class="edit-label" :for="file.getIdSafeName() + '-filename'">Name: </label>
-              <input autocomplete="off" ref="newName" class="edit-input" type="text" :id="file.getIdSafeName() + '-filename'" :value=" file.fileName " />
-            </div>
-          </div>
 
-          <div class="edit-attr">
-            <div>Edit the folder the file is in</div>
-            <div>
-              <label class="edit-label" :for="file.getIdSafeName() + '-folder'">Folder: </label>
-              <input autocomplete="off" ref="newFolder" class="edit-input" type="text" :id="file.getIdSafeName() + '-filename'" :value=" file.parent.name " />
-            </div>
-          </div>
-    
-          <div v-if="file.filetype == 'VaunchQuery'" class="edit-attr">
-            <span>Edit the prefix used of the file</span>
-            <div>
-              <label class="edit-label" :for="file.getIdSafeName() + '-prefix'">Prefix: </label>
-              <input autocomplete="off" ref="newPrefix" class="edit-input" type="text" :id="file.getIdSafeName() + '-prefix'" :value=" file.prefix " />
-            </div>
-          </div>
-      
-          <div class="edit-attr">
-            <span>Edit the link content of the file</span>
-            <div>
-              <label class="edit-label" :for="file.getIdSafeName() + '-content'">Content: </label>
-              <input autocomplete="off" ref="newContent" class="edit-input" type="text" :id="file.getIdSafeName() + '-content'" :value=" file.content " />
-            </div>
-          </div>
-        </div>
-
-        <div class="edit-segment">
-          <h2>File Customisation</h2>
-          <div>
+          <div class="edit-segment">
+            <h2>File Content</h2>
             <div class="edit-attr">
-              <span>Edit the icon name for the file</span>
-              <div>
-                <label class="edit-label" :for="file.getIdSafeName() + '-icon-name'">Icon Name: </label>
-                <input autocomplete="off" ref="newIcon" class="edit-input" type="text" :id="file.getIdSafeName() + '-icon-name'" :value=" file.icon " />
+              <span>Edit the name of the file</span>
+              <div class="edit-input-container">
+                <label class="edit-label" :for="file.getIdSafeName() + '-filename'">Name: </label>
+                <input autocomplete="off" ref="newName" class="edit-input" type="text"
+                  :id="file.getIdSafeName() + '-filename'" :value="file.fileName" />
               </div>
             </div>
+
             <div class="edit-attr">
-              <span>Edit the icon class for the file</span>
-              <div>
-                <label class="edit-label" :for="file.getIdSafeName() + '-icon-class'">Icon Class: </label>
-                <input autocomplete="off" ref="newIconClass" class="edit-input" type="text" :id="file.getIdSafeName() + '-icon-class'" :value=" file.iconClass " />
+              <div>Edit the folder the file is in</div>
+              <div class="edit-input-container">
+                <label class="edit-label" :for="file.getIdSafeName() + '-folder'">Folder: </label>
+                <input autocomplete="off" ref="newFolder" class="edit-input" type="text"
+                  :id="file.getIdSafeName() + '-filename'" :value="file.parent.name" />
               </div>
             </div>
+
+            <div v-if="file.filetype == 'VaunchQuery'" class="edit-attr">
+              <span>Edit the prefix used for the file</span>
+              <div class="edit-input-container">
+                <label class="edit-label" :for="file.getIdSafeName() + '-prefix'">Prefix: </label>
+                <input autocomplete="off" ref="newPrefix" class="edit-input" type="text"
+                  :id="file.getIdSafeName() + '-prefix'" :value="file.prefix" />
+              </div>
+            </div>
+
             <div class="edit-attr">
-              <span>Edit the description for the file</span>
-              <div>
-                <label class="edit-label" :for="file.getIdSafeName() + '-description'">File Description: </label>
-                <input autocomplete="off" ref="newDescription" class="edit-input" type="text" :id="file.getIdSafeName() + '-description'" :value=" file.description " />
+              <span>Edit the link content of the file</span>
+              <div class="edit-input-container">
+                <label class="edit-label" :for="file.getIdSafeName() + '-content'">Content: </label>
+                <input autocomplete="off" ref="newContent" class="edit-input" type="text"
+                  :id="file.getIdSafeName() + '-content'" :value="file.content" />
               </div>
             </div>
           </div>
 
-        </div>
+          <div class="edit-segment">
+            <h2>File Customisation</h2>
+            <div>
+              <div class="edit-attr">
+                <span>Edit the icon name for the file</span>
+                <div class="edit-input-container">
+                  <label class="edit-label" :for="file.getIdSafeName() + '-icon-name'">Icon Name: </label>
+                  <input autocomplete="off" ref="newIcon" class="edit-input" type="text"
+                    :id="file.getIdSafeName() + '-icon-name'" :value="file.icon" />
+                </div>
+              </div>
+              <div class="edit-attr">
+                <span>Edit the icon class for the file</span>
+                <div class="edit-input-container">
+                  <label class="edit-label" :for="file.getIdSafeName() + '-icon-class'">Icon Class: </label>
+                  <input autocomplete="off" ref="newIconClass" class="edit-input" type="text"
+                    :id="file.getIdSafeName() + '-icon-class'" :value="file.iconClass" />
+                </div>
+              </div>
+              <div class="edit-attr">
+                <span>Edit the description for the file</span>
+                <div class="edit-input-container">
+                  <label class="edit-label" :for="file.getIdSafeName() + '-description'">File Description: </label>
+                  <input autocomplete="off" ref="newDescription" class="edit-input" type="text"
+                    :id="file.getIdSafeName() + '-description'" :value="file.description" />
+                </div>
+              </div>
+            </div>
 
-        <input style="display:none" type="submit" />
-      </form>
+          </div>
+
+          <input style="display:none" type="submit" />
+        </form>
+      </div>
     </div>
     <div class="edit-buttons">
       <div>
@@ -237,6 +244,5 @@ const saveFile = () => {
         <VaunchButton icon="close" text="Close" @click="closeWindow" />
       </div>
     </div>
-  </div>
-</VaunchWindow>
+  </VaunchWindow>
 </template>
