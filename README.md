@@ -14,10 +14,13 @@ Vaunch can be accessed at: https://vaunch.kirimson.com, or you can host it yours
     - Icons for both files and folders can be set, using the free [Font Awesome](https://fontawesome.com/) icon set
     - GUI elements can be hidden, for more minimalist design 
     - Can change the window, text, and text-highlight colour
-- Local Data
+- Everything is local
     - All data is stored locally in your browser's Local Storage. None of your configuration is stored on a remote server.
     - Your config can be exported, shared, edited, and imported easily
 - Fuzzy search to quickly find and go to/search commonly used sites
+- Tab completion to quickly execute commands and files
+- Built in documentation, just run `help` or `man` to get help on all commands available in Vaunch
+- GUI to edit files, right click on an existing file and click edit to customise anything in the file from the GUI
 
 ## Usage
 
