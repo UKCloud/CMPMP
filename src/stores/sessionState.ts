@@ -8,6 +8,7 @@ export const useSessionStore = defineStore("session", {
       history: [] as string[],
       historyIndex: -1,
       showResponse: false,
+      vaunchInput: "",
     };
   },
 });

@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import { useConfigStore } from "@/stores/config";
+import { useSessionStore } from "@/stores/sessionState";
 import { ref, watch } from "vue";
 import VaunchGuiFile from "./VaunchGuiFile.vue";
 
 const props = defineProps(["fuzzyMatches", "currentIndex"])
-const emit = defineEmits(["set-input"])
 const config = useConfigStore();
 const files = ref();
 
 const getCurrentIndex = () => props.currentIndex;
-
-const passInput = (input:string) => emit("set-input", input);
 
 watch(getCurrentIndex, (newIndex:number) => {
   let fileElement = files.value as typeof VaunchGuiFile[];
@@ -87,7 +85,6 @@ watch(getCurrentIndex, (newIndex:number) => {
       <VaunchGuiFile
         ref="files"
         :class="{ highlight: file === fuzzyMatches[currentIndex] }"
-        v-on:set-input="passInput"
         v-for="file in fuzzyMatches"
         :key="file.fileName"
         :file="file"
