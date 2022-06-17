@@ -58,6 +58,14 @@ export class VaunchFolder {
     return final;
   }
 
+  organiseFiles(semiSortedFiles:VaunchFile[]) {
+    // To br ran on semi-sorted arrays, with where items are sorted,
+    // but positions may not be in sequence with each other
+    for( let [index, file] of semiSortedFiles.entries() ) {
+      file.position = index+1;
+    }
+  }
+
   setFilePosition(fileName:string, position:number):boolean {
     // Set the folder's position
     let currentFile:VaunchFile|undefined = this.getFile(fileName);
@@ -70,6 +78,9 @@ export class VaunchFolder {
       this.fixOrder(fileName, currentFile.position, positionGoingDown);
 
     } else return false
+    // After setting the position, set each folder's position to a 'sensible' order
+    let sortOfSorted = this.sortFiles();
+    this.organiseFiles(sortOfSorted);
     return true
   }
 

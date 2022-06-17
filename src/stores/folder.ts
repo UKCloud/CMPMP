@@ -79,6 +79,13 @@ export const useFolderStore: StoreDefinition = defineStore({
       let final = [...sortable, ...unsorted]
       return final;
     },
+    organisePosition(semiSortedFolders:VaunchFolder[]) {
+      // To br ran on semi-sorted arrays, with where items are sorted,
+      // but positions may not be in sequence with each other
+      for( let [index, folder] of semiSortedFolders.entries() ) {
+        folder.position = index+1;
+      }
+    },
     setPosition(folderName:string, position:number):boolean {
       // Set the folder's position
       let currentFolder:VaunchFolder = this.getFolderByName(folderName);
@@ -86,10 +93,13 @@ export const useFolderStore: StoreDefinition = defineStore({
         let positionGoingDown = (position > currentFolder.position && currentFolder.position != -1);
         currentFolder.position = position;
         if (position == -1) return true;
-
         this.fixOrder(folderName, currentFolder.position, positionGoingDown)
-
       } else return false;
+
+      // After setting the position, set each folder's position to a 'sensible' order
+      let sortOfSorted = this.sortedItems();
+      this.organisePosition(sortOfSorted);
+
       return true;
     },
     fixOrder(foldername:string, position:number, movingDown:boolean):void {
