@@ -7,20 +7,21 @@ import type { VaunchCommand } from "@/models/VaunchCommand";
 const config = useConfigStore();
 const commandInput = "";
 
-defineProps(["file", "parentFolderName", "isFuzzy"]);
+const props = defineProps(["file", "parentFolderName", "isFuzzy"]);
 
 const commandInputBox = ref();
+const hasArgs = props.file.hasArgs();
 
 const execute = (file:VaunchCommand, args:string[]) => {
   file.execute(args);
   // Clear the input for this command after executing
-  if (file.hasArgs) {
+  if (hasArgs) {
     (commandInputBox.value as HTMLInputElement).value = "";
   }
 }
 
 const handleClick = (file: VaunchCommand, args: string[]) => {
-  if (file.hasArgs) {
+  if (hasArgs) {
     (commandInputBox.value as HTMLInputElement).focus();
   } else {
     execute(file, args);
@@ -90,7 +91,7 @@ const handleClick = (file: VaunchCommand, args: string[]) => {
       <i class="fa-solid fa-chevron-right file-icon"></i>
       <span class="command-name">{{ file.titleCase() }}</span>
       <input
-        v-if="file.hasArgs"
+        v-if="hasArgs"
         class="command-input"
         @keydown.enter.prevent="execute(file, commandInput.split(' '))"
         v-model="commandInput"

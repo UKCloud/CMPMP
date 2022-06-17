@@ -4,7 +4,6 @@ import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useConfigStore } from "@/stores/config";
 
 export class VaunchToggleGui extends VaunchCommand {
-  hasArgs = false;
   constructor() {
     const longDescription: string[] = [
       "Toggles if the Folders/Commands section of Vaunch will be visible.",

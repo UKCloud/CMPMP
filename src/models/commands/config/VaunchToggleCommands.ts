@@ -4,7 +4,6 @@ import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useConfigStore } from "@/stores/config";
 
 export class VaunchToggleCommands extends VaunchCommand {
-  hasArgs = false;
   constructor() {
     const longDescription: string[] = [
       `Toggles if the command window is shows. The command window lists all available commands, and

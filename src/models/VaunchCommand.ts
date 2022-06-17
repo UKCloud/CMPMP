@@ -3,7 +3,6 @@ import { VaunchManual, type Example, type Parameter } from "./VaunchManual";
 import { ResponseType, type VaunchResponse } from "./VaunchResponse";
 
 export abstract class VaunchCommand extends VaunchFile {
-  hasArgs = true;
   filetype = "VaunchCommand";
   manual: VaunchManual;
 
@@ -15,6 +14,10 @@ export abstract class VaunchCommand extends VaunchFile {
   ) {
     super(fileName);
     this.manual = new VaunchManual(longDescription, parameter, examples);
+  }
+
+  hasArgs():boolean {
+    return this.manual.parameters.length > 0;
   }
 
   execute(args: string[]): VaunchResponse {

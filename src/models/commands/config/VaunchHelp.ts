@@ -4,7 +4,6 @@ import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useSessionStore } from "@/stores/sessionState";
 
 export class VaunchHelp extends VaunchCommand {
-  hasArgs = false;
   constructor() {
     const longDescription: string[] = [
       "Shows this help page. Passing an argument will automatically search for the command.",
