@@ -104,14 +104,13 @@ const saveFile = () => {
   justify-content: space-between;
   flex-direction: column;
   height: 100%;
-  padding: 0.5rem 0;
 }
 
 .edit-buttons {
   display: flex;
   justify-content: center;
   border-top: solid thin rgba(0, 0, 0, 0.25);
-  padding-top: 0.5rem;
+  padding: 0.5rem 0;
 }
 .edit-buttons div {
   margin: 0 0.5rem;
@@ -162,70 +161,73 @@ const saveFile = () => {
 <VaunchWindow :title="'Edit - ' + file.titleCase()" :icon="'pencil'" v-on:close-window="closeWindow">
   <div id="edit-container">
     <div class="edit-attributes">
-      
-      <div class="edit-segment">
-        <h2>File Content</h2>
-        <div class="edit-attr">
-          <span>Edit the name of the file</span>
-          <div>
-            <label class="edit-label" :for="file.getIdSafeName() + '-filename'">Name: </label>
-            <input ref="newName" class="edit-input" type="text" :id="file.getIdSafeName() + '-filename'" :value=" file.fileName " />
+        <form id="edit-form" @submit.prevent="saveFile">
+        
+        <div class="edit-segment">
+          <h2>File Content</h2>
+          <div class="edit-attr">
+            <span>Edit the name of the file</span>
+            <div>
+              <label class="edit-label" :for="file.getIdSafeName() + '-filename'">Name: </label>
+              <input autocomplete="off" ref="newName" class="edit-input" type="text" :id="file.getIdSafeName() + '-filename'" :value=" file.fileName " />
+            </div>
           </div>
-        </div>
 
-        <div class="edit-attr">
-          <div>Edit the folder the file is in</div>
-          <div>
-            <label class="edit-label" :for="file.getIdSafeName() + '-folder'">Folder: </label>
-            <input ref="newFolder" class="edit-input" type="text" :id="file.getIdSafeName() + '-filename'" :value=" file.parent.name " />
+          <div class="edit-attr">
+            <div>Edit the folder the file is in</div>
+            <div>
+              <label class="edit-label" :for="file.getIdSafeName() + '-folder'">Folder: </label>
+              <input autocomplete="off" ref="newFolder" class="edit-input" type="text" :id="file.getIdSafeName() + '-filename'" :value=" file.parent.name " />
+            </div>
           </div>
-        </div>
-  
-        <div v-if="file.filetype == 'VaunchQuery'" class="edit-attr">
-          <span>Edit the prefix used of the file</span>
-          <div>
-            <label class="edit-label" :for="file.getIdSafeName() + '-prefix'">Prefix: </label>
-            <input ref="newPrefix" class="edit-input" type="text" :id="file.getIdSafeName() + '-prefix'" :value=" file.prefix " />
-          </div>
-        </div>
     
-        <div class="edit-attr">
-          <span>Edit the link content of the file</span>
+          <div v-if="file.filetype == 'VaunchQuery'" class="edit-attr">
+            <span>Edit the prefix used of the file</span>
+            <div>
+              <label class="edit-label" :for="file.getIdSafeName() + '-prefix'">Prefix: </label>
+              <input autocomplete="off" ref="newPrefix" class="edit-input" type="text" :id="file.getIdSafeName() + '-prefix'" :value=" file.prefix " />
+            </div>
+          </div>
+      
+          <div class="edit-attr">
+            <span>Edit the link content of the file</span>
+            <div>
+              <label class="edit-label" :for="file.getIdSafeName() + '-content'">Content: </label>
+              <input autocomplete="off" ref="newContent" class="edit-input" type="text" :id="file.getIdSafeName() + '-content'" :value=" file.content " />
+            </div>
+          </div>
+        </div>
+
+        <div class="edit-segment">
+          <h2>File Customisation</h2>
           <div>
-            <label class="edit-label" :for="file.getIdSafeName() + '-content'">Content: </label>
-            <input ref="newContent" class="edit-input" type="text" :id="file.getIdSafeName() + '-content'" :value=" file.content " />
+            <div class="edit-attr">
+              <span>Edit the icon name for the file</span>
+              <div>
+                <label class="edit-label" :for="file.getIdSafeName() + '-icon-name'">Icon Name: </label>
+                <input autocomplete="off" ref="newIcon" class="edit-input" type="text" :id="file.getIdSafeName() + '-icon-name'" :value=" file.icon " />
+              </div>
+            </div>
+            <div class="edit-attr">
+              <span>Edit the icon class for the file</span>
+              <div>
+                <label class="edit-label" :for="file.getIdSafeName() + '-icon-class'">Icon Class: </label>
+                <input autocomplete="off" ref="newIconClass" class="edit-input" type="text" :id="file.getIdSafeName() + '-icon-class'" :value=" file.iconClass " />
+              </div>
+            </div>
+            <div class="edit-attr">
+              <span>Edit the description for the file</span>
+              <div>
+                <label class="edit-label" :for="file.getIdSafeName() + '-description'">File Description: </label>
+                <input autocomplete="off" ref="newDescription" class="edit-input" type="text" :id="file.getIdSafeName() + '-description'" :value=" file.description " />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div class="edit-segment">
-        <h2>File Customisation</h2>
-        <div>
-          <div class="edit-attr">
-            <span>Edit the icon name for the file</span>
-            <div>
-              <label class="edit-label" :for="file.getIdSafeName() + '-icon-name'">Icon Name: </label>
-              <input ref="newIcon" class="edit-input" type="text" :id="file.getIdSafeName() + '-icon-name'" :value=" file.icon " />
-            </div>
-          </div>
-          <div class="edit-attr">
-            <span>Edit the icon class for the file</span>
-            <div>
-              <label class="edit-label" :for="file.getIdSafeName() + '-icon-class'">Icon Class: </label>
-              <input ref="newIconClass" class="edit-input" type="text" :id="file.getIdSafeName() + '-icon-class'" :value=" file.iconClass " />
-            </div>
-          </div>
-          <div class="edit-attr">
-            <span>Edit the description for the file</span>
-            <div>
-              <label class="edit-label" :for="file.getIdSafeName() + '-description'">File Description: </label>
-              <input ref="newDescription" class="edit-input" type="text" :id="file.getIdSafeName() + '-description'" :value=" file.description " />
-            </div>
-          </div>
         </div>
 
-      </div>
-
+        <input style="display:none" type="submit" />
+      </form>
     </div>
     <div class="edit-buttons">
       <div>
