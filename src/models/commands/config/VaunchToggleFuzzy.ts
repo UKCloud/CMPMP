@@ -4,7 +4,6 @@ import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useConfigStore } from "@/stores/config";
 
 export class VaunchToggleFuzzy extends VaunchCommand {
-  hasArgs = false;
   constructor() {
     const longDescription: string[] = [
       `Toggles if fuzzy searching is enabled. When enabled, typing in the command box will display

@@ -4,7 +4,6 @@ import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useConfigStore } from "@/stores/config";
 
 export class VaunchToggleCase extends VaunchCommand {
-  hasArgs = false;
   constructor() {
     const longDescription: string[] = [
       "Toggles if the names of files/folders are displayed in Title Case or not.",
