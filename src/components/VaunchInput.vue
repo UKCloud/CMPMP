@@ -26,7 +26,7 @@ onMounted(() => {
 });
 
 
-const getInput = () => data.vaunchInput;
+const getInput = () => sessionConfig.vaunchInput;
 watch(getInput, (val: string) => {
   // If traversing history, ignore this input. Otherwise continue on and reset the history index
   if (data.traversingHistory) {
@@ -126,23 +126,15 @@ watch(getInput, (val: string) => {
   if (file) emit("set-input-icon", file);
 })
 
-const setInput = (input: string) => {
-  data.vaunchInput = input;
-  (inputBox.value as HTMLInputElement).focus();
-}
-defineExpose({
-  setInput
-});
-
 const complete = () => {
   // Only complete if there is something to complete
-  if (data.autocomplete.length > data.vaunchInput.length) {
-    data.vaunchInput = data.autocomplete + (data.isAutocompletePartial || data.autocomplete.endsWith("/") ? "" : " ");
+  if (data.autocomplete.length > sessionConfig.vaunchInput.length) {
+    sessionConfig.vaunchInput = data.autocomplete + (data.isAutocompletePartial || data.autocomplete.endsWith("/") ? "" : " ");
   }
 }
 
 const sendCommand = (newTab = false) => {
-  let trimmedInput = data.vaunchInput.trim();
+  let trimmedInput = sessionConfig.vaunchInput.trim();
   emit("command", trimmedInput.split(" "), newTab);
 }
 
@@ -175,17 +167,17 @@ const downKeyAction = () => {
   let currentHistoryEntry: string =
     sessionConfig.history[sessionConfig.historyIndex];
   if (
-    (data.vaunchInput == "" || data.vaunchInput == currentHistoryEntry) &&
+    (sessionConfig.vaunchInput == "" || sessionConfig.vaunchInput == currentHistoryEntry) &&
     sessionConfig.historyIndex != -1
   ) {
     sessionConfig.historyIndex--;
     data.traversingHistory = true;
     if (sessionConfig.historyIndex == -1) {
-      data.vaunchInput = "";
+      sessionConfig.vaunchInput = "";
     } else {
       let wantedEntry =
         sessionConfig.history[sessionConfig.historyIndex];
-      data.vaunchInput = wantedEntry;
+      sessionConfig.vaunchInput = wantedEntry;
     }
   }
   emit("fuzzyIncrement", true);
@@ -196,14 +188,14 @@ const upKeyAction = () => {
   let currentHistoryEntry: string =
     sessionConfig.history[sessionConfig.historyIndex];
   if (
-    (data.vaunchInput == "" || data.vaunchInput == currentHistoryEntry) &&
+    (sessionConfig.vaunchInput == "" || sessionConfig.vaunchInput == currentHistoryEntry) &&
     sessionConfig.historyIndex < sessionConfig.history.length - 1
   ) {
     sessionConfig.historyIndex++;
     data.traversingHistory = true;
     let wantedEntry =
       sessionConfig.history[sessionConfig.historyIndex];
-    data.vaunchInput = wantedEntry;
+    sessionConfig.vaunchInput = wantedEntry;
   }
   emit("fuzzyIncrement", false);
 }
@@ -306,13 +298,13 @@ const getCommonStartString =(matches: string[]) => {
           autocapitalize="none"
           autocomplete="off"
           enterkeyhint="go"
-          v-model="data.vaunchInput"
+          v-model="sessionConfig.vaunchInput"
           @keydown.tab.prevent="complete"
           @keydown.enter.exact.prevent="sendCommand()"
           @keydown.enter.ctrl.exact.prevent="sendCommand(true)"
           @keydown.down.prevent="downKeyAction"
           @keydown.up.prevent="upKeyAction"
-          @keydown.esc.exact.prevent="data.vaunchInput = ''"
+          @keydown.esc.exact.prevent="sessionConfig.vaunchInput = ''"
           ref="inputBox"
         />
         <input

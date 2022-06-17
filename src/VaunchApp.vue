@@ -169,7 +169,7 @@ const handleResponse = (response: VaunchResponse) => {
 
 const passInput = (input: string | void) => {
   let newInput: string = input ? input : "";
-  (vaunchInput.value as typeof VaunchInput).setInput(newInput);
+  sessionConfig.vaunchInput = newInput;
 }
 
 const updateFuzzyIndex = (increment: boolean) => {
@@ -281,7 +281,6 @@ main {
         v-if="fuzzyFiles.items.length > 0 && config.fuzzy"
         :fuzzy-matches="fuzzyFiles.items"
         :current-index="fuzzyFiles.index"
-        v-on:set-input="passInput"
       />
 
       <div v-if="config.showGUI" id="commands-folders-container">
@@ -296,7 +295,6 @@ main {
           <VaunchGuiFolder
             v-for="folder in folders.sortedItems()"
             :key="folder.name"
-            v-on:set-input="passInput"
             v-on:show-file-option="showFileOption"
             :folder="folder"
           />
@@ -306,7 +304,6 @@ main {
 
     <VaunchMan v-if="sessionConfig.showHelp" :commands="commands" />
     <VaunchFileOption v-if="data.showOptions" v-on:dismiss-self="data.showOptions = false;" 
-    v-on:set-input="passInput"
     v-on:send-response="handleResponse"
     :file="data.optionFile" :x-pos="data.optionX" :y-pos="data.optionY"/>
   </main>

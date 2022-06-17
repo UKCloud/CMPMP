@@ -7,11 +7,7 @@ import type { VaunchUrlFile } from "@/models/VaunchUrlFile";
 const config = useConfigStore();
 
 defineProps(["folder"]);
-const emit = defineEmits(["set-input", "showFileOption"]);
-
-const passInput = (input:string) => {
-  emit("set-input", input);
-}
+const emit = defineEmits(["showFileOption"]);
 
 const passFileOption = (file: VaunchUrlFile, xPos:number, yPos:number) => {
   emit("showFileOption", file, xPos, yPos)
@@ -58,7 +54,6 @@ const passFileOption = (file: VaunchUrlFile, xPos:number, yPos:number) => {
     </span>
     <div v-if="folder.getFiles().length > 0" class="file-container">
       <VaunchGuiFile
-        v-on:set-input="passInput"
         v-on:show-file-option="passFileOption"
         v-for="file in folder.sortFiles()"
         :file="file"

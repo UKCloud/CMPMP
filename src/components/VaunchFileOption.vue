@@ -5,12 +5,15 @@ import { ref, onMounted, onUpdated, reactive } from 'vue'
 import VaunchFileEdit from './VaunchFileEdit.vue'
 import VaunchConfirm from './VaunchConfirm.vue'
 import { useConfigStore } from '@/stores/config';
+import { useSessionStore } from '@/stores/sessionState';
+import { focusVaunchInput } from '@/utilities/inputUtils';
 
 const props = defineProps(['file', 'xPos', 'yPos'])
-const emit = defineEmits(["dismissSelf", "set-input", "sendResponse"]);
+const emit = defineEmits(["dismissSelf", "sendResponse"]);
 const option = ref()
 const optionContainer = ref()
 const config = useConfigStore();
+const sessionConfig = useSessionStore();
 
 const state = reactive({
   showEdit:false,
@@ -45,7 +48,8 @@ const deleteFile = () => {
 const executeFile = (args:string[]) => {
   let response: VaunchResponse = props.file.execute(args);
   if (response.type == ResponseType.UpdateInput) {
-    emit("set-input", response.message);
+    sessionConfig.vaunchInput = response.message;
+    focusVaunchInput()
   }
   hideEditWindow();
 }

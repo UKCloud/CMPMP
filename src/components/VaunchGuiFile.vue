@@ -3,15 +3,19 @@ import { useConfigStore } from "@/stores/config";
 import VaunchTooltip from "./VaunchTooltip.vue";
 import type { VaunchUrlFile } from "@/models/VaunchUrlFile";
 import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
+import { useSessionStore } from "@/stores/sessionState";
+import { focusVaunchInput } from "@/utilities/inputUtils";
 
 const config = useConfigStore();
+const sessionConfig = useSessionStore();
 const props = defineProps(["file","isFuzzy"])
-const emit = defineEmits(["set-input", "showFileOption"]);
+const emit = defineEmits(["showFileOption"]);
 
 const execute = (file: VaunchUrlFile, args: string[]) => {
   let response: VaunchResponse = file.execute(args);
   if (response.type == ResponseType.UpdateInput) {
-    emit("set-input", response.message);
+    sessionConfig.vaunchInput = response.message;
+    focusVaunchInput();
   }
 }
 
