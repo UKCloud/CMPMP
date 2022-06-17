@@ -97,7 +97,7 @@ export class VaunchMv extends VaunchCommand {
         if (newFolder.getFile(newFileName)) {
           return this.makeResponse(
             ResponseType.Info,
-            `A file with the name ${newFileName} already exists in destination folder. ${source} was not moved.`
+            `A file with the name ${newFileName} already exists in the destination folder. ${source} was not moved.`
           );
         }
 

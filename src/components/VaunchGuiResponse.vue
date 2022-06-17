@@ -38,10 +38,6 @@ const dismiss = () => {
   font-size: 1rem;
 }
 
-#error-title {
-  width: 100%;
-}
-
 #response-inner {
   position: relative;
   padding: 1rem;
@@ -52,18 +48,11 @@ const dismiss = () => {
   <div class="response-window-container" ref="responseWindow">
     <div class="vaunch-window" id="response-window">
       <span
-        v-if="response.type == 'error'"
-        id="error-title"
         class="folder-title">
-        <i class="fa-solid fa-circle-exclamation"></i>
-        <span id="man-title-text">Error</span>
-      </span>
-      <span
-        v-if="response.type == 'info'"
-        id="error-title"
-        class="folder-title">
-        <i class="fa-solid fa-circle-information"></i>
-        <span id="man-title-text">Info</span>
+        <i v-if="response.type == 'error'" class="fa-solid fa-circle-exclamation"></i>
+        <span v-if="response.type == 'error'" id="man-title-text">Error</span>
+        <i v-if="response.type == 'info'" class="fa-solid fa-circle-info"></i>
+        <span v-if="response.type == 'info'" id="man-title-text">Info</span>
       </span>
       <div id="response-inner">
         {{ response.message }}

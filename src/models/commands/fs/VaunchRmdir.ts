@@ -57,30 +57,43 @@ export class VaunchRmdir extends VaunchCommand {
       args.shift();
     }
     const failedToDelete: string[] = [];
+    const notEmpty:string[] = [];
     args.forEach((toDelete) => {
       // Strip slashes from folder names, if running from autocompleted value
       toDelete = toDelete.replace("/", "");
       if (folders.getFolderByName(toDelete)) {
+        // If force is set, delete no matter what. Otherwise, check the directory is empty first.
         if (force) {
           folders.remove(toDelete);
         } else if (folders.getFolderByName(toDelete).files.size == 0) {
           folders.remove(toDelete);
+        } else {
+          notEmpty.push(toDelete);
         }
       } else failedToDelete.push(toDelete);
     });
 
-    if (failedToDelete.length == 0) {
-      return this.makeResponse(
-        ResponseType.Success,
-        `Deleted folder: ${args.join(", ")}`
-      );
-    } else {
+    console.log(notEmpty);
+    if (failedToDelete.length != 0) {
       const plural = failedToDelete.length > 1 ? true : false;
       return this.makeResponse(
         ResponseType.Error,
         `The folder${plural ? "s" : ""}: ${failedToDelete.join(", ")} do${
           plural ? "" : "es"
         } not exist and ${plural ? "were" : "was"} not deleted`
+      );
+    } else if (notEmpty.length != 0) {
+      const plural = notEmpty.length > 1 ? true : false;
+      return this.makeResponse(
+        ResponseType.Info,
+        `The folder${plural ? "s" : ""}: ${notEmpty.join(", ")} ${
+          plural ? "are" : "is"
+        } not empty and ${plural ? "were" : "was"} not deleted`
+      );
+    } else {
+      return this.makeResponse(
+        ResponseType.Success,
+        `Deleted folder: ${args.join(", ")}`
       );
     }
   }
