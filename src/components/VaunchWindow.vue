@@ -51,6 +51,7 @@ const closeWindow = () => {
 
 <template>
 <div :class="{'popup-window':true, 'vaunch-window':true, 'vaunch-solid-bg':true, 'popup-window-small':props.small}"
+  v-click-away="closeWindow"
   tabindex="0"
   @keydown.esc="closeWindow">
   <span ref="titlebar" class="window-title folder-title greyscale-title">
