@@ -39,8 +39,8 @@ const data = reactive({
   currentResponse: {
     type: ResponseType.Info,
     message: "Vaunch Initialised",
-    filetype: "none",
-    name: "vaunch",
+    filetype: "VaunchSystem",
+    name: "execute",
   }
 });
 
@@ -112,6 +112,13 @@ const executeCommand = (commandArgs: string[], newTab = false) => {
   }
   // If everything fails, i.e no default search, just clear the input
   passInput("");
+  let noCommandFoundResp:VaunchResponse = {
+    type: ResponseType.Error,
+    message: `Command '${operator}' not found.`,
+    name: "execute",
+    filetype: "VaunchSystem"
+  }
+  return handleResponse(noCommandFoundResp);
 }
 
 const findQryFile = (operator: string): VaunchFile | undefined => {
