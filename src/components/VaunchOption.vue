@@ -28,7 +28,8 @@ onUpdated(() => {
 })
 
 const dismiss = () => {
-  sessionConfig.showOptions = false;
+  sessionConfig.showFileOptions = false;
+  sessionConfig.showFolderOptions = false;
 }
 
 // Exposed method to hide the options container, can be called

@@ -16,7 +16,8 @@ export const useSessionStore = defineStore("session", {
         name: "execute",
       },
       vaunchInput: "",
-      showOptions: false,
+      showFileOptions: false,
+      showFolderOptions: false,
     };
   },
 });
