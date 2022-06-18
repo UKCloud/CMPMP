@@ -1,3 +1,4 @@
+import { ResponseType } from "@/models/VaunchResponse";
 import { defineStore } from "pinia";
 
 export const useSessionStore = defineStore("session", {
@@ -8,6 +9,12 @@ export const useSessionStore = defineStore("session", {
       history: [] as string[],
       historyIndex: -1,
       showResponse: false,
+      currentResponse: {
+        type: ResponseType.Info,
+        message: "Vaunch Initialised",
+        filetype: "VaunchSystem",
+        name: "execute",
+      },
       vaunchInput: "",
     };
   },

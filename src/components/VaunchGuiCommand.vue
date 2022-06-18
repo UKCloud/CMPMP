@@ -3,6 +3,7 @@ import { useConfigStore } from "@/stores/config";
 import VaunchTooltip from "./VaunchTooltip.vue";
 import { ref } from "vue";
 import type { VaunchCommand } from "@/models/VaunchCommand";
+import { handleResponse } from "@/utilities/response";
 
 const config = useConfigStore();
 const commandInput = "";
@@ -13,7 +14,8 @@ const commandInputBox = ref();
 const hasArgs = props.file.hasArgs();
 
 const execute = (file:VaunchCommand, args:string[]) => {
-  file.execute(args);
+  let response = file.execute(args);
+  handleResponse(response);
   // Clear the input for this command after executing
   if (hasArgs) {
     (commandInputBox.value as HTMLInputElement).value = "";
