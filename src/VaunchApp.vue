@@ -5,7 +5,7 @@ import VaunchGuiFolder from "./components/VaunchGuiFolder.vue";
 import { commands } from "@/stores/command";
 import { useConfigStore } from "@/stores/config";
 import { useFolderStore } from "@/stores/folder";
-import type { VaunchFolder } from "./models/VaunchFolder";
+import { VaunchFolder } from "./models/VaunchFolder";
 import type { VaunchFile } from "./models/VaunchFile";
 import { reactive, ref } from "vue";
 import { useFuzzyStore } from "./stores/fuzzy";
@@ -19,6 +19,7 @@ import type { VaunchResponse } from "./models/VaunchResponse";
 import { ResponseType } from "./models/VaunchResponse";
 import VaunchGuiResponse from "./components/VaunchGuiResponse.vue";
 import VaunchFileOption from "./components/VaunchFileOption.vue";
+import VaunchFolderOption from "./components/VaunchFolderOption.vue";
 import type { VaunchUrlFile } from "./models/VaunchUrlFile";
 import { handleResponse } from "./utilities/response";
 
@@ -30,11 +31,12 @@ const sessionConfig = useSessionStore();
 const vaunchInput = ref();
 
 let optionFile:VaunchFile = reactive(new VaunchLink("default", "default"));
+let optionFolder:VaunchFolder = reactive(new VaunchFolder("default"));
 const data = reactive({
   optionFile,
+  optionFolder,
   optionX: 0,
   optionY: 0,
-  showOptions: false,
   prefixName: config.prefix.name,
   prefixClass: config.prefix.class,
 });
@@ -194,7 +196,13 @@ const showFileOption = (file:VaunchUrlFile, xPos:number, yPos:number) => {
   data.optionFile = file;
   data.optionX = xPos;
   data.optionY = yPos;
-  data.showOptions = true;
+  sessionConfig.showFileOptions = true;
+}
+const showFolderOption = (folder:VaunchFolder, xPos:number, yPos:number) => {
+  data.optionFolder = folder;
+  data.optionX = xPos;
+  data.optionY = yPos;
+  sessionConfig.showFolderOptions = true;
 }
 </script>
 
@@ -273,6 +281,7 @@ main {
             v-for="folder in folders.sortedItems()"
             :key="folder.name"
             v-on:show-file-option="showFileOption"
+            v-on:show-folder-option="showFolderOption"
             :folder="folder"
           />
         </div>
@@ -280,7 +289,7 @@ main {
     </div>
 
     <VaunchMan v-if="sessionConfig.showHelp" :commands="commands" />
-    <VaunchFileOption v-if="data.showOptions" v-on:dismiss-self="data.showOptions = false;" 
-    :file="data.optionFile" :x-pos="data.optionX" :y-pos="data.optionY"/>
+    <VaunchFileOption v-if="sessionConfig.showFileOptions" :file="data.optionFile" :x-pos="data.optionX" :y-pos="data.optionY"/>
+    <VaunchFolderOption v-if="sessionConfig.showFolderOptions" :folder="data.optionFolder" :x-pos="data.optionX" :y-pos="data.optionY"/>
   </main>
 </template>

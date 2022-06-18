@@ -3,14 +3,22 @@ import { useConfigStore } from "@/stores/config";
 
 import VaunchGuiFile from "./VaunchGuiFile.vue";
 import type { VaunchUrlFile } from "@/models/VaunchUrlFile";
+import { useSessionStore } from "@/stores/sessionState";
 
 const config = useConfigStore();
+const sessionConfig = useSessionStore();
 
-defineProps(["folder"]);
-const emit = defineEmits(["showFileOption"]);
+const props = defineProps(["folder"]);
+const emit = defineEmits(["showFileOption", "showFolderOption"]);
 
 const passFileOption = (file: VaunchUrlFile, xPos:number, yPos:number) => {
   emit("showFileOption", file, xPos, yPos)
+}
+
+const toggleOptions = (event:any) => {
+  if (!sessionConfig.showFileOptions) {
+    emit('showFolderOption', props.folder, event.clientX, event.clientY)
+  }
 }
 </script>
 
@@ -46,7 +54,7 @@ const passFileOption = (file: VaunchUrlFile, xPos:number, yPos:number) => {
 </style>
 
 <template>
-  <div class="vaunch-folder vaunch-window">
+  <div class="vaunch-folder vaunch-window" @click.right.prevent="toggleOptions($event)">
     <span class="folder-title">
       <i :class="['fa-' + folder.iconClass, 'fa-' + folder.icon]"></i>
       <span v-if="config.titleCase">{{ folder.titleCase() }}</span>
