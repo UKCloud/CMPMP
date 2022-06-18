@@ -26,6 +26,10 @@ onMounted(() => {
 });
 
 
+function isOverflown(element:HTMLElement) {
+  return element.scrollWidth > element.clientWidth;
+}
+
 const getInput = () => sessionConfig.vaunchInput;
 watch(getInput, (val: string) => {
   // If traversing history, ignore this input. Otherwise continue on and reset the history index
@@ -38,11 +42,6 @@ watch(getInput, (val: string) => {
     emit("fuzzy", val.trim());
   }
 
-  // Annoyingly if input overflows autocomplete falls apart, so just disable it after a while...
-  if (val.length > 50) {
-    data.autocomplete = "";
-    return;
-  }
   // If input is empty, reset the prefix icon
   if (val.length == 0) emit("set-input-icon", undefined);
 
@@ -57,12 +56,7 @@ watch(getInput, (val: string) => {
   input.pop();
 
   // Set autocomplete to go up to before the half-typed word
-  data.autocomplete = input.join(" ");
-
-  // If there's at least one word left after popping the last word off, add a space
-  if (input.length > 0) {
-    data.autocomplete += " "; // Add extra space for the to-be-completed word
-  }
+  data.autocomplete = val.substring(0, val.lastIndexOf(" ")+1);
 
   // Search through the valid commands to autocomplete this word with
   // Only do this on the first "word", as commands will always be the first word
@@ -121,6 +115,10 @@ watch(getInput, (val: string) => {
     data.isAutocompletePartial = false;
     data.autocomplete = val;
   }
+
+  // If the input box is overflowing, clear the autocomplete text
+  if (isOverflown(inputBox.value)) data.autocomplete = ""; 
+
   // Check if the final input matches a file, if it does, set the icon to it
   let file = folders.getFileByPath(val.trim());
   if (file) emit("set-input-icon", file);
@@ -134,7 +132,9 @@ const complete = () => {
 }
 
 const sendCommand = (newTab = false) => {
+  // Trim leading/trailing spaces, and compact multiple spaces into one
   let trimmedInput = sessionConfig.vaunchInput.trim();
+  trimmedInput = trimmedInput.replace(/\s+/," ");
   emit("command", trimmedInput.split(" "), newTab);
 }
 
@@ -255,6 +255,10 @@ const getCommonStartString =(matches: string[]) => {
   overflow: hidden;
 }
 
+#vaunch-autocomplete pre {
+  font: inherit;
+}
+
 #input-inner {
   display: flex;
   flex-direction: row;
@@ -309,7 +313,7 @@ const getCommonStartString =(matches: string[]) => {
           ref="inputBox"
         />
         <div id="vaunch-autocomplete">
-          {{data.autocomplete}}
+          <pre>{{data.autocomplete}}</pre>
         </div>
       </div>
     </div>
