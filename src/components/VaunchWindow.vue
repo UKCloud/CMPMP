@@ -2,6 +2,7 @@
 const props = defineProps([
   "title",
   "icon",
+  "iconClass",
   "small"
 ])
 
@@ -57,7 +58,7 @@ const closeWindow = () => {
   tabindex="0"
   @keydown.esc="closeWindow">
   <span ref="titlebar" class="window-title folder-title greyscale-title">
-    <span><i :class="['fa-solid', 'fa-'+props.icon]"></i></span>
+    <span><i :class="['fa-'+ (props.iconClass ? props.iconClass : 'solid'), 'fa-'+props.icon]"></i></span>
     <span class="window-title-text">{{ props.title }}</span>
     <span v-on:click="closeWindow" class="window-close">
     <i class="fa-solid fa-close"></i>

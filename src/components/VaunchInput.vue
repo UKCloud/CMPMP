@@ -135,7 +135,6 @@ const sendCommand = (newTab = false) => {
   // Trim leading/trailing spaces, and compact multiple spaces into one
   let trimmedInput = sessionConfig.vaunchInput.trim();
   trimmedInput = trimmedInput.replace(/\s+/g," ");
-  console.log(trimmedInput);
   emit("command", trimmedInput.split(" "), newTab);
 }
 

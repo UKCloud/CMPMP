@@ -2,20 +2,18 @@
 import VaunchWindow from "./VaunchWindow.vue";
 import VaunchButton from "./VaunchButton.vue";
 import { reactive, ref } from "vue";
-import { VaunchMv } from "@/models/commands/fs/VaunchMv";
 import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
-import { VaunchEditFile } from "@/models/commands/fs/VaunchEditFile";
 import { VaunchSetIcon } from "@/models/commands/fs/VaunchSetIcon";
 import { VaunchSetDescription } from "@/models/commands/fs/VaunchSetDescription";
 import { useConfigStore } from "@/stores/config";
 import { handleResponse } from "@/utilities/response";
+import { VaunchTouch } from "@/models/commands/fs/VaunchTouch";
 const props = defineProps(['folder'])
 
 const emit = defineEmits(['closeAdd'])
 const config = useConfigStore();
 
 const newName = ref();
-const newFolder = ref();
 const newPrefix = ref();
 const newContent = ref();
 const newIcon = ref();
@@ -26,7 +24,6 @@ const state = reactive({
   fileType: "lnk",
 });
 const setFileType = (event: any) => {
-  console.log(event.target.value);
   state.fileType = event.target.value;
 }
 
@@ -34,7 +31,57 @@ const closeWindow = () => {
   emit('closeAdd');
 }
 
+function missingFieldResponse(fields:string[]) {
+  let plural = fields.length > 1;
+  return handleResponse({
+    type: ResponseType.Error,
+    message: `Missing required field${plural? 's':''}: ${fields.join(", ")}`,
+    filetype: "VaunchSystem",
+    name: "touch",
+  })
+}
+
 const createFile = () => {
+
+  // Ensure required fields are set
+  let missingFields:string[] = [];
+  if (newName.value.value == "") missingFields.push("Name")
+  if (state.fileType == "qry" && newPrefix.value.value == "") missingFields.push("Prefix")
+  if (newContent.value.value == "") missingFields.push("Content")
+  if (missingFields.length > 0) return missingFieldResponse(missingFields);
+
+  // Ensure that the file ends with .<extension>
+  let baseName:string = newName.value.value;
+  let fileName:string = baseName + (baseName.endsWith(`.${state.fileType}`) ? '' : `.${state.fileType}`)
+
+  // After checks have passed, touch the file
+  let touch = new VaunchTouch();
+  let filePath = `${props.folder.name}/${fileName}`
+  let content:string = newContent.value.value
+  if (state.fileType == "lnk") {
+    let response:VaunchResponse = touch.execute([filePath, content])
+    if (response.type == ResponseType.Error) return handleResponse(response);
+  } else if (state.fileType == "qry") {
+    let prefix:string = newPrefix.value.value
+    let response:VaunchResponse = touch.execute([filePath, prefix, content])
+    if (response.type == ResponseType.Error) return handleResponse(response);
+  }
+
+  // If the file was made successfully, perform all other customisation for the file
+  // Edit the icon of the file
+  if (newIcon.value.value != "" || newIconClass.value.value != "" ) {
+    let setIcon = new VaunchSetIcon();
+    let response: VaunchResponse = setIcon.execute([filePath, newIcon.value.value, newIconClass.value.value])
+    if (response.type == ResponseType.Error) return handleResponse(response);
+  }
+
+  // Edit the description of the file
+  if (newDescription.value.value != "") {
+    let setDesc = new VaunchSetDescription();
+    let response: VaunchResponse = setDesc.execute([filePath, newDescription.value.value])
+    if (response.type == ResponseType.Error) return handleResponse(response);
+  }
+
   // Once the file is created, close the window
   closeWindow();
 }
@@ -46,6 +93,7 @@ const createFile = () => {
   justify-content: space-between;
   flex-direction: column;
   flex-grow: 1;
+  overflow-y: auto;
 }
 
 .edit-buttons {
@@ -94,6 +142,11 @@ const createFile = () => {
   justify-content: left;
 }
 
+.create-file-container {
+  display: flex;
+  flex-direction: row;
+}
+
 .edit-label {
   padding-right: 0.5em;
 }
@@ -113,7 +166,8 @@ const createFile = () => {
 </style>
 
 <template>
-  <VaunchWindow :title="'Add file to - ' + folder.titleCase()" :icon="'plus'" v-on:close-window="closeWindow">
+  <VaunchWindow :title="folder.titleCase() +': Create File'" 
+    :icon="folder.icon" :icon-class="folder.iconClass" v-on:close-window="closeWindow">
     <div id="edit-container">
       <form id="edit-form" @submit.prevent="createFile">
         <div class="edit-attributes">
@@ -138,10 +192,65 @@ const createFile = () => {
             </div>
           </div>
 
-          <div  class="edit-segment">
-            <h2 v-if="state.fileType == 'lnk'">Link File Properties</h2>
-            <h2  v-if="state.fileType == 'qry'">Query File Properties</h2>
-            
+          <div class="create-file-container">
+            <div class="edit-segment">
+              <h2 v-if="state.fileType == 'lnk'">Link File Content</h2>
+              <h2 v-if="state.fileType == 'qry'">Query File Content</h2>
+
+              <div class="edit-attr">
+                <span>Set the name of the file</span>
+                <div class="edit-input-container">
+                  <label class="edit-label" for="new-filename">Name: </label>
+                  <input autocomplete="off" ref="newName" class="edit-input" type="text" id="new-filename" />
+                </div>
+              </div>
+
+              <div v-if="state.fileType == 'qry'" class="edit-attr">
+                <span>Set the prefix used for the file</span>
+                <div class="edit-input-container">
+                  <label class="edit-label" for="new-prefix">Prefix: </label>
+                  <input autocomplete="off" ref="newPrefix" class="edit-input" type="text" id="new-prefix" />
+                </div>
+              </div>
+
+              <div class="edit-attr">
+                <span>Set the link content of the file</span>
+                <div class="edit-input-container">
+                  <label class="edit-label" for="new-content">Destination: </label>
+                  <input autocomplete="off" ref="newContent" class="edit-input" type="text" id="new-content" />
+                </div>
+              </div>
+            </div>
+
+            <div class="edit-segment">
+              <h2 v-if="state.fileType == 'lnk'">Link File Customisation</h2>
+              <h2 v-if="state.fileType == 'qry'">Query File Customisation</h2>
+
+              <div class="edit-attr">
+                <span>Edit the icon used for the file</span>
+                <div class="edit-input-container">
+                  <label class="edit-label" for="new-icon-name">Icon Name: </label>
+                  <input autocomplete="off" ref="newIcon" class="edit-input" type="text"
+                    id="new-icon-name" value="file" />
+                </div>
+              </div>
+              <div class="edit-attr">
+                <span>Edit the icon class for the file</span>
+                <div class="edit-input-container">
+                  <label class="edit-label" for="new-icon-class">Icon Class: </label>
+                  <input autocomplete="off" ref="newIconClass" class="edit-input" type="text"
+                    id="new-icon-class" value="solid" />
+                </div>
+              </div>
+              <div class="edit-attr">
+                <span>Edit the description for the file</span>
+                <div class="edit-input-container">
+                  <label class="edit-label" for="new-description">File Description: </label>
+                  <input autocomplete="off" ref="newDescription" class="edit-input" type="text"
+                    id="new-description" />
+                </div>
+              </div>
+            </div>
           </div>
 
           <input style="display:none" type="submit" />
