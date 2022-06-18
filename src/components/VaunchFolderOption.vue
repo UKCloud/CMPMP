@@ -39,13 +39,18 @@ const hideDeleteWindow = () => {
   state.showDelete = false;
   sessionConfig.showFolderOptions = false;
 }
+
+const shortenTitle = (title:string, maxLength=12) => {
+  if (title.length < maxLength+3) return title
+  return title.substring(0, maxLength) + "...";
+}
 </script>
 
 <template>
 <VaunchOption :x-pos="props.xPos" :y-pos="props.yPos" ref="optionContainer">
   <template v-slot:options>
     <div class="option-title">
-        <i :class="['fa-' + folder.iconClass, 'fa-' + folder.icon, 'option-icon']"></i>{{ folder.titleCase() }}
+        <i :class="['fa-' + folder.iconClass, 'fa-' + folder.icon, 'option-icon']"></i>{{ shortenTitle(folder.titleCase()) }}
     </div>
 
     <div class="options-segment">
