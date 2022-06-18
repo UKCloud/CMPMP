@@ -68,18 +68,18 @@ export class VaunchSetPosition extends VaunchCommand {
       // Setting a file's position. Get the file's folder, if it exists
       let folder:VaunchFolder = folders.getFolderByName(folderName);
       if (folder) {
-        // If position is unset, set it to -1
-        if (position) {
-          let numberedPosition = stringPosToInt(position, folder.getFiles().length);
+        // If position is unset, set it to last
+        if (!position) position = "last";
+        let numberedPosition = stringPosToInt(position, folder.getFiles().length);
 
-          let fileRepos: boolean = folder.setFilePosition(fileName, numberedPosition);
-          if (!fileRepos) {
-            return this.makeResponse(
-              ResponseType.Error,
-              `The file ${folderName}/${fileName} does not exist`
-            );
-          }
-        } else folder.setFilePosition(folderName, -1);
+        let fileRepos: boolean = folder.setFilePosition(fileName, numberedPosition);
+        if (!fileRepos) {
+          return this.makeResponse(
+            ResponseType.Error,
+            `The file ${folderName}/${fileName} does not exist`
+          );
+        }
+
       } else {
         return this.makeResponse(
           ResponseType.Error,
