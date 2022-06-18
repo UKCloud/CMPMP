@@ -34,7 +34,6 @@ const data = reactive({
   optionFile,
   optionX: 0,
   optionY: 0,
-  showOptions: false,
   prefixName: config.prefix.name,
   prefixClass: config.prefix.class,
 });
@@ -194,7 +193,7 @@ const showFileOption = (file:VaunchUrlFile, xPos:number, yPos:number) => {
   data.optionFile = file;
   data.optionX = xPos;
   data.optionY = yPos;
-  data.showOptions = true;
+  sessionConfig.showOptions = true;
 }
 </script>
 
@@ -280,7 +279,7 @@ main {
     </div>
 
     <VaunchMan v-if="sessionConfig.showHelp" :commands="commands" />
-    <VaunchFileOption v-if="data.showOptions" v-on:dismiss-self="data.showOptions = false;" 
+    <VaunchFileOption v-if="sessionConfig.showOptions" v-on:dismiss-self="sessionConfig.showOptions = false;"
     :file="data.optionFile" :x-pos="data.optionX" :y-pos="data.optionY"/>
   </main>
 </template>

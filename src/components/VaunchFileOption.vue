@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { VaunchRm } from '@/models/commands/fs/VaunchRm';
 import { type VaunchResponse, ResponseType } from '@/models/VaunchResponse';
-import { ref, onMounted, onUpdated, reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import VaunchFileEdit from './VaunchFileEdit.vue'
 import VaunchConfirm from './VaunchConfirm.vue'
 import { useConfigStore } from '@/stores/config';
 import { useSessionStore } from '@/stores/sessionState';
 import { focusVaunchInput } from '@/utilities/inputUtils';
+import VaunchOption from './VaunchOption.vue';
 
 const props = defineProps(['file', 'xPos', 'yPos'])
-const emit = defineEmits(["dismissSelf"]);
-const option = ref()
 const optionContainer = ref()
 const config = useConfigStore();
 const sessionConfig = useSessionStore();
@@ -20,23 +19,6 @@ const state = reactive({
   showDelete:false,
 })
 
-onMounted(() => {
-  let element:HTMLElement = option.value;
-  let lowerSixth = window.innerHeight - (window.outerHeight / 6);
-  if (props.yPos > lowerSixth) {
-    let bottomPos = window.innerHeight - props.yPos;
-    element.style.bottom = `${bottomPos}px`;
-  } else {
-    element.style.top = `${props.yPos}px`;
-  }
-  element.style.left = `${props.xPos}px`;
-})
-
-onUpdated(() => {
-  let element:HTMLElement = option.value;
-  element.style.top = `${props.yPos}px`;
-  element.style.left = `${props.xPos}px`;
-})
 
 const deleteFile = () => {
   let rm = new VaunchRm();
@@ -56,89 +38,34 @@ const executeFile = (args:string[]) => {
 
 const showEditWindow = () => {
   state.showEdit = true;
-  (optionContainer.value as HTMLElement).style.display = "none";
+  optionContainer.value.hideOptions();
 }
 const showDeleteWindow = () => {
   state.showDelete = true;
-  (optionContainer.value as HTMLElement).style.display = "none";
+  optionContainer.value.hideOptions();
 }
 const hideEditWindow = () => {
   state.showEdit = false;
-  emit('dismissSelf');
+  sessionConfig.showOptions = false;
 }
 const hideDeleteWindow = () => {
   state.showDelete = false;
-  emit('dismissSelf');
+  sessionConfig.showOptions = false;
 }
 
 const dismiss = () => {
-  emit('dismissSelf');
+  sessionConfig.showOptions = false;
 }
 </script>
 
-<style scoped>
-.option-outer {
-  position: absolute;
-}
-.vaunch-option {
-  max-width: 15em;
-  min-width: 7em;
-  word-break: break-all;
-  height: auto;
-  z-index: 10;
-  border: solid thin rgba(100, 100, 100, 0.25);
-  overflow: visible;
-}
-
-.options-container {
-  border-radius: inherit;
-  background-color: inherit;
-  padding: 0.5em 0;
-}
-
-.options-container div {
-  background-color: inherit;
-}
-
-.options-container .selectable-entries:not(:last-child) {
-  padding-bottom: 0.5rem;
-  border-bottom: solid 1px rgba(0, 0, 0, 0.25);
-}
-
-.options-title {
-  padding-bottom: 0.5rem !important;
-  border-bottom: solid 1px rgba(0, 0, 0, 0.25);
-}
-
-.option-icon {
-  padding-right: 0.5em;
-  width: 1.5rem;
-}
-
-.selectable-entries {
-  margin-top: 0.5em;
-}
-
-.selectable-entries * {
-  transition: background-color 0.15s;
-}
-.selectable-entries *:hover {
-  cursor: pointer;
-  background: v-bind("config.color.highlight");
-}
-
-.option-entry {
-  padding: 0 0.5em;
-}
-</style>
-
 <template>
-<div class="option-outer" v-click-away="dismiss" ref="option">
-  <div class="vaunch-option vaunch-window vaunch-solid-bg" ref="optionContainer">
-  <div class="options-container">
+<VaunchOption :x-pos="props.xPos" :y-pos="props.yPos" ref="optionContainer">
+  <template v-slot:options>
+    <div class="option-title">
+        <i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'option-icon']"></i>{{ file.titleCase() }}
+    </div>
 
-    <div class="options-title option-entry"><i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'option-icon']"></i>{{ file.titleCase() }}</div>
-    <div class="selectable-entries">
+    <div class="options-segment">
       <div v-if="file.filetype == 'VaunchLink'" class="option-entry" @click="executeFile([])">
         <i class="fa-solid fa-link option-icon" />Open
       </div>
@@ -149,20 +76,22 @@ const dismiss = () => {
         <i class="fa-solid fa-ellipsis option-icon" />Autofill Input
       </div>
     </div>
-    <div class="selectable-entries">
+
+    <div class="options-segment">
       <div class="option-entry" @click="showEditWindow()"><i class="fa-solid fa-pencil option-icon" />Edit File</div>
       <div class="option-entry" @click="showDeleteWindow()"><i class="fa-solid fa-trash option-icon" />Delete File</div>
     </div>
+  </template>
 
-  </div>
-  </div>
-  <VaunchFileEdit v-if="state.showEdit" :file="file" v-on:close-edit="hideEditWindow()"/>
-  <VaunchConfirm v-if="state.showDelete"
-    v-on:close-window="hideDeleteWindow()" 
-    v-on:answer-yes="deleteFile()"
-    v-on:answer-no="hideDeleteWindow()"
-    title="Are You Sure?"
-    icon="trash"
-    :ask-text="'Are you sure you want to delete '+file.titleCase()+'?'" />
-</div>
+  <template v-slot:windows>
+    <VaunchFileEdit v-if="state.showEdit" :file="file" v-on:close-edit="hideEditWindow()"/>
+    <VaunchConfirm v-if="state.showDelete"
+      v-on:close-window="hideDeleteWindow()" 
+      v-on:answer-yes="deleteFile()"
+      v-on:answer-no="hideDeleteWindow()"
+      title="Are You Sure?"
+      icon="trash"
+      :ask-text="'Are you sure you want to delete '+file.titleCase()+'?'" />
+  </template>
+</VaunchOption>
 </template>
