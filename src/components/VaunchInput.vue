@@ -247,9 +247,12 @@ const getCommonStartString =(matches: string[]) => {
   opacity: 0.8;
   font-size: 3rem;
   width: 100%;
-  margin-left: 0.1rem;
+  height: 100%;
+  margin-left: 0.15rem;
+  margin-top: 0.05rem;
 
   color: v-bind("config.color.autocomplete");
+  overflow: hidden;
 }
 
 #input-inner {
@@ -305,9 +308,9 @@ const getCommonStartString =(matches: string[]) => {
           @keydown.esc.exact.prevent="sessionConfig.vaunchInput = ''"
           ref="inputBox"
         />
-        <span id="vaunch-autocomplete">
+        <div id="vaunch-autocomplete">
           {{data.autocomplete}}
-        </span>
+        </div>
       </div>
     </div>
   </div>
