@@ -33,7 +33,7 @@ const executeFile = (args:string[]) => {
     sessionConfig.vaunchInput = response.message;
     focusVaunchInput()
   }
-  hideEditWindow();
+  setWindow('edit', false);
 }
 
 const setWindow = (window:string, show:boolean) => {
@@ -47,7 +47,7 @@ const setWindow = (window:string, show:boolean) => {
   }
   if (show) {
     optionContainer.value.hideOptions();
-  } else sessionConfig.showFolderOptions = false;
+  } else sessionConfig.showFileOptions = false;
 }
 </script>
 
