@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="512"
+   height="512"
+   viewBox="0 0 135.46667 135.46667"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="favicon.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     units="px"
+     inkscape:zoom="1.2337399"
+     inkscape:cx="188.45139"
+     inkscape:cy="243.56836"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g36797" />
+  <defs
+     id="defs2">
+    <linearGradient
+       inkscape:collect="always"
+       id="Rocket">
+      <stop
+         style="stop-color:#1f2359;stop-opacity:1"
+         offset="0"
+         id="stop42134" />
+      <stop
+         style="stop-color:#595eaa;stop-opacity:1"
+         offset="1"
+         id="stop42136" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       id="V">
+      <stop
+         style="stop-color:#0c0d22;stop-opacity:1"
+         offset="0"
+         id="stop20470" />
+      <stop
+         style="stop-color:#1f2359;stop-opacity:1"
+         offset="1"
+         id="stop20472" />
+    </linearGradient>
+    <inkscape:path-effect
+       effect="mirror_symmetry"
+       start_point="67.768199,12.009555"
+       end_point="67.768199,133.1571"
+       center_point="67.768199,72.583328"
+       id="path-effect7549"
+       is_visible="true"
+       lpeversion="1.1"
+       mode="free"
+       discard_orig_path="false"
+       fuse_paths="true"
+       oposite_fuse="false"
+       split_items="false"
+       split_open="false" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#V"
+       id="linearGradient20476"
+       x1="68.197113"
+       y1="12.652924"
+       x2="68.197113"
+       y2="76.629097"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#Rocket"
+       id="linearGradient42140"
+       x1="67.767578"
+       y1="12.009766"
+       x2="67.767578"
+       y2="115.71571"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Vaunch"
+     style="display:none;opacity:1" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="V"
+     style="display:inline">
+    <g
+       id="g36797"
+       transform="matrix(0.79288103,0.79288103,-0.79288103,0.79288103,89.171156,-61.789018)">
+      <path
+         style="display:inline;opacity:1;fill:url(#linearGradient42140);fill-opacity:1;stroke:#1f2359;stroke-width:3;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 67.767578,12.009766 39.244141,75.195312 4.0742188,114.08984 l 43.1054692,-3.85937 7.798828,18.85156 h 12.789062 12.791016 l 7.796875,-18.85156 43.105471,3.85937 -35.167971,-38.894528 z"
+         id="path7144"
+         sodipodi:nodetypes="ccccccc"
+         inkscape:path-effect="#path-effect7549"
+         inkscape:original-d="m 4.0746704,114.09077 43.1057216,-3.86021 7.797616,18.85187 H 67.768199 V 12.009555 L 39.244348,75.195878 Z"
+         transform="translate(0.42891268,0.64336896)" />
+      <path
+         style="fill:none;stroke:url(#linearGradient20476);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 39.67326,75.839245 68.19711,12.652924 96.72096,75.839245"
+         id="path16711" />
+    </g>
+  </g>
+</svg>
