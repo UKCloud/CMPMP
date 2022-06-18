@@ -73,7 +73,6 @@ export class VaunchRmdir extends VaunchCommand {
       } else failedToDelete.push(toDelete);
     });
 
-    console.log(notEmpty);
     if (failedToDelete.length != 0) {
       const plural = failedToDelete.length > 1 ? true : false;
       return this.makeResponse(
