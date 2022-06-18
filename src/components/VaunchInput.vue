@@ -225,22 +225,18 @@ const getCommonStartString =(matches: string[]) => {
   width: 75vw;
 }
 
-/* Common styles for both inputs */
-#vaunch-input-container input {
-  font-size: 3rem;
-  width: 100%;
-  padding: 0.2em 0.25em;
-  border: none;
-}
-
-#vaunch-input-container input:focus {
-  outline: none;
-}
 
 #vaunch-input {
   background: none;
   z-index: 2;
   color: inherit;
+  font: inherit;
+  font-size: 3rem;
+  width: 100%;
+  border: none;
+}
+#vaunch-input:focus {
+  outline: none;
 }
 
 #vaunch-autocomplete {
@@ -249,11 +245,13 @@ const getCommonStartString =(matches: string[]) => {
   top: 0;
   z-index: 1;
   opacity: 0.8;
+  font-size: 3rem;
+  width: 100%;
+  margin-left: 0.1rem;
 
-  /* color: var(--color-autocomplete); */
-  background: none;
   color: v-bind("config.color.autocomplete");
 }
+
 #input-inner {
   display: flex;
   flex-direction: row;
@@ -307,12 +305,9 @@ const getCommonStartString =(matches: string[]) => {
           @keydown.esc.exact.prevent="sessionConfig.vaunchInput = ''"
           ref="inputBox"
         />
-        <input
-          disabled
-          id="vaunch-autocomplete"
-          type="text"
-          :value="data.autocomplete"
-        />
+        <span id="vaunch-autocomplete">
+          {{data.autocomplete}}
+        </span>
       </div>
     </div>
   </div>
