@@ -13,6 +13,7 @@ const sessionConfig = useSessionStore();
 const state = reactive({
   showEdit:false,
   showDelete:false,
+  showAdd:false,
 })
 
 
@@ -23,21 +24,21 @@ const deleteFolder = () => {
   sessionConfig.showFolderOptions = false;
 }
 
-const showEditWindow = () => {
-  state.showEdit = true;
-  optionContainer.value.hideOptions();
-}
-const showDeleteWindow = () => {
-  state.showDelete = true;
-  optionContainer.value.hideOptions();
-}
-const hideEditWindow = () => {
-  state.showEdit = false;
-  sessionConfig.showFolderOptions = false;
-}
-const hideDeleteWindow = () => {
-  state.showDelete = false;
-  sessionConfig.showFolderOptions = false;
+const setWindow = (window:string, show:boolean) => {
+  switch (window) {
+    case "add":
+      state.showAdd = show;
+      break;
+    case "edit":
+      state.showEdit = show;
+      break;
+    case "delete":
+      state.showDelete = show;
+      break;
+  }
+  if (show) {
+    optionContainer.value.hideOptions();
+  } else sessionConfig.showFolderOptions = false;
 }
 
 const shortenTitle = (title:string, maxLength=12) => {
@@ -54,17 +55,19 @@ const shortenTitle = (title:string, maxLength=12) => {
     </div>
 
     <div class="options-segment">
-      <div class="option-entry" @click="showEditWindow()"><i class="fa-solid fa-pencil option-icon" />Edit Folder</div>
-      <div class="option-entry" @click="showDeleteWindow()"><i class="fa-solid fa-trash option-icon" />Delete Folder</div>
+      <div class="option-entry" @click="setWindow('add', true)"><i class="fa-solid fa-plus option-icon" />Add File</div>
+      <div class="option-entry" @click="setWindow('edit', true)"><i class="fa-solid fa-pencil option-icon" />Edit Folder</div>
+      <div class="option-entry" @click="setWindow('delete', true)"><i class="fa-solid fa-trash option-icon" />Delete Folder</div>
     </div>
   </template>
 
   <template v-slot:windows>
-    <VaunchFolderEdit v-if="state.showEdit" :folder="folder" v-on:close-edit="hideEditWindow()"/>
+    <VaunchFolderEdit v-if="state.showEdit" :folder="folder" v-on:close-edit="setWindow('edit', false)"/>
+    <!-- <VaunchFileAdd v-if="state.showAdd" :folder="folder" v-on:close-edit="setWindow('add', false)"/> -->
     <VaunchConfirm v-if="state.showDelete"
-      v-on:close-window="hideDeleteWindow()" 
+      v-on:close-window="setWindow('delete', false)" 
       v-on:answer-yes="deleteFolder()"
-      v-on:answer-no="hideDeleteWindow()"
+      v-on:answer-no="setWindow('delete', false)"
       title="Are You Sure?"
       icon="trash"
       :ask-text="'Are you sure you want to delete '+folder.titleCase()+'?'" />
