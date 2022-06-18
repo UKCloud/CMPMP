@@ -71,7 +71,8 @@ const shortenTitle = (title:string, maxLength=12) => {
       v-on:answer-no="setWindow('delete', false)"
       title="Are You Sure?"
       icon="trash"
-      :ask-text="'Are you sure you want to delete '+folder.titleCase()+'?'" />
+      :ask-lines="['Are you sure you want to delete '+folder.titleCase()+'?', 
+        (folder.getFiles().length > 0) ? `This will delete ${folder.getFiles().length} file${folder.getFiles().length > 1 ? 's':''}.` : '']" />
   </template>
 </VaunchOption>
 </template>

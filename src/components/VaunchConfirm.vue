@@ -2,7 +2,7 @@
 import VaunchWindow from './VaunchWindow.vue';
 import VaunchButton from './VaunchButton.vue';
 
-defineProps(["askText","title","icon"])
+const props = defineProps(["askText","askLines","title","icon"])
 
 const emit = defineEmits(["closeWindow", "answerYes", "answerNo"])
 
@@ -13,6 +13,7 @@ const emit = defineEmits(["closeWindow", "answerYes", "answerNo"])
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   flex: 1;
 }
 
@@ -33,8 +34,11 @@ const emit = defineEmits(["closeWindow", "answerYes", "answerNo"])
 <template>
   <VaunchWindow :small="true" :title="title" :icon="icon" v-on:close-window="emit('closeWindow')">
     <div class="confirm-container">
-      <div class="confirm-text">
+      <div v-if="props.askText" class="confirm-text">
         {{ askText }}
+      </div>
+      <div v-if="props.askLines" class="confirm-text">
+        <span v-for="line in props.askLines">{{ line }}</span>
       </div>
       <div class="confirm-buttons">
         <div>
