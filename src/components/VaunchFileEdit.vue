@@ -8,9 +8,10 @@ import { VaunchEditFile } from "@/models/commands/fs/VaunchEditFile";
 import { VaunchSetIcon } from "@/models/commands/fs/VaunchSetIcon";
 import { VaunchSetDescription } from "@/models/commands/fs/VaunchSetDescription";
 import { useConfigStore } from "@/stores/config";
+import { handleResponse } from "@/utilities/response";
 const props = defineProps(['file'])
 
-const emit = defineEmits(['closeEdit', 'sendResponse'])
+const emit = defineEmits(['closeEdit'])
 const config = useConfigStore();
 
 const newName = ref();
@@ -44,30 +45,21 @@ const saveFile = () => {
     // Edit the file, using the originalPath to get to the file
     let edit = new VaunchEditFile();
     let response: VaunchResponse = edit.execute([originalPath, ...editArgs]);
-    if (response.type == ResponseType.Error) {
-      emit("sendResponse", response);
-      return;
-    }
+    if (response.type == ResponseType.Error) return handleResponse(response);
   }
 
   // Edit the icon of the file
   if (newIcon.value.value != props.file.icon || newIconClass.value.value != props.file.iconClass) {
     let setIcon = new VaunchSetIcon();
     let response: VaunchResponse = setIcon.execute([originalPath, newIcon.value.value, newIconClass.value.value])
-    if (response.type == ResponseType.Error) {
-      emit("sendResponse", response);
-      return;
-    }
+    if (response.type == ResponseType.Error) return handleResponse(response);
   }
 
   // Edit the description of the file
   if (newDescription.value.value != props.file.description) {
     let setDesc = new VaunchSetDescription();
     let response: VaunchResponse = setDesc.execute([originalPath, newDescription.value.value])
-    if (response.type == ResponseType.Error) {
-      emit("sendResponse", response);
-      return;
-    }
+    if (response.type == ResponseType.Error) return handleResponse(response);
   }
 
   // If the name/folder of the file has changed, attempt to move it
@@ -76,10 +68,7 @@ const saveFile = () => {
     let newPath = `${newFolder.value.value}/${newName.value.value}`
     let mv = new VaunchMv();
     let response: VaunchResponse = mv.execute([originalPath, newPath]);
-    if (response.type == ResponseType.Error) {
-      emit("sendResponse", response);
-      return;
-    }
+    if (response.type == ResponseType.Error) return handleResponse(response);
   }
 
   // Once all edits are made, close the window

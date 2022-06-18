@@ -20,6 +20,7 @@ import { ResponseType } from "./models/VaunchResponse";
 import VaunchGuiResponse from "./components/VaunchGuiResponse.vue";
 import VaunchFileOption from "./components/VaunchFileOption.vue";
 import type { VaunchUrlFile } from "./models/VaunchUrlFile";
+import { handleResponse } from "./utilities/response";
 
 const config = useConfigStore();
 const folders = useFolderStore();
@@ -36,12 +37,6 @@ const data = reactive({
   showOptions: false,
   prefixName: config.prefix.name,
   prefixClass: config.prefix.class,
-  currentResponse: {
-    type: ResponseType.Info,
-    message: "Vaunch Initialised",
-    filetype: "VaunchSystem",
-    name: "execute",
-  }
 });
 
 const executeCommand = (commandArgs: string[], newTab = false) => {
@@ -111,7 +106,7 @@ const executeCommand = (commandArgs: string[], newTab = false) => {
     }
   }
   // If everything fails, i.e no default search, just clear the input
-  passInput("");
+  sessionConfig.vaunchInput = "";
   let noCommandFoundResp:VaunchResponse = {
     type: ResponseType.Error,
     message: `Command '${operator}' not found.`,
@@ -152,31 +147,6 @@ const fuzzy = (input: string) => {
 
 const sortByHits = (files: VaunchFile[]) => {
   return files.sort((a, b) => (a.hits < b.hits ? 1 : -1));
-}
-
-const handleResponse = (response: VaunchResponse) => {
-  let newInputValue = "";
-
-  switch (response.type) {
-    case ResponseType.Error:
-    case ResponseType.Info:
-      sessionConfig.showResponse = true;
-      break;
-    case ResponseType.UpdateInput:
-      newInputValue = response.message;
-      sessionConfig.showResponse = false;
-      break;
-    default:
-      sessionConfig.showResponse = false;
-  }
-
-  data.currentResponse = response;
-  passInput(newInputValue);
-}
-
-const passInput = (input: string | void) => {
-  let newInput: string = input ? input : "";
-  sessionConfig.vaunchInput = newInput;
 }
 
 const updateFuzzyIndex = (increment: boolean) => {
@@ -280,7 +250,7 @@ main {
 
     <VaunchGuiResponse
       v-if="sessionConfig.showResponse"
-      :response="data.currentResponse"
+      :response="sessionConfig.currentResponse"
     />
 
     <div id="bottom-half">
@@ -311,7 +281,6 @@ main {
 
     <VaunchMan v-if="sessionConfig.showHelp" :commands="commands" />
     <VaunchFileOption v-if="data.showOptions" v-on:dismiss-self="data.showOptions = false;" 
-    v-on:send-response="handleResponse"
     :file="data.optionFile" :x-pos="data.optionX" :y-pos="data.optionY"/>
   </main>
 </template>

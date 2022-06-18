@@ -9,7 +9,7 @@ import { useSessionStore } from '@/stores/sessionState';
 import { focusVaunchInput } from '@/utilities/inputUtils';
 
 const props = defineProps(['file', 'xPos', 'yPos'])
-const emit = defineEmits(["dismissSelf", "sendResponse"]);
+const emit = defineEmits(["dismissSelf"]);
 const option = ref()
 const optionContainer = ref()
 const config = useConfigStore();
@@ -69,10 +69,6 @@ const hideEditWindow = () => {
 const hideDeleteWindow = () => {
   state.showDelete = false;
   emit('dismissSelf');
-}
-
-const sendResponse = (response:VaunchResponse) => {
-  emit("sendResponse", response)
 }
 
 const dismiss = () => {
@@ -160,7 +156,7 @@ const dismiss = () => {
 
   </div>
   </div>
-  <VaunchFileEdit v-if="state.showEdit" :file="file" v-on:close-edit="hideEditWindow()" v-on:send-response="sendResponse"/>
+  <VaunchFileEdit v-if="state.showEdit" :file="file" v-on:close-edit="hideEditWindow()"/>
   <VaunchConfirm v-if="state.showDelete"
     v-on:close-window="hideDeleteWindow()" 
     v-on:answer-yes="deleteFile()"
