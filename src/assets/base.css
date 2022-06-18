@@ -121,6 +121,14 @@ h2 {
   margin-top: 0.5rem;
 }
 
+select {
+  font: inherit;
+  color: inherit;
+  border: solid thin rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  background-color: rgba(20, 20, 20, 0.25);
+}
+
 #vaunch-folder-container {
   position: relative;
   display: flex;

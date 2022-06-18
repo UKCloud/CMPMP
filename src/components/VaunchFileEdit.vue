@@ -183,7 +183,7 @@ const saveFile = () => {
             <div class="edit-attr">
               <span>Edit the link content of the file</span>
               <div class="edit-input-container">
-                <label class="edit-label" :for="file.getIdSafeName() + '-content'">Content: </label>
+                <label class="edit-label" :for="file.getIdSafeName() + '-content'">Destination: </label>
                 <input autocomplete="off" ref="newContent" class="edit-input" type="text"
                   :id="file.getIdSafeName() + '-content'" :value="file.content" />
               </div>
@@ -192,33 +192,30 @@ const saveFile = () => {
 
           <div class="edit-segment">
             <h2>File Customisation</h2>
-            <div>
-              <div class="edit-attr">
-                <span>Edit the icon used for the file</span>
-                <div class="edit-input-container">
-                  <label class="edit-label" :for="file.getIdSafeName() + '-icon-name'">Icon Name: </label>
-                  <input autocomplete="off" ref="newIcon" class="edit-input" type="text"
-                    :id="file.getIdSafeName() + '-icon-name'" :value="file.icon" />
-                </div>
-              </div>
-              <div class="edit-attr">
-                <span>Edit the icon class for the file</span>
-                <div class="edit-input-container">
-                  <label class="edit-label" :for="file.getIdSafeName() + '-icon-class'">Icon Class: </label>
-                  <input autocomplete="off" ref="newIconClass" class="edit-input" type="text"
-                    :id="file.getIdSafeName() + '-icon-class'" :value="file.iconClass" />
-                </div>
-              </div>
-              <div class="edit-attr">
-                <span>Edit the description for the file</span>
-                <div class="edit-input-container">
-                  <label class="edit-label" :for="file.getIdSafeName() + '-description'">File Description: </label>
-                  <input autocomplete="off" ref="newDescription" class="edit-input" type="text"
-                    :id="file.getIdSafeName() + '-description'" :value="file.description" />
-                </div>
+            <div class="edit-attr">
+              <span>Edit the icon used for the file</span>
+              <div class="edit-input-container">
+                <label class="edit-label" :for="file.getIdSafeName() + '-icon-name'">Icon Name: </label>
+                <input autocomplete="off" ref="newIcon" class="edit-input" type="text"
+                  :id="file.getIdSafeName() + '-icon-name'" :value="file.icon" />
               </div>
             </div>
-
+            <div class="edit-attr">
+              <span>Edit the icon class for the file</span>
+              <div class="edit-input-container">
+                <label class="edit-label" :for="file.getIdSafeName() + '-icon-class'">Icon Class: </label>
+                <input autocomplete="off" ref="newIconClass" class="edit-input" type="text"
+                  :id="file.getIdSafeName() + '-icon-class'" :value="file.iconClass" />
+              </div>
+            </div>
+            <div class="edit-attr">
+              <span>Edit the description for the file</span>
+              <div class="edit-input-container">
+                <label class="edit-label" :for="file.getIdSafeName() + '-description'">File Description: </label>
+                <input autocomplete="off" ref="newDescription" class="edit-input" type="text"
+                  :id="file.getIdSafeName() + '-description'" :value="file.description" />
+              </div>
+            </div>
           </div>
 
           <input style="display:none" type="submit" />

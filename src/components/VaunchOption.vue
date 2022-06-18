@@ -74,8 +74,7 @@ defineExpose({
 }
 
 .option-title {
-  padding-left: 0.5em;
-  padding-bottom: 0.5rem;
+  padding: 0 0.5em 0.5em 0.5em;
   border-bottom: solid 1px rgba(0, 0, 0, 0.25);
 }
 

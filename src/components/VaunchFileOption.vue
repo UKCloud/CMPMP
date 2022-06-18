@@ -33,24 +33,21 @@ const executeFile = (args:string[]) => {
     sessionConfig.vaunchInput = response.message;
     focusVaunchInput()
   }
-  hideEditWindow();
+  setWindow('edit', false);
 }
 
-const showEditWindow = () => {
-  state.showEdit = true;
-  optionContainer.value.hideOptions();
-}
-const showDeleteWindow = () => {
-  state.showDelete = true;
-  optionContainer.value.hideOptions();
-}
-const hideEditWindow = () => {
-  state.showEdit = false;
-  sessionConfig.showFileOptions = false;
-}
-const hideDeleteWindow = () => {
-  state.showDelete = false;
-  sessionConfig.showFileOptions = false;
+const setWindow = (window:string, show:boolean) => {
+  switch (window) {
+    case "edit":
+      state.showEdit = show;
+      break;
+    case "delete":
+      state.showDelete = show;
+      break;
+  }
+  if (show) {
+    optionContainer.value.hideOptions();
+  } else sessionConfig.showFileOptions = false;
 }
 </script>
 
@@ -74,17 +71,17 @@ const hideDeleteWindow = () => {
     </div>
 
     <div class="options-segment">
-      <div class="option-entry" @click="showEditWindow()"><i class="fa-solid fa-pencil option-icon" />Edit File</div>
-      <div class="option-entry" @click="showDeleteWindow()"><i class="fa-solid fa-trash option-icon" />Delete File</div>
+      <div class="option-entry" @click="setWindow('edit', true)"><i class="fa-solid fa-pencil option-icon" />Edit File</div>
+      <div class="option-entry" @click="setWindow('delete', true)"><i class="fa-solid fa-trash option-icon" />Delete File</div>
     </div>
   </template>
 
   <template v-slot:windows>
-    <VaunchFileEdit v-if="state.showEdit" :file="file" v-on:close-edit="hideEditWindow()"/>
+    <VaunchFileEdit v-if="state.showEdit" :file="file" v-on:close-edit="setWindow('edit', false)"/>
     <VaunchConfirm v-if="state.showDelete"
-      v-on:close-window="hideDeleteWindow()" 
+      v-on:close-window="setWindow('delete', false)"
       v-on:answer-yes="deleteFile()"
-      v-on:answer-no="hideDeleteWindow()"
+      v-on:answer-no="setWindow('delete', false)"
       title="Are You Sure?"
       icon="trash"
       :ask-text="'Are you sure you want to delete '+file.titleCase()+'?'" />
