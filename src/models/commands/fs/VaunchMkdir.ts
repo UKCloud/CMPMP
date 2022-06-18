@@ -29,11 +29,21 @@ export class VaunchMkdir extends VaunchCommand {
 
   execute(args: string[]): VaunchResponse {
     const folder = useFolderStore();
+    let existingFolders:string[] = []
     args.forEach((newFolder) => {
+      // Strip any trailing slashes from the foldername
+      newFolder = newFolder.replace('/', ''); 
       if (newFolder.length > 0 && !folder.folderNames.includes(newFolder)) {
         folder.add(newFolder);
-      }
+      } else existingFolders.push(newFolder)
     });
+    if (existingFolders.length != 0) {
+      let plural = existingFolders.length > 1;
+      return this.makeResponse(
+        ResponseType.Info,
+        `The folder${plural ? 's':''} ${existingFolders.join(", ")} already exist and ${plural ? 'were' : 'was'} not made.`
+      );
+    }
     return this.makeResponse(
       ResponseType.Success,
       `Created folders: ${args.join(", ")}`
