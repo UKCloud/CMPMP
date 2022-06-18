@@ -24,7 +24,7 @@ const deleteFile = () => {
   let rm = new VaunchRm();
   let filePath = `${props.file.getParentName()}/${props.file.fileName}`;
   rm.execute([filePath])
-  dismiss();
+  sessionConfig.showOptions = false;
 }
 
 const executeFile = (args:string[]) => {
@@ -50,10 +50,6 @@ const hideEditWindow = () => {
 }
 const hideDeleteWindow = () => {
   state.showDelete = false;
-  sessionConfig.showOptions = false;
-}
-
-const dismiss = () => {
   sessionConfig.showOptions = false;
 }
 </script>
