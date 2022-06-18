@@ -20,7 +20,9 @@ const execute = (file: VaunchUrlFile, args: string[]) => {
 }
 
 const toggleOptions = (event:any) => {
-  emit('showFileOption', props.file, event.clientX, event.clientY)
+  if (!sessionConfig.showFolderOptions) {
+    emit('showFileOption', props.file, event.clientX, event.clientY)
+  }
 }
 </script>
 

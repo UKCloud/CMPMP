@@ -24,6 +24,10 @@ export class VaunchFolder {
     return true;
   }
 
+  getIdSafeName(): string {
+    return this.name.replace(".", "-");
+  }
+
   titleCase(): string {
     const prettyString = this.name.replace(/[-_]/g, " ");
     return prettyString

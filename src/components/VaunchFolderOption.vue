@@ -4,6 +4,7 @@ import { ref, reactive } from 'vue'
 import VaunchConfirm from './VaunchConfirm.vue'
 import { useSessionStore } from '@/stores/sessionState';
 import VaunchOption from './VaunchOption.vue';
+import VaunchFolderEdit from './VaunchFolderEdit.vue';
 
 const props = defineProps(['folder', 'xPos', 'yPos'])
 const optionContainer = ref()
@@ -48,12 +49,13 @@ const hideDeleteWindow = () => {
     </div>
 
     <div class="options-segment">
+      <div class="option-entry" @click="showEditWindow()"><i class="fa-solid fa-pencil option-icon" />Edit Folder</div>
       <div class="option-entry" @click="showDeleteWindow()"><i class="fa-solid fa-trash option-icon" />Delete Folder</div>
     </div>
   </template>
 
   <template v-slot:windows>
-    <!-- <VaunchFileEdit v-if="state.showEdit" :folder="folder" v-on:close-edit="hideEditWindow()"/> -->
+    <VaunchFolderEdit v-if="state.showEdit" :folder="folder" v-on:close-edit="hideEditWindow()"/>
     <VaunchConfirm v-if="state.showDelete"
       v-on:close-window="hideDeleteWindow()" 
       v-on:answer-yes="deleteFolder()"

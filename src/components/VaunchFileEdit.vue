@@ -194,7 +194,7 @@ const saveFile = () => {
             <h2>File Customisation</h2>
             <div>
               <div class="edit-attr">
-                <span>Edit the icon name for the file</span>
+                <span>Edit the icon used for the file</span>
                 <div class="edit-input-container">
                   <label class="edit-label" :for="file.getIdSafeName() + '-icon-name'">Icon Name: </label>
                   <input autocomplete="off" ref="newIcon" class="edit-input" type="text"
