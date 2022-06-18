@@ -28,11 +28,19 @@ onMounted(() => {
   }
 });
 
+function arrayIncludesSubStr(list:string[], subString:string):boolean {
+  let match = list.find(entry => {
+    return entry.includes(subString);
+  })
+  // If a match was found, return true
+  return match !== undefined;
+}
+
 const getSearchInput = () => data.searchInput;
 watch(getSearchInput, (val: string) => {
   data.matches = 0;
   (manualItems.value as any[]).forEach((item) => {
-    if (item.command.fileName.toLowerCase().includes(val.toLowerCase())) {
+    if (arrayIncludesSubStr(item.command.getNames(), val.toLowerCase())) {
       item.$el.classList.remove("hidden");
       if (val != "") data.matches++;
     } else {
