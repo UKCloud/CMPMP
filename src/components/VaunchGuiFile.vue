@@ -20,9 +20,7 @@ const execute = (file: VaunchUrlFile, args: string[]) => {
 }
 
 const toggleOptions = (event:any) => {
-  if (!sessionConfig.showFolderOptions) {
-    emit('showFileOption', props.file, event.clientX, event.clientY)
-  }
+  emit('showFileOption', props.file, event.clientX, event.clientY)
 }
 </script>
 
@@ -63,7 +61,7 @@ const toggleOptions = (event:any) => {
     @click.exact="execute(file, [])"
     @click.ctrl="execute(file, ['_blank'])"
     @click.middle.exact="execute(file, ['_blank'])"
-    @click.right.prevent="toggleOptions($event)"
+    @click.right.prevent.stop="toggleOptions($event)"
     :id="props.file.parent.name + '-' + file.getIdSafeName()"
   >
     <div :class="{ fuzzyInfo: isFuzzy }">
