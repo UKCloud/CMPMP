@@ -16,9 +16,7 @@ const passFileOption = (file: VaunchUrlFile, xPos:number, yPos:number) => {
 }
 
 const toggleOptions = (event:any) => {
-  if (!sessionConfig.showFileOptions) {
-    emit('showFolderOption', props.folder, event.clientX, event.clientY)
-  }
+  emit('showFolderOption', props.folder, event.clientX, event.clientY)
 }
 </script>
 
@@ -54,7 +52,7 @@ const toggleOptions = (event:any) => {
 </style>
 
 <template>
-  <div class="vaunch-folder vaunch-window" @click.right.prevent="toggleOptions($event)">
+  <div class="vaunch-folder vaunch-window" @click.right.prevent.stop="toggleOptions($event)">
     <span class="folder-title">
       <i :class="['fa-' + folder.iconClass, 'fa-' + folder.icon]"></i>
       <span v-if="config.titleCase">{{ folder.titleCase() }}</span>

@@ -196,12 +196,14 @@ const showFileOption = (file:VaunchUrlFile, xPos:number, yPos:number) => {
   data.optionFile = file;
   data.optionX = xPos;
   data.optionY = yPos;
+  if (sessionConfig.showFolderOptions) sessionConfig.showFolderOptions = false;
   sessionConfig.showFileOptions = true;
 }
 const showFolderOption = (folder:VaunchFolder, xPos:number, yPos:number) => {
   data.optionFolder = folder;
   data.optionX = xPos;
   data.optionY = yPos;
+  if (sessionConfig.showFileOptions) sessionConfig.showFileOptions = false;
   sessionConfig.showFolderOptions = true;
 }
 </script>
