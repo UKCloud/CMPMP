@@ -238,8 +238,10 @@ const createFile = () => {
                 <span>Edit the icon class for the file</span>
                 <div class="edit-input-container">
                   <label class="edit-label" for="new-icon-class">Icon Class: </label>
-                  <input autocomplete="off" ref="newIconClass" class="edit-input" type="text"
-                    id="new-icon-class" value="solid" />
+                  <select ref="newIconClass" id="new-icon-class">
+                    <option value="solid">Solid</option>
+                    <option value="brands">Brands</option>
+                  </select>
                 </div>
               </div>
               <div class="edit-attr">

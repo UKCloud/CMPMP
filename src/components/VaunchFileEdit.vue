@@ -20,6 +20,7 @@ const newPrefix = ref();
 const newContent = ref();
 const newIcon = ref();
 const newIconClass = ref();
+const selectedClass = props.file.iconClass;
 const newDescription = ref();
 
 const closeWindow = () => {
@@ -204,8 +205,10 @@ const saveFile = () => {
               <span>Edit the icon class for the file</span>
               <div class="edit-input-container">
                 <label class="edit-label" :for="file.getIdSafeName() + '-icon-class'">Icon Class: </label>
-                <input autocomplete="off" ref="newIconClass" class="edit-input" type="text"
-                  :id="file.getIdSafeName() + '-icon-class'" :value="file.iconClass" />
+                  <select v-model="selectedClass" ref="newIconClass" id="new-icon-class">
+                    <option value="solid">Solid</option>
+                    <option value="brands">Brands</option>
+                  </select>
               </div>
             </div>
             <div class="edit-attr">
