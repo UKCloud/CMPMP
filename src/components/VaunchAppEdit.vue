@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import VaunchWindow from "./VaunchWindow.vue";
 import VaunchButton from "./VaunchButton.vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { defaultconfig, useConfigStore } from "@/stores/config";
-import { VaunchSetIcon } from "@/models/commands/fs/VaunchSetIcon";
-import { type VaunchResponse, ResponseType } from "@/models/VaunchResponse";
-import { handleResponse } from "@/utilities/response";
+import { VaunchToggleCase } from "@/models/commands/config/VaunchToggleCase";
+import { VaunchToggleGui } from "@/models/commands/config/VaunchToggleGui";
+import { VaunchToggleCommands } from "@/models/commands/config/VaunchToggleCommands";
+import { VaunchToggleFuzzy } from "@/models/commands/config/VaunchToggleFuzzy";
+import { VaunchSetColor } from "@/models/commands/config/VaunchsetColor";
 
 const emit = defineEmits(['closeEdit'])
 const config = useConfigStore();
@@ -20,7 +22,7 @@ const windowColor = ref();
 const textColor = ref();
 const highlightColor = ref();
 
-const currentColours = {
+let currentColours = {
   window: config.color.window == defaultconfig.color.window ? 'default' : rgbaToHex(config.color.window),
   text: config.color.text == defaultconfig.color.text ? 'default' : config.color.text,
   highlight: config.color.highlight == defaultconfig.color.highlight ? 'default' : config.color.highlight
@@ -28,7 +30,6 @@ const currentColours = {
 
 function rgbaToHex(color:string):string {
   let rgbaMatch = color.match(/rgba\((\d+),\s+(\d+),\s+(\d+),\s+\d+\.\d+\)/)
-  console.log(rgbaMatch);
   if (rgbaMatch) {
     let r = parseInt(rgbaMatch[1]).toString(16).padStart(2,'0');
     let g = parseInt(rgbaMatch[2]).toString(16).padStart(2,'0');
@@ -42,8 +43,34 @@ const closeWindow = () => {
   emit('closeEdit');
 }
 
+onMounted(() => {
+  currentColours = {
+    window: config.color.window == defaultconfig.color.window ? 'default' : rgbaToHex(config.color.window),
+    text: config.color.text == defaultconfig.color.text ? 'default' : config.color.text,
+    highlight: config.color.highlight == defaultconfig.color.highlight ? 'default' : config.color.highlight
+  }
+})
+
 const saveApp = () => {
-  console.log("saving...");
+  // Set toggle-able settings
+  // If the state has changed, toggle the respective setting
+  let toggleGui = new VaunchToggleGui();
+  if (showGui.value.checked != config.showGUI) toggleGui.execute([]);
+  let toggleCase = new VaunchToggleCase();
+  if (titleCase.value.checked != config.titleCase) toggleCase.execute([]);
+  let toggleCommands = new VaunchToggleCommands();
+  if (showCommands.value.checked != config.showCommands) toggleCommands.execute([]);
+  let toggleFuzzy = new VaunchToggleFuzzy();
+  if (fuzzy.value.checked != config.fuzzy) toggleFuzzy.execute([]);
+
+  // If input is default, and previous config was default, set to *, so set-color wont ignore the other color options.
+  // Ideally set-color should be fixed to work better with setting default colors on a per element basis, but this works for now
+  let newWindowColor = windowColor.value.value == 'default' && config.color.window == defaultconfig.color.window ? '*' : windowColor.value.value
+  let newTextColor = textColor.value.value == 'default' ? defaultconfig.color.text : textColor.value.value
+  let newHighlightColor = highlightColor.value.value == 'default' ? defaultconfig.color.highlight : highlightColor.value.value
+  let setColor = new VaunchSetColor();
+  setColor.execute([newWindowColor, newTextColor, newHighlightColor]);
+  closeWindow();
 }
 </script>
 
@@ -169,7 +196,7 @@ input[type="checkbox"]:checked::before {
               <div class="edit-input-container">
                 <label class="edit-label" for="gui-checkbox">Show GUI: </label>
                 <input autocomplete="off" ref="showGui" type="checkbox" :checked="config.showGUI" id="gui-checkbox"
-                  value="true" />
+                  />
               </div>
             </div>
 
@@ -179,7 +206,7 @@ input[type="checkbox"]:checked::before {
               <div class="edit-input-container">
                 <label class="edit-label" for="titlecase-checkbox">Enable Title Case: </label>
                 <input autocomplete="off" ref="titleCase" type="checkbox" :checked="config.titleCase"
-                  id="titlecase-checkbox" value="true" />
+                  id="titlecase-checkbox" />
               </div>
             </div>
 
@@ -190,7 +217,7 @@ input[type="checkbox"]:checked::before {
               <div class="edit-input-container">
                 <label class="edit-label" for="showcommands-checkbox">Show Commands Window: </label>
                 <input autocomplete="off" ref="showCommands" type="checkbox" :checked="config.showCommands"
-                  id="showcommands-checkbox" value="true" />
+                  id="showcommands-checkbox" />
               </div>
             </div>
 
@@ -200,7 +227,7 @@ input[type="checkbox"]:checked::before {
               <div class="edit-input-container">
                 <label class="edit-label" for="fuzzy-checkbox">Enable Fuzzy Search: </label>
                 <input autocomplete="off" ref="fuzzy" type="checkbox" :checked="config.fuzzy" id="fuzzy-checkbox"
-                  value="true" />
+                  />
               </div>
             </div>
 
@@ -219,14 +246,29 @@ input[type="checkbox"]:checked::before {
             </div>
 
             <h3>Vaunch Colour Properties</h3>
+            <span>Colours can be css colour names, hex, or rgb. To reset the color scheme to default, set Window to 'default'</span>
             <div class="edit-attr">
-              <span>Set the window colour, this also impacts the colour of files, and folder/window titles.
-                Colours can be css colour names, rg
-              </span>
+              <span>Set the window colour, this also impacts the colour of files, and folder/window titles.</span>
               <div class="edit-input-container">
                 <label class="edit-label" for="search-input">Window Color: </label>
-                <input autocomplete="off" ref="defaultFile" type="text" 
+                <input autocomplete="off" ref="windowColor" type="text" 
                 :value="currentColours.window" class="edit-input" id="search-input"/>
+              </div>
+            </div>
+            <div class="edit-attr">
+              <span>Set the text colour.</span>
+              <div class="edit-input-container">
+                <label class="edit-label" for="search-input">Text Color: </label>
+                <input autocomplete="off" ref="textColor" type="text" 
+                :value="currentColours.text" class="edit-input" id="search-input"/>
+              </div>
+            </div>
+            <div class="edit-attr">
+              <span>Set the highlight colour. Affects highlighted text, and button hover color</span>
+              <div class="edit-input-container">
+                <label class="edit-label" for="search-input">Highlight Color: </label>
+                <input autocomplete="off" ref="highlightColor" type="text" 
+                :value="currentColours.highlight" class="edit-input" id="search-input"/>
               </div>
             </div>
           </div>
