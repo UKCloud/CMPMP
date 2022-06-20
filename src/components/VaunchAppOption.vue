@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { VaunchRmdir } from '@/models/commands/fs/VaunchRmdir';
 import { ref, reactive } from 'vue'
-import VaunchConfirm from './VaunchConfirm.vue'
 import { useSessionStore } from '@/stores/sessionState';
 import VaunchOption from './VaunchOption.vue';
 import VaunchFolderEdit from './VaunchFolderEdit.vue';
-import VaunchFileAdd from './VaunchFileAdd.vue';
+import VaunchAppEdit from './VaunchAppEdit.vue';
 import { VaunchExport } from '@/models/commands/config/VaunchExport';
 import { ResponseType, type VaunchResponse } from '@/models/VaunchResponse';
 import { handleResponse } from '@/utilities/response';
@@ -71,6 +69,7 @@ const importVaunch = () => {
 
   <template v-slot:windows>
     <VaunchFolderEdit v-if="state.showAdd" :add-new="true" v-on:close-edit="setWindow('add', false)"/>
+    <VaunchAppEdit v-if="state.showEdit" :add-new="true" v-on:close-edit="setWindow('edit', false)"/>
   </template>
 </VaunchOption>
 </template>
