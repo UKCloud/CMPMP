@@ -89,7 +89,7 @@ const importVaunch = () => {
       v-on:close-window="setWindow('import', false)"
       v-on:answer-yes="importVaunch"
       v-on:answer-no="setWindow('import', false)"
-      title="Export Vaunch Settings?"
+      title="Import Vaunch Settings?"
       icon="file-import"
       ask-text="Do you want to import Vaunch settings from a file?" />
   </template>
