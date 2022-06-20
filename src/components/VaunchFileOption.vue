@@ -4,14 +4,12 @@ import { type VaunchResponse, ResponseType } from '@/models/VaunchResponse';
 import { ref, reactive } from 'vue'
 import VaunchFileEdit from './VaunchFileEdit.vue'
 import VaunchConfirm from './VaunchConfirm.vue'
-import { useConfigStore } from '@/stores/config';
 import { useSessionStore } from '@/stores/sessionState';
 import { focusVaunchInput } from '@/utilities/inputUtils';
 import VaunchOption from './VaunchOption.vue';
 
 const props = defineProps(['file', 'xPos', 'yPos'])
 const optionContainer = ref()
-const config = useConfigStore();
 const sessionConfig = useSessionStore();
 
 const state = reactive({

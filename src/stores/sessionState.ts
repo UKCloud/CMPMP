@@ -18,6 +18,7 @@ export const useSessionStore = defineStore("session", {
       vaunchInput: "",
       showFileOptions: false,
       showFolderOptions: false,
+      showAppOptions: false,
     };
   },
 });

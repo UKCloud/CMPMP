@@ -20,6 +20,7 @@ import { ResponseType } from "./models/VaunchResponse";
 import VaunchGuiResponse from "./components/VaunchGuiResponse.vue";
 import VaunchFileOption from "./components/VaunchFileOption.vue";
 import VaunchFolderOption from "./components/VaunchFolderOption.vue";
+import VaunchAppOption from "./components/VaunchAppOption.vue";
 import type { VaunchUrlFile } from "./models/VaunchUrlFile";
 import { handleResponse } from "./utilities/response";
 
@@ -196,15 +197,24 @@ const showFileOption = (file:VaunchUrlFile, xPos:number, yPos:number) => {
   data.optionFile = file;
   data.optionX = xPos;
   data.optionY = yPos;
-  if (sessionConfig.showFolderOptions) sessionConfig.showFolderOptions = false;
+  sessionConfig.showFolderOptions = false;
+  sessionConfig.showAppOptions = false;
   sessionConfig.showFileOptions = true;
 }
 const showFolderOption = (folder:VaunchFolder, xPos:number, yPos:number) => {
   data.optionFolder = folder;
   data.optionX = xPos;
   data.optionY = yPos;
-  if (sessionConfig.showFileOptions) sessionConfig.showFileOptions = false;
+  sessionConfig.showFileOptions = false;
+  sessionConfig.showAppOptions = false;
   sessionConfig.showFolderOptions = true;
+}
+const showAppOption = (xPos:number, yPos:number) => {
+  data.optionX = xPos;
+  data.optionY = yPos;
+  sessionConfig.showFileOptions = false;
+  sessionConfig.showFolderOptions = false;
+  sessionConfig.showAppOptions = true;
 }
 </script>
 
@@ -278,6 +288,7 @@ main {
         <div
           v-if="folders.items.length > 0 && config.showGUI"
           id="vaunch-folder-container"
+          @click.right.prevent.self="showAppOption($event.clientX, $event.clientY)"
         >
           <VaunchGuiFolder
             v-for="folder in folders.sortedItems()"
@@ -293,5 +304,6 @@ main {
     <VaunchMan v-if="sessionConfig.showHelp" :commands="commands" />
     <VaunchFileOption v-if="sessionConfig.showFileOptions" :file="data.optionFile" :x-pos="data.optionX" :y-pos="data.optionY"/>
     <VaunchFolderOption v-if="sessionConfig.showFolderOptions" :folder="data.optionFolder" :x-pos="data.optionX" :y-pos="data.optionY"/>
+    <VaunchAppOption v-if="sessionConfig.showAppOptions" :x-pos="data.optionX" :y-pos="data.optionY"/>
   </main>
 </template>

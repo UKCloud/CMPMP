@@ -9,7 +9,7 @@ const option = ref()
 const optionContainer = ref();
 const config = useConfigStore();
 
-onMounted(() => {
+function calcPosition() {
   let element: HTMLElement = option.value;
   let lowerSixth = window.innerHeight - (window.outerHeight / 6);
   if (props.yPos > lowerSixth) {
@@ -19,17 +19,20 @@ onMounted(() => {
     element.style.top = `${props.yPos}px`;
   }
   element.style.left = `${props.xPos}px`;
+}
+
+onMounted(() => {
+  calcPosition()
 })
 
 onUpdated(() => {
-  let element: HTMLElement = option.value;
-  element.style.top = `${props.yPos}px`;
-  element.style.left = `${props.xPos}px`;
+  calcPosition()
 })
 
 const dismiss = () => {
   sessionConfig.showFileOptions = false;
   sessionConfig.showFolderOptions = false;
+  sessionConfig.showAppOptions = false;
 }
 
 // Exposed method to hide the options container, can be called
@@ -76,6 +79,9 @@ defineExpose({
 .option-title {
   padding: 0 0.5em 0.5em 0.5em;
   border-bottom: solid 1px rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: start;
+  align-items: center;
 }
 
 .option-icon {

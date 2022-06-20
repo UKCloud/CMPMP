@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import VaunchGuiCommand from "./VaunchGuiCommand.vue";
 import { commands } from "@/stores/command";
+import { useConfigStore } from "@/stores/config";
+const config = useConfigStore();
 </script>
 
 <style scoped>
+.folder-title {
+  background: v-bind("config.color.window");
+}
 .vaunch-command-folder {
   display: flex;
   flex-direction: column;
