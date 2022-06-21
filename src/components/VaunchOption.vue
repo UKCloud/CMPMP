@@ -11,14 +11,20 @@ const config = useConfigStore();
 
 function calcPosition() {
   let element: HTMLElement = option.value;
-  let lowerSixth = window.innerHeight - (window.outerHeight / 6);
-  if (props.yPos > lowerSixth) {
-    let bottomPos = window.innerHeight - props.yPos;
-    element.style.bottom = `${bottomPos}px`;
-  } else {
-    element.style.top = `${props.yPos}px`;
-  }
+  element.style.top = `${props.yPos}px`;
   element.style.left = `${props.xPos}px`;
+  element.style.bottom = "unset";
+  element.style.right = "unset";
+
+
+  if (element.getBoundingClientRect().bottom > window.innerHeight) {
+    element.style.top = "unset";
+    element.style.bottom = "0";
+  }
+  if (element.getBoundingClientRect().right > window.innerWidth) {
+    element.style.left = "unset";
+    element.style.right = "0";
+  }
 }
 
 onMounted(() => {
@@ -52,7 +58,7 @@ defineExpose({
 }
 .vaunch-option {
   max-width: 15em;
-  min-width: 7em;
+  min-width: 10em;
   word-break: break-all;
   height: auto;
   z-index: 10;
