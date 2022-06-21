@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { useConfigStore } from "@/stores/config";
 import VaunchTooltip from "./VaunchTooltip.vue";
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import type { VaunchCommand } from "@/models/VaunchCommand";
 import { handleResponse } from "@/utilities/response";
 
 const config = useConfigStore();
-const commandInput = "";
+const data = reactive({
+  commandInput:""
+});
 
 const props = defineProps(["file", "parentFolderName", "isFuzzy"]);
 
@@ -95,8 +97,8 @@ const handleClick = (file: VaunchCommand, args: string[]) => {
       <input
         v-if="hasArgs"
         class="command-input"
-        @keydown.enter.prevent="execute(file, commandInput.split(' '))"
-        v-model="commandInput"
+        @keydown.enter.prevent="execute(file, data.commandInput.split(' '))"
+        v-model="data.commandInput"
         type="text"
         ref="commandInputBox"
       />
