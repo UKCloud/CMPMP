@@ -63,11 +63,10 @@ const saveApp = () => {
   let toggleFuzzy = new VaunchToggleFuzzy();
   if (fuzzy.value.checked != config.fuzzy) toggleFuzzy.execute([]);
 
-  // If input is default, and previous config was default, set to *, so set-color wont ignore the other color options.
-  // Ideally set-color should be fixed to work better with setting default colors on a per element basis, but this works for now
-  let newWindowColor = windowColor.value.value == 'default' && config.color.window == defaultconfig.color.window ? '*' : windowColor.value.value
-  let newTextColor = textColor.value.value == 'default' ? defaultconfig.color.text : textColor.value.value
-  let newHighlightColor = highlightColor.value.value == 'default' ? defaultconfig.color.highlight : highlightColor.value.value
+  // If an input is blank, leave it the same
+  let newWindowColor = windowColor.value.value  ? windowColor.value.value : '*';
+  let newTextColor = textColor.value.value ? textColor.value.value : '*';
+  let newHighlightColor = highlightColor.value.value ? highlightColor.value.value : '*';
   let setColor = new VaunchSetColor();
   setColor.execute([newWindowColor, newTextColor, newHighlightColor]);
   closeWindow();
@@ -246,7 +245,7 @@ input[type="checkbox"]:checked::before {
             </div>
 
             <h3>Vaunch Colour Properties</h3>
-            <span>Colours can be css colour names, hex, or rgb. To reset the color scheme to default, set Window to 'default'</span>
+            <span>Colours can be css colour names, hex, or rgb. 'default' will set an element back to its default colour</span>
             <div class="edit-attr">
               <span>Set the window colour, this also impacts the colour of files, and folder/window titles.</span>
               <div class="edit-input-container">
@@ -264,7 +263,7 @@ input[type="checkbox"]:checked::before {
               </div>
             </div>
             <div class="edit-attr">
-              <span>Set the highlight colour. Affects highlighted text, and button hover color</span>
+              <span>Set the highlight colour. Affects highlighted text, and button hover colour</span>
               <div class="edit-input-container">
                 <label class="edit-label" for="search-input">Highlight Color: </label>
                 <input autocomplete="off" ref="highlightColor" type="text" 

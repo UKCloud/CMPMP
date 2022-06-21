@@ -9,11 +9,11 @@ export class VaunchSetColor extends VaunchCommand {
       "Changes the colours of Vaunch. The window colour, text color, and highlight color can be customised. Colors can either be a css colour name, or hex-code.",
       "Supplying * at any of the parameters will leave that element's colour unchanged.",
       "If the window colour is changed, and text colour is not specified Vaunch will set the text colour to either black or white, based on the window colour.",
-      "If 'default' is supplied, Vaunch will be reset to the default colour scheme, based on your preferred OS colour theme.",
+      "If 'default' is supplied for an element, it will be reset to its default colour",
     ];
     const parameters: Parameter[] = [
       {
-        name: "windowColor|default",
+        name: "windowColor",
         optional: true,
         repeatable: false,
       },
@@ -40,7 +40,7 @@ export class VaunchSetColor extends VaunchCommand {
       {
         args: ["cornflowerblue", "#ffffff"],
         description: [
-          "Sets the window color to the css colour 'cornflowerblue' and the text colour to #ffffff (white)",
+          "Sets the window color to the css colour Cornflower Blue and the text colour to #ffffff (white)",
         ],
       },
       {
@@ -52,13 +52,19 @@ export class VaunchSetColor extends VaunchCommand {
       {
         args: ["default"],
         description: [
-          "Changes the colour scheme to Vaunch's default, which is based on your OS colour scheme",
+          "Changes the window colour to Vaunch's default, which is based on your OS colour scheme",
+        ],
+      },
+      {
+        args: ["cornflowerblue", "default", "navy"],
+        description: [
+          "Changes the window colour to Cornflower Blue, resets the text colour to the default color (black based on Cornflower Blue) and the highlight color to Navy",
         ],
       },
     ];
     super("set-color", longDescription, parameters, examples);
   }
-  aliases: string[] = ["set-colour", "colo"];
+  aliases: string[] = ["set-colour", "set-colo", "colo"];
   description = "Changes the colour of Vaunch";
 
   private rgbToHsl(r: number, g: number, b: number) {
@@ -144,34 +150,41 @@ export class VaunchSetColor extends VaunchCommand {
     const changedComponents: string[] = [];
 
     // If first arg is 'default' set back to default variables
+    // If anything past this is defined, it will overwrite the default
     if (newWindowColor == "default") {
       config.color = defaultconfig.color;
-      changedComponents.push(`to default`);
-    } else {
+      changedComponents.push(`Window colour to default`);
+    } else if (newWindowColor != "*") {
       // Set the new window color
-      if (newWindowColor != "*") {
-        config.color.window = this.calcWindowColor(newWindowColor);
-        config.color.windowOpaque = this.calcWindowColor(newWindowColor, 1);
-        changedComponents.push(`Window colour to ${newWindowColor}`);
-      }
+      config.color.window = this.calcWindowColor(newWindowColor);
+      config.color.windowOpaque = this.calcWindowColor(newWindowColor, 1);
+      changedComponents.push(`Window colour to ${newWindowColor}`);
+    }
 
-      // If a second color is provided, set the text color to that
-      // else calculate the text color based on the window color
-      if (newTextColor) {
-        if (newTextColor != "*") {
-          config.color.text = newTextColor;
-          changedComponents.push(`Text colour to ${newTextColor}`);
-        }
-        // Calculate the 'best' highlight color for this text color
-        config.color.autocomplete = this.calcAutocompleteColor(newTextColor);
-      } else config.color.text = this.calcTextColor(config.color.window);
-      if (newHighlightColor) {
-        if (newHighlightColor != "*") {
-          config.color.highlight = newHighlightColor;
-          changedComponents.push(`Highlight colour to ${newHighlightColor}`);
-        }
+    // If a second color is provided, set the text color to that
+    // else calculate the text color based on the window color
+    if (newTextColor) {
+      if (newTextColor == "default") {
+        config.color.text = this.calcTextColor(config.color.window);
+        changedComponents.push(`Text colour to default`);
+      } else if (newTextColor != "*") {
+        config.color.text = newTextColor;
+        changedComponents.push(`Text colour to ${newTextColor}`);
+      }
+      // Calculate the 'best' highlight color for this text color
+      config.color.autocomplete = this.calcAutocompleteColor(newTextColor);
+    } else config.color.text = this.calcTextColor(config.color.window);
+
+    if (newHighlightColor) {
+      if (newHighlightColor == "default") {
+        config.color.highlight = defaultconfig.color.highlight;
+        changedComponents.push(`Highlight colour to default`);
+      } else if (newHighlightColor != "*") {
+        config.color.highlight = newHighlightColor;
+        changedComponents.push(`Highlight colour to ${newHighlightColor}`);
       }
     }
+  
     return this.makeResponse(
       ResponseType.Success,
       `Edited colour scheme: ${changedComponents.join(", ")}`
