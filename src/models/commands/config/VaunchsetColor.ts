@@ -33,7 +33,7 @@ export class VaunchSetColor extends VaunchCommand {
       {
         args: ["cornflowerblue"],
         description: [
-          "Sets the window color to the css colour 'cornflowerblue'",
+          "Sets the window color to the css colour Cornflower Blue",
           "Vaunch will additionally set the text colour to black, as textColor was not specified",
         ],
       },
