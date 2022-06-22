@@ -50,11 +50,13 @@ const createFile = () => {
   if (newContent.value.value == "") missingFields.push("Content")
   if (missingFields.length > 0) return missingFieldResponse(missingFields);
 
-  // Ensure that the file ends with .<extension>
-  let baseName:string = newName.value.value;
+  // Ensure that the file ends with .<extension> and is in good filename format
+  // eg replacing spaces with underscores, and lower case etc...
+  let baseName:string = (newName.value.value as string).toLowerCase()
+                                                       .replace(/\s+/g, '_');
   let fileName:string = baseName + (baseName.endsWith(`.${state.fileType}`) ? '' : `.${state.fileType}`)
 
-  // After checks have passed, touch the file
+  // After checks have passed, touch the file, prefixing the file's folder
   let touch = new VaunchTouch();
   let filePath = `${props.folder.name}/${fileName}`
   let content:string = newContent.value.value
