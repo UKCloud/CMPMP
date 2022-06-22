@@ -20,13 +20,34 @@ Vaunch can be accessed at: https://vaunch.kirimson.com, or you can host it yours
 - Fuzzy search to quickly find and go to/search commonly used sites
 - Tab completion to quickly execute commands and files
 - Built in documentation, just run `help` or `man` to get help on all commands available in Vaunch
-- GUI to edit files, right click on an existing file and click edit to customise anything in the file from the GUI
+- GUI to perform all actions commands can do
+    - Add/Edit/Delete files
+    - Add/Edit/Delete folders
+    - Edit Vaunch configuration
+    - Import/Export Vaunch configuration     
 
 ## Usage
 
 While using Vaunch, to get help on any of the available commands, just type `help` in the input box, or find the `help` command in the Commands window. The help window will list all available commands with a description, their available parameters, and some examples of using the command.
 
-On Vaunch's first start, there will be no files or folders created. To make one, just type `mkdir folderName` to create a folder, and `touch folderName/fileName.lnk siteName.tld/path` to create a Link file going to any website. (More information on `mkdir` and `touch` can be found on Vaunch's Help window)
+On Vaunch's first start, there will be no files or folders created.
+
+To create a new folder:
+- With commands: Run `mkdir folder_name`
+    - To set the icon of the folder, run `set-icon folder_name new_icon_name`
+- With the GUI: Right click on an empty space and click "Add Folder"
+    - The name, and icon can then be set in the "New Folder" window
+
+To create a new file:
+- With commands: Run `touch folder_name/file_name.lnk siteName.tld/path`
+    - To set the icon of the file, run `set-icon folder_name/file_name.lnk new_icon_name`
+    - To set the description of the file, run `set-description folder_name/file_name.lnk New Description`
+- With the GUI: Right click on an empty space within a folder and click "Add File"
+    - Choose the type of file to create, and set the name, prefix (if a Query file), and destination for the file
+    - The file icon and description can also be set
+
+Note: When using the GUI to create/edit files and folders all spaces in file/folder names will be converted to underscores, and will be set to lower case.
+By default Vaunch changes the display name of files/folders, replacing underscores with spaces, and converting the name to Upper Camel Case.
 
 ## Setting Up
 
