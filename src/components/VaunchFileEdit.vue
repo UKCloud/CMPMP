@@ -65,8 +65,14 @@ const saveFile = () => {
 
   // If the name/folder of the file has changed, attempt to move it
   // Do this last so the originalPath variable can be used for all other commands
-  if (newFolder.value.value != props.file.parent.name || newName.value.value != props.file.fileName) {
-    let newPath = `${newFolder.value.value}/${newName.value.value}`
+  let newFolderName = (newFolder.value.value as string).toLowerCase()
+                                                     .replace(/\s+/g, '_');
+  if (newFolderName != props.file.parent.name || newName.value.value != props.file.fileName) {
+    // Ensure that the file ends with .<extension> and is in good filename format
+    // eg replacing spaces with underscores, and lower case etc...
+    let newFileName:string = (newName.value.value as string).toLowerCase()
+                                                          .replace(/\s+/g, '_');
+    let newPath = `${newFolderName}/${newFileName}`
     let mv = new VaunchMv();
     let response: VaunchResponse = mv.execute([originalPath, newPath]);
     if (response.type == ResponseType.Error) return handleResponse(response);

@@ -25,12 +25,15 @@ const closeWindow = () => {
 const createFolder = () => {
   // Create the folder
   let mkdir = new VaunchMkdir();
-  let response:VaunchResponse = mkdir.execute([newName.value.value])
+
+  let newFolderName = (newName.value.value as string).toLowerCase()
+                                                     .replace(/\s+/g, '_');
+  let response:VaunchResponse = mkdir.execute([newFolderName])
   if (response.type == ResponseType.Error) return handleResponse(response);
 
   // Set the folder icon
   let setIcon = new VaunchSetIcon();
-  response = setIcon.execute([newName.value.value, newIcon.value.value, newIconClass.value.value])
+  response = setIcon.execute([newFolderName, newIcon.value.value, newIconClass.value.value])
   if (response.type == ResponseType.Error) return handleResponse(response);
   // Once the folder is made, close the window
   closeWindow();
@@ -51,8 +54,10 @@ const saveFolder = () => {
   // If the name of the folder has changed, attempt to move it
   // Do this last so the originalPath variable can be used for all other commands
   if (newName.value.value != props.folder.name) {
+    let newFolderName = (newName.value.value as string).toLowerCase()
+                                                    .replace(/\s+/g, '_');
     let mv = new VaunchMv();
-    let response: VaunchResponse = mv.execute([folderPath, newName.value.value]);
+    let response: VaunchResponse = mv.execute([folderPath, newFolderName]);
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
   // Once all edits are made, close the window
