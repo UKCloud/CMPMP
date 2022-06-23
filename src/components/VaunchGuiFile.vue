@@ -62,7 +62,7 @@ const deleteFile = () => emit('showFileOption', props.file, 0, 0, "delete");
 </style>
 
 <template>
-  <div :key="file.fileName" class="file vaunch-window" @click.exact="execute(file, [])"
+  <div :key="file.fileName" class="file vaunch-window" @click.self.exact="execute(file, [])"
     @click.ctrl="execute(file, ['_blank'])" @click.middle.exact="execute(file, ['_blank'])"
     @click.right.prevent.stop="toggleOptions($event)" :id="props.file.parent.name + '-' + file.getIdSafeName()">
     <div :class="{ fuzzyInfo: isFuzzy }">
