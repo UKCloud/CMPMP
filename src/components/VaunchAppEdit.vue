@@ -70,9 +70,9 @@ const saveApp = () => {
   let feh = new VaunchFeh();
   if (background.value.value != currentBg) feh.execute([background.value.value])
   // If an input is blank, leave it the same
-  let newWindowColor = windowColor.value.value  ? windowColor.value.value : '*';
-  let newTextColor = textColor.value.value ? textColor.value.value : '*';
-  let newHighlightColor = highlightColor.value.value ? highlightColor.value.value : '*';
+  let newWindowColor = windowColor.value.value ? (windowColor.value.value as string).toLowerCase() : '*';
+  let newTextColor = textColor.value.value ? (textColor.value.value as string).toLowerCase() : '*';
+  let newHighlightColor = highlightColor.value.value ? (highlightColor.value.value as string).toLowerCase() : '*';
   let setColor = new VaunchSetColor();
   setColor.execute([newWindowColor, newTextColor, newHighlightColor]);
   closeWindow();
