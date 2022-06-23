@@ -8,6 +8,7 @@ import { VaunchToggleGui } from "@/models/commands/config/VaunchToggleGui";
 import { VaunchToggleCommands } from "@/models/commands/config/VaunchToggleCommands";
 import { VaunchToggleFuzzy } from "@/models/commands/config/VaunchToggleFuzzy";
 import { VaunchSetColor } from "@/models/commands/config/VaunchsetColor";
+import { VaunchFeh } from "@/models/commands/config/VaunchFeh";
 
 const emit = defineEmits(['closeEdit'])
 const config = useConfigStore();
@@ -17,6 +18,7 @@ const titleCase = ref();
 const showCommands = ref();
 const fuzzy = ref();
 
+const background = ref();
 const defaultFile = ref();
 const windowColor = ref();
 const textColor = ref();
@@ -27,6 +29,8 @@ let currentColours = {
   text: config.color.text == defaultconfig.color.text ? 'default' : config.color.text,
   highlight: config.color.highlight == defaultconfig.color.highlight ? 'default' : config.color.highlight
 }
+
+let currentBg = config.background == defaultconfig.background ? 'default' : config.background
 
 function rgbaToHex(color:string):string {
   let rgbaMatch = color.match(/rgba\((\d+),\s+(\d+),\s+(\d+),\s+\d+\.\d+\)/)
@@ -63,6 +67,8 @@ const saveApp = () => {
   let toggleFuzzy = new VaunchToggleFuzzy();
   if (fuzzy.value.checked != config.fuzzy) toggleFuzzy.execute([]);
 
+  let feh = new VaunchFeh();
+  if (background.value.value != currentBg) feh.execute([background.value.value])
   // If an input is blank, leave it the same
   let newWindowColor = windowColor.value.value  ? windowColor.value.value : '*';
   let newTextColor = textColor.value.value ? textColor.value.value : '*';
@@ -241,6 +247,15 @@ input[type="checkbox"]:checked::before {
                 <label class="edit-label" for="search-input">Default Search File: </label>
                 <input autocomplete="off" ref="defaultFile" type="text" 
                 :value="config.defaultFile" class="edit-input" id="search-input"/>
+              </div>
+            </div>
+
+            <div class="edit-attr">
+              <span>Set background image for Vaunch. Set to 'default' to reset to the default image</span>
+              <div class="edit-input-container">
+                <label class="edit-label" for="bg-input">Background Image: </label>
+                <input autocomplete="off" ref="background" type="text" 
+                :value="currentBg" class="edit-input" id="bg-input"/>
               </div>
             </div>
 
