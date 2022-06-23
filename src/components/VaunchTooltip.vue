@@ -51,6 +51,11 @@ onMounted(() => {
   padding: 0.5em;
   border: solid thin rgba(100, 100, 100, 0.1);
 }
+@media (max-width: 768px) { 
+  .vaunch-tippy {
+    display: none;
+  }
+}
 </style>
 
 // eslint-disable-next-line vue/valid-template-root
