@@ -153,7 +153,7 @@ const enterSubmit = () => {
               <span>Name of the folder</span>
               <div class="edit-input-container">
                 <label class="edit-label" :for="(props.addNew ? 'new' : folder.getIdSafeName()) + '-filename'">Name: </label>
-                <input autocomplete="off" ref="newName" class="edit-input" type="text"
+                <input autocapitalize="none" autocomplete="off" ref="newName" class="edit-input" type="text"
                   :id="(props.addNew ? 'new' : folder.getIdSafeName()) + '-filename'" :value="!props.addNew ? folder.name : ''" />
               </div>
             </div>
@@ -162,7 +162,7 @@ const enterSubmit = () => {
               <span>Icon used for the folder</span>
               <div class="edit-input-container">
                 <label class="edit-label" :for="(props.addNew ? 'new' : folder.getIdSafeName()) + '-icon'">Icon: </label>
-                <input autocomplete="off" ref="newIcon" class="edit-input" type="text"
+                <input autocapitalize="none" autocomplete="off" ref="newIcon" class="edit-input" type="text"
                   :id="(props.addNew ? 'new' : folder.getIdSafeName()) + '-icon'" :value="!props.addNew ? folder.icon : 'folder'" />
               </div>
             </div>
@@ -171,7 +171,7 @@ const enterSubmit = () => {
               <span>Icon class for the folder</span>
               <div class="edit-input-container">
                 <label class="edit-label" :for="(props.addNew ? 'new' : folder.getIdSafeName()) + '-icon-class'">Icon Class: </label>
-                <select v-model="selectedClass" ref="newIconClass" :id="(props.addNew ? 'new' : folder.getIdSafeName()) + '-icon-class'">
+                <select autocapitalize="none" v-model="selectedClass" ref="newIconClass" :id="(props.addNew ? 'new' : folder.getIdSafeName()) + '-icon-class'">
                   <option value="solid">Solid</option>
                   <option value="brands">Brands</option>
                 </select>

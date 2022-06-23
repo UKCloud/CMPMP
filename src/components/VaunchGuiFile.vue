@@ -62,7 +62,7 @@ const deleteFile = () => emit('showFileOption', props.file, 0, 0, "delete");
 </style>
 
 <template>
-  <div :key="file.fileName" class="file vaunch-window" @click.self.exact="execute(file, [])"
+  <div :key="file.fileName" class="file vaunch-window" @click.exact="execute(file, [])"
     @click.ctrl="execute(file, ['_blank'])" @click.middle.exact="execute(file, ['_blank'])"
     @click.right.prevent.stop="toggleOptions($event)" :id="props.file.parent.name + '-' + file.getIdSafeName()">
     <div :class="{ fuzzyInfo: isFuzzy }">
@@ -79,8 +79,8 @@ const deleteFile = () => emit('showFileOption', props.file, 0, 0, "delete");
     <span v-if="isFuzzy" class="description"> {{ file.getDescription() }}</span>
     <span v-if="isFuzzy">Hits: {{ file.hits }}</span>
     <div v-if="!isFuzzy" class="mobile-only mobile-actions">
-      <i class="fa-solid fa-pencil" @click="editFile" />
-      <i class="fa-solid fa-trash" @click="deleteFile" />
+      <i class="fa-solid fa-pencil" @click.stop="editFile" />
+      <i class="fa-solid fa-trash" @click.stop="deleteFile" />
     </div>
     <VaunchTooltip v-if="!isFuzzy" :tip-for="props.file.parent.name + '-' + file.getIdSafeName()" :tip-file="file" />
   </div>

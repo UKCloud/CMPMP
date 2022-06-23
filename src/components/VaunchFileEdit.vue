@@ -38,7 +38,9 @@ const saveFile = () => {
   let editArgs: string[] = [];
   if (newPrefix.value) {
     // If prefix has changed, add it to the editArgs
-    if (newPrefix.value.value != props.file.prefix) editArgs.push(newPrefix.value.value);
+    if (newPrefix.value.value != props.file.prefix) {
+      editArgs.push(newPrefix.value.value);
+    } else editArgs.push("*");
   }
   // If the link content has changed, add it to the editArgs
   if (newContent.value.value != props.file.content) editArgs.push(newContent.value.value);
@@ -171,7 +173,7 @@ const saveFile = () => {
               <span>Edit the name of the file</span>
               <div class="edit-input-container">
                 <label class="edit-label" :for="file.getIdSafeName() + '-filename'">Name: </label>
-                <input autocomplete="off" ref="newName" class="edit-input" type="text"
+                <input autocapitalize="none" autocomplete="off" ref="newName" class="edit-input" type="text"
                   :id="file.getIdSafeName() + '-filename'" :value="file.fileName" />
               </div>
             </div>
@@ -180,7 +182,7 @@ const saveFile = () => {
               <div>Edit the folder the file is in</div>
               <div class="edit-input-container">
                 <label class="edit-label" :for="file.getIdSafeName() + '-folder'">Folder: </label>
-                <input autocomplete="off" ref="newFolder" class="edit-input" type="text"
+                <input autocapitalize="none" autocomplete="off" ref="newFolder" class="edit-input" type="text"
                   :id="file.getIdSafeName() + '-filename'" :value="file.parent.name" />
               </div>
             </div>
@@ -189,7 +191,7 @@ const saveFile = () => {
               <span>Edit the prefix used for the file</span>
               <div class="edit-input-container">
                 <label class="edit-label" :for="file.getIdSafeName() + '-prefix'">Prefix: </label>
-                <input autocomplete="off" ref="newPrefix" class="edit-input" type="text"
+                <input autocapitalize="none" autocomplete="off" ref="newPrefix" class="edit-input" type="text"
                   :id="file.getIdSafeName() + '-prefix'" :value="file.prefix" />
               </div>
             </div>
@@ -198,7 +200,7 @@ const saveFile = () => {
               <span>Edit the link content of the file</span>
               <div class="edit-input-container">
                 <label class="edit-label" :for="file.getIdSafeName() + '-content'">Destination: </label>
-                <input autocomplete="off" ref="newContent" class="edit-input" type="text"
+                <input autocapitalize="none" autocomplete="off" ref="newContent" class="edit-input" type="text"
                   :id="file.getIdSafeName() + '-content'" :value="file.content" />
               </div>
             </div>
@@ -210,7 +212,7 @@ const saveFile = () => {
               <span>Edit the icon used for the file</span>
               <div class="edit-input-container">
                 <label class="edit-label" :for="file.getIdSafeName() + '-icon-name'">Icon Name: </label>
-                <input autocomplete="off" ref="newIcon" class="edit-input" type="text"
+                <input autocapitalize="none" autocomplete="off" ref="newIcon" class="edit-input" type="text"
                   :id="file.getIdSafeName() + '-icon-name'" :value="file.icon" />
               </div>
             </div>

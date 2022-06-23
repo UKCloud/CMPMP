@@ -210,7 +210,7 @@ const createFile = () => {
                 <span>Set the name of the file</span>
                 <div class="edit-input-container">
                   <label class="edit-label" for="new-filename">Name: </label>
-                  <input autocomplete="off" ref="newName" class="edit-input" type="text" id="new-filename" />
+                  <input autocapitalize="none" autocomplete="off" ref="newName" class="edit-input" type="text" id="new-filename" />
                 </div>
               </div>
 
@@ -218,7 +218,7 @@ const createFile = () => {
                 <span>Set the prefix used for the file</span>
                 <div class="edit-input-container">
                   <label class="edit-label" for="new-prefix">Prefix: </label>
-                  <input autocomplete="off" ref="newPrefix" class="edit-input" type="text" id="new-prefix" />
+                  <input autocapitalize="none" autocomplete="off" ref="newPrefix" class="edit-input" type="text" id="new-prefix" />
                 </div>
               </div>
 
@@ -226,7 +226,7 @@ const createFile = () => {
                 <span>Set the link content of the file</span>
                 <div class="edit-input-container">
                   <label class="edit-label" for="new-content">Destination: </label>
-                  <input autocomplete="off" ref="newContent" class="edit-input" type="text" id="new-content" />
+                  <input autocapitalize="none" autocomplete="off" ref="newContent" class="edit-input" type="text" id="new-content" />
                 </div>
               </div>
             </div>
@@ -239,7 +239,7 @@ const createFile = () => {
                 <span>Edit the icon used for the file</span>
                 <div class="edit-input-container">
                   <label class="edit-label" for="new-icon-name">Icon Name: </label>
-                  <input autocomplete="off" ref="newIcon" class="edit-input" type="text"
+                  <input autocapitalize="none" autocomplete="off" ref="newIcon" class="edit-input" type="text"
                     id="new-icon-name" value="file" />
                 </div>
               </div>
