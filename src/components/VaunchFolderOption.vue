@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { VaunchRmdir } from '@/models/commands/fs/VaunchRmdir';
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import VaunchConfirm from './VaunchConfirm.vue'
 import { useSessionStore } from '@/stores/sessionState';
 import VaunchOption from './VaunchOption.vue';
@@ -17,6 +17,12 @@ const state = reactive({
   showAdd:false,
 })
 
+onMounted(() => {
+  if (sessionConfig.action) {
+    setWindow(sessionConfig.action, true);
+    sessionConfig.action = "";
+  }
+})
 
 const deleteFolder = () => {
   let rm = new VaunchRmdir();
@@ -41,6 +47,10 @@ const setWindow = (window:string, show:boolean) => {
     optionContainer.value.hideOptions();
   } else sessionConfig.showFolderOptions = false;
 }
+
+defineExpose({
+  setWindow
+})
 
 const shortenTitle = (title:string, maxLength=12) => {
   if (title.length < maxLength+3) return title

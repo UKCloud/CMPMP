@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { VaunchRm } from '@/models/commands/fs/VaunchRm';
 import { type VaunchResponse, ResponseType } from '@/models/VaunchResponse';
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import VaunchFileEdit from './VaunchFileEdit.vue'
 import VaunchConfirm from './VaunchConfirm.vue'
 import { useSessionStore } from '@/stores/sessionState';
@@ -17,6 +17,13 @@ const state = reactive({
   showDelete:false,
 })
 
+onMounted(() => {
+  console.log(sessionConfig.action);
+  if (sessionConfig.action) {
+    setWindow(sessionConfig.action, true);
+    sessionConfig.action = "";
+  }
+})
 
 const deleteFile = () => {
   let rm = new VaunchRm();

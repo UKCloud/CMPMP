@@ -30,12 +30,14 @@ const fuzzyFiles = useFuzzyStore();
 const sessionConfig = useSessionStore();
 
 const vaunchInput = ref();
+const folderOption = ref();
 
 let optionFile:VaunchFile = reactive(new VaunchLink("default", "default"));
 let optionFolder:VaunchFolder = reactive(new VaunchFolder("default"));
 const data = reactive({
   optionFile,
   optionFolder,
+  action:"",
   optionX: 0,
   optionY: 0,
   prefixName: config.prefix.name,
@@ -193,25 +195,29 @@ const setInputIcon = (file: VaunchFile | undefined) =>  {
   }
 }
 
-const showFileOption = (file:VaunchUrlFile, xPos:number, yPos:number) => {
+const showFileOption = (file:VaunchUrlFile, xPos:number, yPos:number, action:string|null=null) => {
   data.optionFile = file;
   data.optionX = xPos;
   data.optionY = yPos;
+  console.log("app", action);
+  if (action) sessionConfig.action = action;
   sessionConfig.showFolderOptions = false;
   sessionConfig.showAppOptions = false;
   sessionConfig.showFileOptions = true;
 }
-const showFolderOption = (folder:VaunchFolder, xPos:number, yPos:number) => {
+const showFolderOption = (folder:VaunchFolder, xPos:number, yPos:number, action:string|null=null) => {
   data.optionFolder = folder;
   data.optionX = xPos;
   data.optionY = yPos;
+  if (action) sessionConfig.action = action;
   sessionConfig.showFileOptions = false;
   sessionConfig.showAppOptions = false;
   sessionConfig.showFolderOptions = true;
 }
-const showAppOption = (xPos:number, yPos:number) => {
+const showAppOption = (xPos:number, yPos:number, action:string|null=null) => {
   data.optionX = xPos;
   data.optionY = yPos;
+  if (action) sessionConfig.action = action;
   sessionConfig.showFileOptions = false;
   sessionConfig.showFolderOptions = false;
   sessionConfig.showAppOptions = true;
@@ -239,6 +245,45 @@ main {
   background: v-bind("config.color.windowOpaque") !important;
 }
 
+#option-buttons-container {
+  width: 100%;
+}
+
+.app-option-buttons {
+  width: 100%;
+  height: 2.5rem;
+  border-radius: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  border-top: solid thin rgba(0, 0, 0, 0.25);
+  margin-top: 1rem;
+}
+
+.option-icon {
+  padding-right: 0.5em;
+  width: 1.5rem;
+}
+
+.app-option {
+  height: 100%;
+  background: v-bind("config.color.window");
+  border-left: solid thin rgba(0, 0, 0, 0.25);
+  border-right: solid thin rgba(0, 0, 0, 0.25);
+  padding: 0 0.5rem;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
+  transition: background-color 0.15s;
+}
+
+.app-option:hover {
+  background: v-bind("config.color.highlight");
+  cursor: pointer;
+}
+
 /* Scrollbar theming */
 ::-webkit-scrollbar {
   width: 3px;
@@ -256,7 +301,7 @@ main {
 </style>
 
 <template>
-  <main :style="{ 'background-image': 'url(' + config.background + ')' }">
+  <main id="main-container" :style="{ 'background-image': 'url(' + config.background + ')' }">
     <VaunchInput
       v-on:command="executeCommand"
       v-on:fuzzy="fuzzy"
@@ -299,11 +344,21 @@ main {
           />
         </div>
       </div>
+      <div class="mobile-only" id="option-buttons-container">
+        <div class="app-option-buttons">
+          <div class="app-option" @click="showAppOption(0, 0, 'edit')">
+            <span><i class="fa-solid fa-pencil option-icon" />Vaunch Settings</span>
+          </div>
+          <div class="app-option" @click="showAppOption(0, 0, 'add')">
+            <span><i class="fa-solid fa-plus option-icon" />Add Folder</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <VaunchMan v-if="sessionConfig.showHelp" :commands="commands" />
     <VaunchFileOption v-if="sessionConfig.showFileOptions" :file="data.optionFile" :x-pos="data.optionX" :y-pos="data.optionY"/>
-    <VaunchFolderOption v-if="sessionConfig.showFolderOptions" :folder="data.optionFolder" :x-pos="data.optionX" :y-pos="data.optionY"/>
+    <VaunchFolderOption ref="folderOption" v-if="sessionConfig.showFolderOptions" :folder="data.optionFolder" :x-pos="data.optionX" :y-pos="data.optionY" />
     <VaunchAppOption v-if="sessionConfig.showAppOptions" :x-pos="data.optionX" :y-pos="data.optionY"/>
   </main>
 </template>

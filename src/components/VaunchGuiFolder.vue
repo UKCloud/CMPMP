@@ -6,18 +6,21 @@ import type { VaunchUrlFile } from "@/models/VaunchUrlFile";
 import { useSessionStore } from "@/stores/sessionState";
 
 const config = useConfigStore();
-const sessionConfig = useSessionStore();
 
 const props = defineProps(["folder"]);
 const emit = defineEmits(["showFileOption", "showFolderOption"]);
 
-const passFileOption = (file: VaunchUrlFile, xPos:number, yPos:number) => {
-  emit("showFileOption", file, xPos, yPos)
+const passFileOption = (file: VaunchUrlFile, xPos:number, yPos:number, action:null|string=null) => {
+  emit("showFileOption", file, xPos, yPos, action)
 }
 
 const toggleOptions = (event:any) => {
-  emit('showFolderOption', props.folder, event.clientX, event.clientY)
+  emit('showFolderOption', props.folder, event.clientX, event.clientY);
 }
+
+const addFile = () => emit('showFolderOption', props.folder, 0, 0, "add");
+const editFolder = () => emit('showFolderOption', props.folder, 0, 0, "edit");
+const deleteFolder = () => emit('showFolderOption', props.folder, 0, 0, "delete");
 </script>
 
 <style scoped>
@@ -31,7 +34,12 @@ const toggleOptions = (event:any) => {
 }
 
 .folder-title {
+  display: flex;
   background: v-bind("config.color.window");
+}
+
+.folder-title-name {
+  flex: 1;
 }
 
 /* Medium devices (tablets, 768px and up) */
@@ -54,9 +62,16 @@ const toggleOptions = (event:any) => {
 <template>
   <div class="vaunch-folder vaunch-window" @click.right.prevent.stop="toggleOptions($event)">
     <span class="folder-title">
-      <i :class="['fa-' + folder.iconClass, 'fa-' + folder.icon]"></i>
-      <span v-if="config.titleCase">{{ folder.titleCase() }}</span>
-      <span v-if="!config.titleCase">{{ folder.name }}</span>
+      <div class="folder-title-name">
+        <i :class="['fa-' + folder.iconClass, 'fa-' + folder.icon]"></i>
+        <span v-if="config.titleCase">{{ folder.titleCase() }}</span>
+        <span v-if="!config.titleCase">{{ folder.name }}</span>
+      </div>
+      <div class="mobile-only mobile-actions">
+        <i class="fa-solid fa-plus" @click="addFile" />
+        <i class="fa-solid fa-pencil" @click="editFolder" />
+        <i class="fa-solid fa-trash" @click="deleteFolder" />
+      </div>
     </span>
     <div v-if="folder.getFiles().length > 0" class="file-container">
       <VaunchGuiFile

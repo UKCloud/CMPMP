@@ -22,6 +22,9 @@ const execute = (file: VaunchUrlFile, args: string[]) => {
 const toggleOptions = (event:any) => {
   emit('showFileOption', props.file, event.clientX, event.clientY)
 }
+
+const editFile = () => emit('showFileOption', props.file, 0, 0, "edit");
+const deleteFile = () => emit('showFileOption', props.file, 0, 0, "delete");
 </script>
 
 <style scoped>
@@ -51,6 +54,10 @@ const toggleOptions = (event:any) => {
   .fuzzyInfo {
     width: auto;
   }
+
+  .file {
+    width: 100%;
+  }
 }
 </style>
 
@@ -64,19 +71,25 @@ const toggleOptions = (event:any) => {
     @click.right.prevent.stop="toggleOptions($event)"
     :id="props.file.parent.name + '-' + file.getIdSafeName()"
   >
-    <div :class="{ fuzzyInfo: isFuzzy }">
-      <i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'file-icon']"></i>
-      <span v-if="isFuzzy" class="filename">{{ file.getParentName(config.titleCase) }}:
-      </span>
-      <span v-if="config.titleCase" :class="{ filename: !isFuzzy }">
-        {{ file.titleCase() }}
-      </span>
-      <span v-if="!config.titleCase" :class="{ filename: !isFuzzy }">
-        {{ file.fileName }}
-      </span>
+    <div>
+      <div :class="{ fuzzyInfo: isFuzzy }">
+        <i :class="['fa-' + file.iconClass, 'fa-' + file.icon, 'file-icon']"></i>
+        <span v-if="isFuzzy" class="filename">{{ file.getParentName(config.titleCase) }}:
+        </span>
+        <span v-if="config.titleCase" :class="{ filename: !isFuzzy }">
+          {{ file.titleCase() }}
+        </span>
+        <span v-if="!config.titleCase" :class="{ filename: !isFuzzy }">
+          {{ file.fileName }}
+        </span>
+      </div>
+      <span v-if="isFuzzy" class="description"> {{ file.getDescription() }}</span>
+      <span v-if="isFuzzy">Hits: {{ file.hits }}</span>
     </div>
-    <span v-if="isFuzzy" class="description"> {{ file.getDescription() }}</span>
-    <span v-if="isFuzzy">Hits: {{ file.hits }}</span>
+      <div class="mobile-only mobile-actions">
+        <i class="fa-solid fa-pencil" @click="editFile" />
+        <i class="fa-solid fa-trash" @click="deleteFile" />
+      </div>
     <VaunchTooltip
       v-if="!isFuzzy"
       :tip-for="props.file.parent.name + '-' + file.getIdSafeName()"

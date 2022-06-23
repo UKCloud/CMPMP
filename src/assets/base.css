@@ -214,6 +214,15 @@ select {
   display: none !important;
 }
 
+.mobile-only {
+  display: none !important;
+}
+
+.mobile-actions i {
+  cursor: pointer;
+  padding: 0 0.5rem;
+}
+
 .fade-out {
   opacity: 0;
 }
@@ -222,14 +231,15 @@ select {
   html {
     overflow-x: hidden;
   }
+  #vaunch-folder-container {
+    mask-image: unset;
+  }
   #commands-folders-container {
     display: block;
     width: 100%;
     flex-direction: column;
     overflow-y: scroll;
-    mask-image: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255, 1) 3%);
-    -webkit-mask-image: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255, 1) 3%);
-    mask-repeat: no-repeat, no-repeat;
+    mask-image: linear-gradient(to bottom, transparent, black 3%, black 97%, transparent);
   }
   #commands-container, .vaunch-command-folder {
     display: block;
@@ -252,5 +262,9 @@ select {
     left: 10vw !important;
     height: 15vh !important;
     width: 80vw !important;
+  }
+
+  .mobile-only {
+    display: initial !important;
   }
 }
