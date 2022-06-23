@@ -19,6 +19,7 @@ export const useSessionStore = defineStore("session", {
       showFileOptions: false,
       showFolderOptions: false,
       showAppOptions: false,
+      action: "",
     };
   },
 });

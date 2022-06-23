@@ -150,6 +150,12 @@ const saveFile = () => {
 .edit-input:focus {
   outline: none;
 }
+
+@media (max-width: 768px) {
+  #edit-form {
+    flex-direction: column;
+  }
+}
 </style>
 
 <template>

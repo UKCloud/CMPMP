@@ -165,6 +165,12 @@ const createFile = () => {
 .edit-input:focus {
   outline: none;
 }
+
+@media (max-width: 768px) {
+  .create-file-container {
+    flex-direction: column;
+  }
+}
 </style>
 
 <template>

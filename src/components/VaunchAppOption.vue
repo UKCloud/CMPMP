@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useSessionStore } from '@/stores/sessionState';
 import VaunchOption from './VaunchOption.vue';
 import VaunchFolderEdit from './VaunchFolderEdit.vue';
@@ -19,6 +19,13 @@ const state = reactive({
   showAdd:false,
   showExport:false,
   showImport:false,
+})
+
+onMounted(() => {
+  if (sessionConfig.action) {
+    setWindow(sessionConfig.action, true);
+    sessionConfig.action = "";
+  }
 })
 
 const setWindow = (window:string, show:boolean) => {
