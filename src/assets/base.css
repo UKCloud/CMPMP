@@ -228,9 +228,17 @@ select {
 }
 
 @media (max-width: 768px) {
+  body, #app {
+    min-height: 100vh !important;
+    min-height: -webkit-fill-available !important;
+  }
   html {
+    height: -webkit-fill-available !important;
+  }
+  main {
     overflow-x: hidden;
   }
+
   #vaunch-folder-container {
     mask-image: unset;
   }
@@ -240,6 +248,7 @@ select {
     flex-direction: column;
     overflow-y: scroll;
     mask-image: linear-gradient(to bottom, transparent, black 3%, black 97%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 3%, black 97%, transparent);
   }
   #commands-container, .vaunch-command-folder {
     display: block;
@@ -254,7 +263,7 @@ select {
     top: 2.5vh !important;
     left: 2.5vw !important;
     width: 95vw !important;
-    height: 95vh !important;
+    height: 90vh !important;
   }
 
   .popup-window-small {

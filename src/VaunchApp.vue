@@ -246,7 +246,7 @@ main {
 }
 
 #option-buttons-container {
-  width: 100%;
+  width: 100vw;
 }
 
 .app-option-buttons {
