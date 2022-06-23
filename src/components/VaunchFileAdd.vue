@@ -154,6 +154,7 @@ const createFile = () => {
 }
 
 .edit-input {
+  width: 50%;
   border: none;
   background: none;
   font-size: 1rem;

@@ -139,10 +139,11 @@ const saveFile = () => {
 }
 
 .edit-input {
+  width: 50%;
+  flex: 1;
   border: none;
   background: none;
   font-size: 1rem;
-  flex-grow: 1;
   border-bottom: solid thin v-bind("config.color.text") !important;
   color: v-bind("config.color.text");
 }
