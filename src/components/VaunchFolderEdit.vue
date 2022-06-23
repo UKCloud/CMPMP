@@ -47,7 +47,7 @@ const saveFolder = () => {
   // Edit the icon of the folder
   if (newIcon.value.value != props.folder.icon || newIconClass.value.value != props.folder.iconClass) {
     let setIcon = new VaunchSetIcon();
-    let response: VaunchResponse = setIcon.execute([folderPath, newIcon.value.value, newIconClass.value.value])
+    let response: VaunchResponse = setIcon.execute([folderPath, newIcon.value.value.toLowerCase(), newIconClass.value.value.toLowerCase()])
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
 

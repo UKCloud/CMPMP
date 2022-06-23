@@ -54,7 +54,7 @@ const saveFile = () => {
   // Edit the icon of the file
   if (newIcon.value.value != props.file.icon || newIconClass.value.value != props.file.iconClass) {
     let setIcon = new VaunchSetIcon();
-    let response: VaunchResponse = setIcon.execute([originalPath, newIcon.value.value, newIconClass.value.value])
+    let response: VaunchResponse = setIcon.execute([originalPath, newIcon.value.value.toLowerCase(), newIconClass.value.value.toLowerCase()])
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
 
