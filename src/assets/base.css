@@ -111,6 +111,7 @@ main {
   flex-flow: column;
   background-size: cover;
   overflow-y: hidden;
+  background-position: center top;
 }
 
 h1,h2,h3 {
