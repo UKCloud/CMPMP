@@ -166,7 +166,6 @@ input[type="checkbox"] {
   border-radius: 5px;
   display: grid;
   place-content: center;
-  background-color: v-bind("config.color.text");
 }
 
 input[type="checkbox"]::before {
@@ -179,7 +178,7 @@ input[type="checkbox"]::before {
 }
 
 input[type="checkbox"]:checked {
-  background-color: v-bind("config.color.highlight");
+  background-color: v-bind("config.color.highlight") !important;
 }
 
 input[type="checkbox"]:checked::before {
