@@ -251,7 +251,7 @@ input[type="checkbox"]:checked::before {
             </div>
 
             <div class="edit-attr">
-              <span>Set background image for Vaunch. Set to 'default' to reset to the default image</span>
+              <span>Set the background image for Vaunch. Set to 'default' to reset to the default image</span>
               <div class="edit-input-container">
                 <label class="edit-label" for="bg-input">Background Image: </label>
                 <input autocomplete="off" ref="background" type="text" 
