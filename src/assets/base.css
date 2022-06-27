@@ -246,7 +246,6 @@ select {
   }
   #commands-folders-container {
     display: block;
-    width: 100%;
     flex-direction: column;
     overflow-y: scroll;
     mask-image: linear-gradient(to bottom, transparent, black 3%, black 97%, transparent);
