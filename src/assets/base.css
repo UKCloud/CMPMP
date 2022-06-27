@@ -168,6 +168,7 @@ select {
   padding: 0.5em;
   flex-wrap: wrap;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .file {
