@@ -109,7 +109,7 @@ main {
   justify-content: space-between;
   height: 100vh;
   flex-flow: column;
-  background-size: cover;
+  background-size: auto;
   overflow-y: hidden;
   background-position: center top;
 }
