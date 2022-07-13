@@ -331,7 +331,7 @@ main {
         </div>
 
         <div
-          v-if="folders.items.length > 0 && config.showGUI"
+          v-if="config.showGUI"
           id="vaunch-folder-container"
           @click.right.prevent.self="showAppOption($event.clientX, $event.clientY)"
         >
