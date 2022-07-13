@@ -9,16 +9,18 @@ import { ResponseType, type VaunchResponse } from '@/models/VaunchResponse';
 import { handleResponse } from '@/utilities/response';
 import { VaunchImport } from '@/models/commands/config/VaunchImport';
 import VaunchConfirm from './VaunchConfirm.vue';
+import VaunchAbout from './VaunchAbout.vue';
 
 const props = defineProps(['folder', 'xPos', 'yPos'])
 const optionContainer = ref()
 const sessionConfig = useSessionStore();
 
 const state = reactive({
-  showEdit:false,
-  showAdd:false,
-  showExport:false,
-  showImport:false,
+  showEdit: false,
+  showAdd: false,
+  showExport: false,
+  showImport: false,
+  showAbout: false,
 })
 
 onMounted(() => {
@@ -28,7 +30,7 @@ onMounted(() => {
   }
 })
 
-const setWindow = (window:string, show:boolean) => {
+const setWindow = (window: string, show: boolean) => {
   switch (window) {
     case "add":
       state.showAdd = show;
@@ -42,6 +44,9 @@ const setWindow = (window:string, show:boolean) => {
     case "import":
       state.showImport = show;
       break;
+    case "about":
+      state.showAbout = show;
+      break;
   }
   if (show) {
     optionContainer.value.hideOptions();
@@ -50,7 +55,7 @@ const setWindow = (window:string, show:boolean) => {
 
 const exportVaunch = () => {
   let vaunchExport = new VaunchExport();
-  let response:VaunchResponse = vaunchExport.execute([]);
+  let response: VaunchResponse = vaunchExport.execute([]);
   if (response.type != ResponseType.Success) {
     handleResponse(response);
   }
@@ -59,7 +64,7 @@ const exportVaunch = () => {
 
 const importVaunch = () => {
   let vaunchImport = new VaunchImport();
-  let response:VaunchResponse = vaunchImport.execute([]);
+  let response: VaunchResponse = vaunchImport.execute([]);
   if (response.type != ResponseType.Success) {
     handleResponse(response);
   }
@@ -68,37 +73,36 @@ const importVaunch = () => {
 </script>
 
 <template>
-<VaunchOption :x-pos="props.xPos" :y-pos="props.yPos" ref="optionContainer">
-  <template v-slot:options>
-    <div class="option-title">
+  <VaunchOption :x-pos="props.xPos" :y-pos="props.yPos" ref="optionContainer">
+    <template v-slot:options>
+      <div class="option-title">
         <i class="fa-solid fa-cog option-icon"></i> Vaunch Settings
-    </div>
+      </div>
 
-    <div class="options-segment">
-      <div class="option-entry" @click="setWindow('add', true)"><i class="fa-solid fa-plus option-icon" />Add Folder</div>
-      <div class="option-entry" @click="setWindow('edit', true)"><i class="fa-solid fa-pencil option-icon" />Vaunch Settings</div>
-      <div class="option-entry" @click="setWindow('export', true)"><i class="fa-solid fa-file-export option-icon" />Export Vaunch</div>
-      <div class="option-entry" @click="setWindow('import', true)"><i class="fa-solid fa-file-import option-icon" />Import Vaunch</div>
-    </div>
-  </template>
+      <div class="options-segment">
+        <div class="option-entry" @click="setWindow('add', true)"><i class="fa-solid fa-plus option-icon" />Add Folder
+        </div>
+        <div class="option-entry" @click="setWindow('edit', true)"><i class="fa-solid fa-pencil option-icon" />Vaunch
+          Settings</div>
+        <div class="option-entry" @click="setWindow('export', true)"><i
+            class="fa-solid fa-file-export option-icon" />Export Vaunch</div>
+        <div class="option-entry" @click="setWindow('import', true)"><i
+            class="fa-solid fa-file-import option-icon" />Import Vaunch</div>
+        <div class="option-entry" @click="setWindow('about', true)"><i
+            class="fa-solid fa-question-circle option-icon" />About Vaunch</div>
+      </div>
+    </template>
 
-  <template v-slot:windows>
-    <VaunchFolderEdit v-if="state.showAdd" :add-new="true" v-on:close-edit="setWindow('add', false)"/>
-    <VaunchAppEdit v-if="state.showEdit" :add-new="true" v-on:close-edit="setWindow('edit', false)"/>
-    <VaunchConfirm v-if="state.showExport"
-      v-on:close-window="setWindow('export', false)"
-      v-on:answer-yes="exportVaunch"
-      v-on:answer-no="setWindow('export', false)"
-      title="Export Vaunch Settings?"
-      icon="file-export"
-      ask-text="Do you want to export your Vaunch settings?" />
-    <VaunchConfirm v-if="state.showImport"
-      v-on:close-window="setWindow('import', false)"
-      v-on:answer-yes="importVaunch"
-      v-on:answer-no="setWindow('import', false)"
-      title="Import Vaunch Settings?"
-      icon="file-import"
-      ask-text="Do you want to import Vaunch settings from a file?" />
-  </template>
-</VaunchOption>
+    <template v-slot:windows>
+      <VaunchFolderEdit v-if="state.showAdd" :add-new="true" v-on:close-edit="setWindow('add', false)" />
+      <VaunchAppEdit v-if="state.showEdit" :add-new="true" v-on:close-edit="setWindow('edit', false)" />
+      <VaunchConfirm v-if="state.showExport" v-on:close-window="setWindow('export', false)"
+        v-on:answer-yes="exportVaunch" v-on:answer-no="setWindow('export', false)" title="Export Vaunch Settings?"
+        icon="file-export" ask-text="Do you want to export your Vaunch settings?" />
+      <VaunchConfirm v-if="state.showImport" v-on:close-window="setWindow('import', false)"
+        v-on:answer-yes="importVaunch" v-on:answer-no="setWindow('import', false)" title="Import Vaunch Settings?"
+        icon="file-import" ask-text="Do you want to import Vaunch settings from a file?" />
+      <VaunchAbout v-if="state.showAbout" v-on:close-window="setWindow('about', false)" />
+    </template>
+  </VaunchOption>
 </template>
