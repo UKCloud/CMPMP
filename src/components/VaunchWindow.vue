@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue';
+
 const props = defineProps([
   "title",
   "icon",
@@ -7,6 +9,11 @@ const props = defineProps([
 ])
 
 const emit = defineEmits(['closeWindow'])
+
+const vaunchWindow = ref();
+onMounted(() => {
+  vaunchWindow.value.focus()
+})
 
 const closeWindow = () => {
   emit('closeWindow');
@@ -25,6 +32,11 @@ const closeWindow = () => {
   display: flex;
   flex-direction: column;
 }
+
+.popup-window:focus {
+  outline: none;
+}
+
 .window-inner {
   display: flex;
   flex-direction: column;;
@@ -54,6 +66,7 @@ const closeWindow = () => {
 
 <template>
 <div :class="{'popup-window':true, 'vaunch-window':true, 'vaunch-solid-bg':true, 'popup-window-small':props.small}"
+  ref="vaunchWindow"
   v-click-away="closeWindow"
   tabindex="0"
   @keydown.esc="closeWindow">
