@@ -23,17 +23,6 @@ function makeRequest (url:string, done:CallableFunction) {
 }
 
 onMounted(() => {
-  // let xHttp = new XMLHttpRequest();
-  // xHttp.onreadystatechange = function () {
-  //   if (this.readyState == 4 && this.status == 200) {
-  //     state.version = this.responseText;
-  //     console.log(state.version);
-  //   } else if (this.readyState == 4 && this.status == 404) { 
-  //     state.version = "unknown_version"; 
-  //   }
-  // };
-  // xHttp.open("version.txt", true);
-  // xHttp.send();
   makeRequest('version.txt', (result:string) => state.version = result )
   makeRequest('build_date.txt', (result:string) => state.buildDate = result )
 })
@@ -86,7 +75,7 @@ onMounted(() => {
           </span>
         </div>
         <span>
-          View Source code on <a id="source-link" href="https://github.com/kirimson/Vaunch">Github</a>
+          View source code on <a id="source-link" href="https://github.com/kirimson/Vaunch">Github</a>
         </span>
       </div>
       <div class="confirm-buttons">

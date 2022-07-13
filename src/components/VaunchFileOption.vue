@@ -18,7 +18,6 @@ const state = reactive({
 })
 
 onMounted(() => {
-  console.log(sessionConfig.action);
   if (sessionConfig.action) {
     setWindow(sessionConfig.action, true);
     sessionConfig.action = "";
