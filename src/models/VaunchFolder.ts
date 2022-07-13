@@ -20,6 +20,9 @@ export class VaunchFolder {
 
   public addFile(newFile: VaunchFile): boolean {
     if (this.getFile(newFile.fileName)) return false;
+    // Set the new file's position to last
+    const nextPos:number = this.getFiles().length + 1;
+    newFile.position = nextPos;
     this.files.set(newFile.fileName, newFile);
     return true;
   }

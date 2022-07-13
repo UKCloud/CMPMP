@@ -90,6 +90,9 @@ export class VaunchRmdir extends VaunchCommand {
         } not empty and ${plural ? "were" : "was"} not deleted`
       );
     } else {
+      // After deleting a folder, re-organise the folder positions, if
+      // folders in the middle were deleted folder positions need to be updated
+      folders.organisePosition(folders.items);
       return this.makeResponse(
         ResponseType.Success,
         `Deleted folder: ${args.join(", ")}`
