@@ -39,7 +39,7 @@ const createFolder = () => {
   if (response.type == ResponseType.Error) return handleResponse(response);
 
   
-  // If the folder position has changed, run set-pos
+  // If the folder position is set, run set-pos
   if (newPos.value.value) {
     let setPos = new VaunchSetPosition();
     let response: VaunchResponse = setPos.execute([newFolderName, newPos.value.value.toLowerCase()])
