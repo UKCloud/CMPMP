@@ -199,7 +199,6 @@ const showFileOption = (file:VaunchUrlFile, xPos:number, yPos:number, action:str
   data.optionFile = file;
   data.optionX = xPos;
   data.optionY = yPos;
-  console.log("app", action);
   if (action) sessionConfig.action = action;
   sessionConfig.showFolderOptions = false;
   sessionConfig.showAppOptions = false;
