@@ -50,7 +50,9 @@ export const useFolderStore: StoreDefinition = defineStore({
   },
   actions: {
     add(name: string) {
-      const newFolder = new VaunchFolder(name);
+      const nextPos:number = this.rawFolders.size + 1;
+      const newFolder = new VaunchFolder(name=name);
+      newFolder.position = nextPos;
       this.rawFolders.set(name, newFolder);
     },
     insert(folder: VaunchFolder) {

@@ -49,6 +49,9 @@ export class VaunchRm extends VaunchCommand {
       if (folder) {
         let deleted = folder.removeFile(fileToDelete);
         if (!deleted) failedToDelete.push(filePath.join('/'));
+        // After deleting the file, re-organise the file's positions
+        // to update them after a deletion
+        folder.organiseFiles(folder.getFiles());
       } else failedToDelete.push(filePath.join('/'));
     }
 
