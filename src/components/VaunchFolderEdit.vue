@@ -8,12 +8,14 @@ import { type VaunchResponse, ResponseType } from "@/models/VaunchResponse";
 import { handleResponse } from "@/utilities/response";
 import { VaunchMv } from "@/models/commands/fs/VaunchMv";
 import { VaunchMkdir } from "@/models/commands/fs/VaunchMkdir";
+import { VaunchSetPosition } from "@/models/commands/fs/VaunchSetPosition";
 const props = defineProps(['folder', 'addNew'])
 
 const emit = defineEmits(['closeEdit'])
 const config = useConfigStore();
 
 const newName = ref();
+const newPos = ref();
 const newIcon = ref();
 const newIconClass = ref();
 const selectedClass = !props.addNew ? props.folder.iconClass : 'solid';
@@ -35,11 +37,21 @@ const createFolder = () => {
   let setIcon = new VaunchSetIcon();
   response = setIcon.execute([newFolderName, newIcon.value.value, newIconClass.value.value])
   if (response.type == ResponseType.Error) return handleResponse(response);
+
+  
+  // If the folder position has changed, run set-pos
+  if (newPos.value.value) {
+    let setPos = new VaunchSetPosition();
+    let response: VaunchResponse = setPos.execute([newFolderName, newPos.value.value.toLowerCase()])
+    if (response.type == ResponseType.Error) return handleResponse(response);
+  }
+
+
   // Once the folder is made, close the window
   closeWindow();
 }
 
-const saveFolder = () => {
+const updateFolder = () => {
   // .value.value is used here to get the .value of the reference,
   // a HTMLInputElement, which itself has a .value property
   let folderPath:string = props.folder.name;
@@ -48,6 +60,13 @@ const saveFolder = () => {
   if (newIcon.value.value != props.folder.icon || newIconClass.value.value != props.folder.iconClass) {
     let setIcon = new VaunchSetIcon();
     let response: VaunchResponse = setIcon.execute([folderPath, newIcon.value.value.toLowerCase(), newIconClass.value.value.toLowerCase()])
+    if (response.type == ResponseType.Error) return handleResponse(response);
+  }
+  
+  // If the folder position has changed, run set-pos
+  if (newPos.value.value != props.folder.position) {
+    let setPos = new VaunchSetPosition();
+    let response: VaunchResponse = setPos.execute([folderPath, newPos.value.value.toLowerCase()])
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
 
@@ -67,7 +86,7 @@ const saveFolder = () => {
 const enterSubmit = () => {
   if (props.addNew) {
     createFolder();
-  } else saveFolder();
+  } else updateFolder();
 }
 </script>
 
@@ -152,9 +171,18 @@ const enterSubmit = () => {
             <div class="edit-attr">
               <span>Name of the folder</span>
               <div class="edit-input-container">
-                <label class="edit-label" :for="(props.addNew ? 'new' : folder.getIdSafeName()) + '-filename'">Name: </label>
+                <label class="edit-label" :for="(props.addNew ? 'new' : folder.getIdSafeName()) + '-foldername'">Name: </label>
                 <input autocapitalize="none" autocomplete="off" ref="newName" class="edit-input" type="text"
-                  :id="(props.addNew ? 'new' : folder.getIdSafeName()) + '-filename'" :value="!props.addNew ? folder.name : ''" />
+                  :id="(props.addNew ? 'new' : folder.getIdSafeName()) + '-foldername'" :value="!props.addNew ? folder.name : ''" />
+              </div>
+            </div>
+
+            <div class="edit-attr">
+              <span>Position of the folder, with 1 representing the first folder. Can also use 'top', 'middle', or 'bottom'</span>
+              <div class="edit-input-container">
+                <label class="edit-label" :for="(props.addNew ? 'new' : folder.getIdSafeName()) + '-position'">Position: </label>
+                <input autocapitalize="none" autocomplete="off" ref="newPos" class="edit-input" type="text"
+                  :id="(props.addNew ? 'new' : folder.getIdSafeName()) + '-position'" :value="!props.addNew ? folder.position : ''" />
               </div>
             </div>
 
@@ -184,7 +212,7 @@ const enterSubmit = () => {
     </div>
     <div class="edit-buttons">
       <div>
-        <VaunchButton v-if="!props.addNew" icon="save" text="Save" @click="saveFolder" />
+        <VaunchButton v-if="!props.addNew" icon="save" text="Save" @click="updateFolder" />
         <VaunchButton v-if="props.addNew" icon="add" text="Create" @click="createFolder" />
       </div>
       <div>
