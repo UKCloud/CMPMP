@@ -1,31 +1,11 @@
 <script setup lang="ts">
 import VaunchWindow from './VaunchWindow.vue';
 import VaunchButton from './VaunchButton.vue';
-import { onMounted, reactive } from 'vue';
 
-const state = reactive({
-  version:"",
-  buildDate:"",
-})
+const appVersion = import.meta.env.VITE_APP_VERSION;
+const appBuildDate = import.meta.env.VITE_APP_BUILD_DATE;
 
 const emit = defineEmits(['closeWindow'])
-
-function makeRequest (url:string, done:CallableFunction) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", url);
-  xhr.onload = function () {
-    done(xhr.responseText);
-  };
-  xhr.onerror = function () {
-    done("unknown");
-  };
-  xhr.send();
-}
-
-onMounted(() => {
-  makeRequest('version.txt', (result:string) => state.version = result )
-  makeRequest('build_date.txt', (result:string) => state.buildDate = result )
-})
 </script>
 
 <style scoped>
@@ -68,10 +48,10 @@ onMounted(() => {
       <div id="about-text">
         <div id="build-info">
           <span>
-            Vaunch version: {{ state.version }}
+            Vaunch version: {{ appVersion ? appVersion : "Version not found" }}
           </span>
           <span>
-            Build date: {{ state.buildDate }}
+            Build date: {{ appBuildDate ? appBuildDate : "Build date not found" }}
           </span>
         </div>
         <span>
