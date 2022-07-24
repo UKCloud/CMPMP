@@ -40,6 +40,13 @@ const executeFile = (args:string[]) => {
   setWindow('edit', false);
 }
 
+const copyLink = () => {
+  // Get the URL for the file, and then write the content to the clipboard
+  let destination = props.file.getCorrectURL();
+  navigator.clipboard.writeText(destination);
+  sessionConfig.showFileOptions = false;
+}
+
 const setWindow = (window:string, show:boolean) => {
   switch (window) {
     case "edit":
@@ -68,6 +75,9 @@ const setWindow = (window:string, show:boolean) => {
       </div>
       <div v-if="file.filetype == 'VaunchLink'" class="option-entry" @click="executeFile(['_blank'])">
         <i class="fa-solid fa-up-right-from-square option-icon" />Open in New Tab
+      </div>
+      <div v-if="file.filetype == 'VaunchLink'" class="option-entry" @click="copyLink()">
+        <i class="fa-solid fa-clipboard option-icon" />Copy Link
       </div>
       <div v-if="file.filetype == 'VaunchQuery'" class="option-entry" @click="executeFile([])">
         <i class="fa-solid fa-ellipsis option-icon" />Autofill Input
