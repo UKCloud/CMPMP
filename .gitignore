@@ -30,3 +30,7 @@ src/assets/fontawesome
 vaunch.sock
 public*/version.txt
 public*/build_date.txt
+
+# Environment variables
+.env
+.env.production
