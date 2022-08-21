@@ -41,7 +41,7 @@ export class VaunchMkdir extends VaunchCommand {
       let plural = existingFolders.length > 1;
       return this.makeResponse(
         ResponseType.Info,
-        `The folder${plural ? 's':''} ${existingFolders.join(", ")} already exist and ${plural ? 'were' : 'was'} not made.`
+        `The folder${plural ? 's':''} ${existingFolders.join(", ")} already exist${plural ? '' : 's'} and ${plural ? 'were' : 'was'} not made.`
       );
     }
     return this.makeResponse(
