@@ -2,6 +2,8 @@ import { ResponseType } from "@/models/VaunchResponse";
 import { defineStore } from "pinia";
 
 export const useSessionStore = defineStore("session", {
+  // Stores information used in the current session, such as the input prompt value
+  // and any responses from commands
   state: () => {
     return {
       showHelp: false,

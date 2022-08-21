@@ -49,6 +49,7 @@ export abstract class VaunchUrlFile extends VaunchFile {
   }
 
   protected getParentName(titleCase = false): string {
+    // Returns the parent folder for this file
     if (this.parent) {
       if (titleCase) {
         return this.parent.titleCase();
@@ -58,6 +59,7 @@ export abstract class VaunchUrlFile extends VaunchFile {
   }
 
   getCorrectURL(): string {
+    // Returns a url representation of this file's content
     const linkUrl: URL | undefined = this.createUrl();
     if (linkUrl) {
       return linkUrl.href;
@@ -67,6 +69,7 @@ export abstract class VaunchUrlFile extends VaunchFile {
   }
 
   hasValidURL(): boolean {
+    // Checks if this file's content is a valid URL
     const linkUrl: URL | undefined = this.createUrl();
     if (linkUrl) return true;
     return false;

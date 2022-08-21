@@ -1,3 +1,4 @@
+// Basic response type to handle returning information to the user
 export enum ResponseType {
   Error = "error",
   Success = "success",

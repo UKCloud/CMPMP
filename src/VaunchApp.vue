@@ -168,6 +168,8 @@ const updateFuzzyIndex = (increment: boolean) => {
       fuzzyFiles.index--;
     } else fuzzyFiles.index = fuzzyFiles.items.length - 1;
   }
+  // After updating the fuzzy index, set the input prompt icon to the selected file's icon
+  // Otherwise, set it to the default
   if (fuzzyFiles.items[fuzzyFiles.index]) {
     setInputIcon(fuzzyFiles.items[fuzzyFiles.index]);
   } else {
@@ -176,6 +178,8 @@ const updateFuzzyIndex = (increment: boolean) => {
 }
 
 const setIconIfQuery = (input: string) => {
+  // Checks if the input string matches a VaunchQuery prefix,
+  // and set's the input prompts' icon to a matching file
   let file = findQryFile(input);
   if (file) {
     setInputIcon(file);
@@ -195,16 +199,24 @@ const setInputIcon = (file: VaunchFile | undefined) =>  {
   }
 }
 
+// TODO: Implement a way to improve opening/closing of context menus.
+// currently these functions are called through a series of emits from child components.
+// this should be able to be re-written to use an exported function, similar to handleResponse()
 const showFileOption = (file:VaunchUrlFile, xPos:number, yPos:number, action:string|null=null) => {
+  // Opens a file's context menu. Sets the target file to display options for, and set the position
+  // on screen for the component
   data.optionFile = file;
   data.optionX = xPos;
   data.optionY = yPos;
   if (action) sessionConfig.action = action;
+  // TODO: this could be improved, only having one context menu component which can adapt its content
+  // rather than the file context menu closing all other context menu types
   sessionConfig.showFolderOptions = false;
   sessionConfig.showAppOptions = false;
   sessionConfig.showFileOptions = true;
 }
 const showFolderOption = (folder:VaunchFolder, xPos:number, yPos:number, action:string|null=null) => {
+   // Opens a folder's context menu, closing any other open context menu
   data.optionFolder = folder;
   data.optionX = xPos;
   data.optionY = yPos;
@@ -214,6 +226,7 @@ const showFolderOption = (folder:VaunchFolder, xPos:number, yPos:number, action:
   sessionConfig.showFolderOptions = true;
 }
 const showAppOption = (xPos:number, yPos:number, action:string|null=null) => {
+  // Opens the main Vaunch context menu, closing any other open context menu
   data.optionX = xPos;
   data.optionY = yPos;
   if (action) sessionConfig.action = action;
@@ -356,6 +369,8 @@ main {
     </div>
 
     <VaunchMan v-if="sessionConfig.showHelp" :commands="commands" />
+
+    <!-- Context menu components are at the app root to ensure there will be only one open at any one time -->
     <VaunchFileOption v-if="sessionConfig.showFileOptions" :file="data.optionFile" :x-pos="data.optionX" :y-pos="data.optionY"/>
     <VaunchFolderOption ref="folderOption" v-if="sessionConfig.showFolderOptions" :folder="data.optionFolder" :x-pos="data.optionX" :y-pos="data.optionY" />
     <VaunchAppOption v-if="sessionConfig.showAppOptions" :x-pos="data.optionX" :y-pos="data.optionY"/>
