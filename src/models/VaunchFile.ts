@@ -1,5 +1,6 @@
 import type { VaunchResponse, ResponseType } from "./VaunchResponse";
 
+// Base class for all Files within Vaunch
 export abstract class VaunchFile {
   fileName: string;
   aliases: string[];
@@ -23,6 +24,7 @@ export abstract class VaunchFile {
   }
 
   titleCase(): string {
+    // Converts a filename to Title Case. replacing _ and - with spaces
     const prettyString = this.getBaseName().replace(/[-_]/g, " ");
     return prettyString
       .toLowerCase()
@@ -34,6 +36,7 @@ export abstract class VaunchFile {
   }
 
   getNames(): string[] {
+    // Gets all names for the file, including any aliases (in the case of command files)
     const allNames: string[] = [this.fileName, ...this.aliases];
     return allNames;
   }
@@ -50,9 +53,12 @@ export abstract class VaunchFile {
     this.iconClass = iconClass;
   }
 
+  // Abstract execution method, to be implemented by concrete classes
+  // to define what happens when they are ran
   abstract execute(args: string[]): VaunchResponse;
 
   makeResponse(type: ResponseType, message: string) {
+    // Creates a VaunchResponse for this file, given a ResponseType and a message string
     return {
       type: type,
       message: message,

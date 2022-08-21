@@ -18,6 +18,7 @@ import { VaunchSetIcon } from "@/models/commands/fs/VaunchSetIcon";
 import { VaunchSetPosition } from "@/models/commands/fs/VaunchSetPosition";
 import { VaunchTouch } from "@/models/commands/fs/VaunchTouch";
 
+// Load in all available commands into Vaunch
 export const commands = [
   new VaunchMkdir(),
   new VaunchRmdir(),

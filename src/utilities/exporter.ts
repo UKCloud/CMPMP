@@ -1,11 +1,15 @@
 import type { VaunchFolder } from "@/models/VaunchFolder";
 
+// Converts the current state of Vaunch into a JSON object
 export function exportVaunch(folders: VaunchFolder[], config: any): string {
   const vaunchData = {
     folders: [] as any[],
     config: {},
   };
 
+  // If a config proxy has been passed, convert it into JSON
+  // TODO: this can definitely be done better, however as Pinia stores use Proxy objects
+  // simply setting vaunchData["config"] = config results in some odd nested objects when stringify-ing
   if (config) {
     vaunchData["config"] = {
       background: config.background,
@@ -28,6 +32,7 @@ export function exportVaunch(folders: VaunchFolder[], config: any): string {
     };
   }
 
+  // Add each folder's JSON information to the export object
   for (const folder of folders) {
     vaunchData.folders.push(folder.info());
   }

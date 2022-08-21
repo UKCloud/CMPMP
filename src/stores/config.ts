@@ -28,6 +28,10 @@ export const useConfigStore: StoreDefinition = defineStore({
     useStorage("config", defaultconfig, undefined, {
       serializer: {
         read(v: any) {
+          // TODO: when adding new config options to Vaunch, if they were not present in the
+          // config localstorage, it would be set to a null/undefined value, which is less than
+          // ideal. To get around this the config is read in, but uses defaultconfig's values as
+          // a fallback if a config option is not present. There is likely a much better way to do this
           const data = JSON.parse(v);
           const config = {
             background: data.background
@@ -68,6 +72,7 @@ export const useConfigStore: StoreDefinition = defineStore({
           };
           return config;
         },
+        // Writing the config to localstorage is fine, and can use the standard stringify method
         write: (v: any) => JSON.stringify(v),
       },
     }),
