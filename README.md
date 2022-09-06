@@ -53,7 +53,7 @@ By default Vaunch changes the display name of files/folders, replacing underscor
 
 Vaunch is written in Typescript, and uses Vue 3 (with Vite) as its framework. To install all dependencies for Vaunch, clone this repo and run `npm i` within the root directory.
 
-Font Awesome's CSS also needs to be added into `src/assets/fontawesome/`, see [Host Font Awesome Yourself](https://fontawesome.com/v5/docs/web/setup/host-font-awesome-yourself) for any details.
+Run `npm run setup` to add Font Awesome's CSS.
 
 To run a development instance, run `npm run dev`, or `vite`.
 
