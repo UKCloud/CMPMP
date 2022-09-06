@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@vueuse/core": "^8.5.0",
+    "adm-zip": "^0.5.9",
+    "decompress": "^4.2.1",
     "pinia": "^2.0.13",
     "tippy.js": "^6.3.7",
     "vue": "^3.2.33",
