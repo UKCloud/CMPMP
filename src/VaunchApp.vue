@@ -312,8 +312,24 @@ main {
 }
 </style>
 
+<script lang="ts">
+  import Greet from './Greeting.vue';
+  export default {
+    name: 'app',
+    components: {
+      Greet, 
+    },
+    data() {
+      return {
+        email: 'default@email.com'
+      }
+    }
+  };
+</script>
+
 <template>
   <main id="main-container" :style="{ 'background-image': 'url(' + config.background + ')' }">
+    <Greet v-bind:email="email"/>
     <VaunchInput
       v-on:command="executeCommand"
       v-on:fuzzy="fuzzy"
@@ -376,3 +392,5 @@ main {
     <VaunchAppOption v-if="sessionConfig.showAppOptions" :x-pos="data.optionX" :y-pos="data.optionY"/>
   </main>
 </template>
+
+
