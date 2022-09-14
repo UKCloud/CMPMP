@@ -24,6 +24,7 @@ import VaunchAppOption from "./components/VaunchAppOption.vue";
 import type { VaunchUrlFile } from "./models/VaunchUrlFile";
 import { handleResponse } from "./utilities/response";
 
+
 const config = useConfigStore();
 const folders = useFolderStore();
 const fuzzyFiles = useFuzzyStore();

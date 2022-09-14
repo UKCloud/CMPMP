@@ -7,19 +7,7 @@
 </template>
 
 <script setup lang="ts">
-    // export default {
-    //     name: 'app', 
-    //     components: {
-    //         Greet,
-    //     },
-    //     data() {
-    //         return {
-    //             email: 'default@email.com'
-    //         }
-    //     }
-    //     }
-    
-
+   
     defineProps<{
         email: string;
     }>();
