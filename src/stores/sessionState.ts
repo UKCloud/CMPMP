@@ -22,6 +22,7 @@ export const useSessionStore = defineStore("session", {
       showFolderOptions: false,
       showAppOptions: false,
       action: "",
+      email: "",
     };
   },
 });
