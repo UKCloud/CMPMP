@@ -23,7 +23,7 @@ import VaunchFolderOption from "./components/VaunchFolderOption.vue";
 import VaunchAppOption from "./components/VaunchAppOption.vue";
 import type { VaunchUrlFile } from "./models/VaunchUrlFile";
 import { handleResponse } from "./utilities/response";
-import Login from "./Login.vue";
+import Login from "./components/Login.vue";
 
 
 const config = useConfigStore();

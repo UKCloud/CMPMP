@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import VaunchWindow from './VaunchWindow.vue';
 import VaunchButton from './VaunchButton.vue';
+import { useSessionStore } from "@/stores/sessionState";
 
-const appVersion = import.meta.env.VITE_APP_VERSION;
-const appBuildDate = import.meta.env.VITE_APP_BUILD_DATE;
+const sessionConfig = useSessionStore();
+const appVersion = sessionConfig.appVersion;
+const appBuildDate = sessionConfig.buildDate;
 
 const emit = defineEmits(['closeWindow'])
 </script>

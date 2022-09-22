@@ -23,6 +23,11 @@ export const useSessionStore = defineStore("session", {
       showAppOptions: false,
       action: "",
       email: "",
+      appVersion: String(import.meta.env.VITE_APP_VERSION),
+      buildDate: String(import.meta.env.VITE_APP_BUILD_DATE),
+      login: new URL('/login', import.meta.env.VITE_APP_BACKEND_URL).href,
+      logout: new URL('/logout', import.meta.env.VITE_APP_BACKEND_URL).href,
+      users: new URL('/users', import.meta.env.VITE_APP_BACKEND_URL).href
     };
   },
 });
