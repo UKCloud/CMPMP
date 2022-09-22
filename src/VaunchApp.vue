@@ -23,6 +23,8 @@ import VaunchFolderOption from "./components/VaunchFolderOption.vue";
 import VaunchAppOption from "./components/VaunchAppOption.vue";
 import type { VaunchUrlFile } from "./models/VaunchUrlFile";
 import { handleResponse } from "./utilities/response";
+import Login from "./components/Login.vue";
+
 
 const config = useConfigStore();
 const folders = useFolderStore();
@@ -314,6 +316,7 @@ main {
 
 <template>
   <main id="main-container" :style="{ 'background-image': 'url(' + config.background + ')' }">
+    <Login />
     <VaunchInput
       v-on:command="executeCommand"
       v-on:fuzzy="fuzzy"
@@ -323,6 +326,7 @@ main {
       :prefix-name="data.prefixName"
       :prefix-class="data.prefixClass"
       ref="vaunchInput"
+      v-if=sessionConfig.email
     />
 
     <VaunchGuiResponse
@@ -330,7 +334,7 @@ main {
       :response="sessionConfig.currentResponse"
     />
 
-    <div id="bottom-half">
+    <div id="bottom-half" v-if=sessionConfig.email>
       <VaunchFuzzy
         v-if="fuzzyFiles.items.length > 0 && config.fuzzy"
         :fuzzy-matches="fuzzyFiles.items"
@@ -376,3 +380,5 @@ main {
     <VaunchAppOption v-if="sessionConfig.showAppOptions" :x-pos="data.optionX" :y-pos="data.optionY"/>
   </main>
 </template>
+
+
