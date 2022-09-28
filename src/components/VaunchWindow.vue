@@ -1,12 +1,24 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 
-const props = defineProps([
-  "title",
-  "icon",
-  "iconClass",
-  "small"
-])
+const props = defineProps({
+  "title": {
+    type: String
+  },
+  "icon": {
+    type: String
+  },
+  "iconClass": {
+    type: String
+  },
+  "small": {
+    type: Boolean
+  },
+  "canClose": {
+    type: Boolean,
+    default: true
+  }
+})
 
 const emit = defineEmits(['closeWindow'])
 
@@ -16,7 +28,7 @@ onMounted(() => {
 })
 
 const closeWindow = () => {
-  emit('closeWindow');
+  if (props.canClose) emit('closeWindow');
 }
 
 </script>
@@ -71,9 +83,9 @@ const closeWindow = () => {
   tabindex="0"
   @keydown.esc="closeWindow">
   <span ref="titlebar" class="window-title folder-title greyscale-title">
-    <span><i :class="['fa-'+ (props.iconClass ? props.iconClass : 'solid'), 'fa-'+props.icon]"></i></span>
+    <span v-if="props.icon"><i :class="['fa-'+ (props.iconClass ? props.iconClass : 'solid'), 'fa-'+props.icon]"></i></span>
     <span class="window-title-text">{{ props.title }}</span>
-    <span v-on:click="closeWindow" class="window-close">
+    <span v-if="props.canClose" v-on:click="closeWindow" class="window-close">
     <i class="fa-solid fa-close"></i>
     </span>
   </span>
