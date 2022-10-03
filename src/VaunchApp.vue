@@ -55,7 +55,9 @@ const executeCommand = (commandArgs: string[], newTab = false) => {
   // Check if we're running a command, if we find it in commands, execute it
   for (let command of commands) {
     if (command.getNames().includes(operator)) {
-      return handleResponse(command.execute(commandArgs));
+      return command.execute(commandArgs).then(response => {
+        handleResponse(response);
+      })
     }
   }
 
@@ -63,9 +65,10 @@ const executeCommand = (commandArgs: string[], newTab = false) => {
   if (fuzzyFiles.items.length > 0 && config.fuzzy) {
     // Also shift this entry off the history, in case it was a qry file
     sessionConfig.history.shift();
-    let response =
-      fuzzyFiles.items[fuzzyFiles.index].execute(commandArgs);
-    return handleResponse(response);
+    const fuzzyFile = fuzzyFiles.items[fuzzyFiles.index];
+    return fuzzyFile.execute(commandArgs).then((response) => {
+      handleResponse(response);
+    })
   }
 
   // If ctrl was held, append _black to commandArgs
@@ -78,14 +81,18 @@ const executeCommand = (commandArgs: string[], newTab = false) => {
     // it into the commandArgs. This deals with a multi ${} file, executed like:
     // prefix:firstArg secondArg
     if (operator.split(":")[1]) commandArgs.unshift(operator.split(":")[1]);
-    return handleResponse(file.execute(commandArgs));
+    return file.execute(commandArgs).then((response) => {
+      return handleResponse(response);
+    })
   }
 
   // If no command was found, let's check if we're running a file
   if (operator.includes("/")) {
     let file: VaunchFile = folders.getFileByPath(operator);
     if (file) {
-      return handleResponse(file.execute(commandArgs));
+      return file.execute(commandArgs).then((response) => {
+        return handleResponse(response);
+      })
     }
   }
 
@@ -109,7 +116,9 @@ const executeCommand = (commandArgs: string[], newTab = false) => {
     }
     // If a default file was found, execute it with the commandArgs, returning the response to vaunchInput
     if (file) {
-      return handleResponse(file.execute(commandArgs));
+      return file.execute(commandArgs).then((response) => {
+        handleResponse(response);
+      });
     }
   }
   // If everything fails, i.e no default search, just clear the input

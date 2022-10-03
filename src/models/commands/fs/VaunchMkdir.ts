@@ -27,7 +27,7 @@ export class VaunchMkdir extends VaunchCommand {
   description = "Creates folders";
   aliases: string[] = ["make-folder"];
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     const folder = useFolderStore();
     let existingFolders:string[] = []
     args.forEach((newFolder) => {

@@ -20,7 +20,7 @@ export class VaunchToggleCase extends VaunchCommand {
   }
   description = "Toggles if names are converted to Title Case";
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     const config = useConfigStore();
     config.titleCase = !config.titleCase;
     return this.makeResponse(

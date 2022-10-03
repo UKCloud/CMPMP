@@ -33,7 +33,7 @@ export class VaunchFeh extends VaunchCommand {
   aliases: string[] = ["set-bg", "set-background"];
   description = "Changes the background";
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     const config = useConfigStore();
     let background: string = args[0];
     let newBackgroundString: string = background;

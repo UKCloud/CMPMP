@@ -141,7 +141,7 @@ export class VaunchSetColor extends VaunchCommand {
     return `hsla(${hsl[0]},${hsl[1]}%,${hsl[2]}%, 0.75)`;
   }
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     const config = useConfigStore();
     const newWindowColor = args[0];
     const newTextColor = args[1];

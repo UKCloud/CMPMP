@@ -46,7 +46,7 @@ export class VaunchRmdir extends VaunchCommand {
 
   aliases: string[] = ["remove-folder", "delete-folder"];
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     if (args.length == 0) {
       return this.makeResponse(ResponseType.Error, "Not enough arguments");
     }

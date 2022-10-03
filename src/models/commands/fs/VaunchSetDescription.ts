@@ -36,7 +36,7 @@ export class VaunchSetDescription extends VaunchCommand {
   aliases: string[] = ["set-desc"];
   description = "Sets the description of a file's tooltip";
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     const folders = useFolderStore();
     const fullPath: string | undefined = args.shift();
     if (!fullPath)

@@ -19,7 +19,7 @@ export class VaunchToggleGui extends VaunchCommand {
   }
   description = "Toggles if Folders/Commands are visible";
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     const config = useConfigStore();
     config.showGUI = !config.showGUI;
     return this.makeResponse(

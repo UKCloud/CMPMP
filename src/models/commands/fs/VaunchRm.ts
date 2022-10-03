@@ -35,7 +35,7 @@ export class VaunchRm extends VaunchCommand {
   aliases: string[] = ["remove-file", "delete-file"];
   description = "Deletes files";
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     if (args.length == 0) {
       return this.makeResponse(ResponseType.Error, "Not enough arguments");
     }

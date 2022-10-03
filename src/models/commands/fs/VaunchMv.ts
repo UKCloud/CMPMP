@@ -47,7 +47,7 @@ export class VaunchMv extends VaunchCommand {
   aliases: string[] = ["move", "move-file", "move-folder"];
   description = "Moves or Renames files and folders";
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     if (args.length != 2) {
       return this.makeResponse(ResponseType.Error, "Not enough arguments");
     }

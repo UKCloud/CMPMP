@@ -32,7 +32,7 @@ export class VaunchHelp extends VaunchCommand {
   aliases: string[] = ["show-help", "man"];
   description = "Shows the help window for all Vaunch commands";
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     const sessionConfig = useSessionStore();
     if (args[0]) {
       sessionConfig.helpCommand = args[0];

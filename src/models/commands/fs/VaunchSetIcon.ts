@@ -53,7 +53,7 @@ export class VaunchSetIcon extends VaunchCommand {
   }
   description = "Changes the icon of an existing file/folder";
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     const folders = useFolderStore();
     const fullPath: string = args[0];
     const newIcon: string = args[1];

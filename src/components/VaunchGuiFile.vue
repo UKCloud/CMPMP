@@ -12,11 +12,12 @@ const props = defineProps(["file", "isFuzzy"])
 const emit = defineEmits(["showFileOption"]);
 
 const execute = (file: VaunchUrlFile, args: string[]) => {
-  let response: VaunchResponse = file.execute(args);
-  if (response.type == ResponseType.UpdateInput) {
-    sessionConfig.vaunchInput = response.message;
-    focusVaunchInput();
-  }
+  file.execute(args).then((response) => {
+    if (response.type == ResponseType.UpdateInput) {
+      sessionConfig.vaunchInput = response.message;
+      focusVaunchInput();
+    }
+  })
 }
 
 const toggleOptions = (event: any) => {

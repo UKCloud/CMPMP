@@ -51,7 +51,7 @@ export class VaunchSetPosition extends VaunchCommand {
   description = "Changes file/folder position";
   aliases: string[] = ["set-pos"];
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     const folders = useFolderStore();
     if (args.length < 1) {
       return this.makeResponse(

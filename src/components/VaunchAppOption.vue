@@ -55,19 +55,21 @@ const setWindow = (window: string, show: boolean) => {
 
 const exportVaunch = () => {
   let vaunchExport = new VaunchExport();
-  let response: VaunchResponse = vaunchExport.execute([]);
-  if (response.type != ResponseType.Success) {
-    handleResponse(response);
-  }
+  vaunchExport.execute([]).then((response) => {
+    if (response.type != ResponseType.Success) {
+      handleResponse(response);
+    }
+  })
   setWindow("", false);
 }
 
 const importVaunch = () => {
   let vaunchImport = new VaunchImport();
-  let response: VaunchResponse = vaunchImport.execute([]);
-  if (response.type != ResponseType.Success) {
-    handleResponse(response);
-  }
+  vaunchImport.execute([]).then((response) => {
+    if (response.type != ResponseType.Success) {
+      handleResponse(response);
+    }
+  })
   setWindow("", false);
 }
 </script>
