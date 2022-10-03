@@ -34,7 +34,7 @@ export class VaunchLink extends VaunchUrlFile {
     return "Navigate to: " + this.trimString(this.getCorrectURL());
   }
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     // Ensure file content is "linkable"
     const linkUrl: URL | undefined = this.createUrl();
     if (linkUrl) {

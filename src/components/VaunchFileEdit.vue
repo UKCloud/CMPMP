@@ -29,7 +29,7 @@ const closeWindow = () => {
   emit('closeEdit');
 }
 
-const saveFile = () => {
+const saveFile = async () => {
   // .value.value is used here to get the .value of the reference,
   // a HTMLInputElement, which itself has a .value property
 
@@ -49,28 +49,28 @@ const saveFile = () => {
   if (editArgs.length > 0) {
     // Edit the file, using the originalPath to get to the file
     let edit = new VaunchEditFile();
-    let response: VaunchResponse = edit.execute([originalPath, ...editArgs]);
+    let response: VaunchResponse = await edit.execute([originalPath, ...editArgs]);
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
 
   // Edit the icon of the file
   if (newIcon.value.value != props.file.icon || newIconClass.value.value != props.file.iconClass) {
     let setIcon = new VaunchSetIcon();
-    let response: VaunchResponse = setIcon.execute([originalPath, newIcon.value.value.toLowerCase(), newIconClass.value.value.toLowerCase()])
+    let response: VaunchResponse = await setIcon.execute([originalPath, newIcon.value.value.toLowerCase(), newIconClass.value.value.toLowerCase()])
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
 
   // Edit the description of the file
   if (newDescription.value.value != props.file.description) {
     let setDesc = new VaunchSetDescription();
-    let response: VaunchResponse = setDesc.execute([originalPath, newDescription.value.value])
+    let response: VaunchResponse = await setDesc.execute([originalPath, newDescription.value.value])
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
 
   // If the file position has changed, run set-pos
   if (newPos.value.value != props.file.position) {
     let setPos = new VaunchSetPosition();
-    let response: VaunchResponse = setPos.execute([originalPath, newPos.value.value.toLowerCase()])
+    let response: VaunchResponse = await setPos.execute([originalPath, newPos.value.value.toLowerCase()])
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
 
@@ -85,7 +85,7 @@ const saveFile = () => {
                                                           .replace(/\s+/g, '_');
     let newPath = `${newFolderName}/${newFileName}`
     let mv = new VaunchMv();
-    let response: VaunchResponse = mv.execute([originalPath, newPath]);
+    let response: VaunchResponse = await mv.execute([originalPath, newPath]);
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
 

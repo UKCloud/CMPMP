@@ -24,25 +24,25 @@ const closeWindow = () => {
   emit('closeEdit');
 }
 
-const createFolder = () => {
+const createFolder = async () => {
   // Create the folder
   let mkdir = new VaunchMkdir();
 
   let newFolderName = (newName.value.value as string).toLowerCase()
                                                      .replace(/\s+/g, '_');
-  let response:VaunchResponse = mkdir.execute([newFolderName])
+  let response:VaunchResponse = await mkdir.execute([newFolderName])
   if (response.type == ResponseType.Error) return handleResponse(response);
 
   // Set the folder icon
   let setIcon = new VaunchSetIcon();
-  response = setIcon.execute([newFolderName, newIcon.value.value, newIconClass.value.value])
+  response = await setIcon.execute([newFolderName, newIcon.value.value, newIconClass.value.value])
   if (response.type == ResponseType.Error) return handleResponse(response);
 
   
   // If the folder position is set, run set-pos
   if (newPos.value.value) {
     let setPos = new VaunchSetPosition();
-    let response: VaunchResponse = setPos.execute([newFolderName, newPos.value.value.toLowerCase()])
+    let response: VaunchResponse = await setPos.execute([newFolderName, newPos.value.value.toLowerCase()])
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
 
@@ -51,7 +51,7 @@ const createFolder = () => {
   closeWindow();
 }
 
-const updateFolder = () => {
+const updateFolder = async () => {
   // .value.value is used here to get the .value of the reference,
   // a HTMLInputElement, which itself has a .value property
   let folderPath:string = props.folder.name;
@@ -59,14 +59,14 @@ const updateFolder = () => {
   // Edit the icon of the folder
   if (newIcon.value.value != props.folder.icon || newIconClass.value.value != props.folder.iconClass) {
     let setIcon = new VaunchSetIcon();
-    let response: VaunchResponse = setIcon.execute([folderPath, newIcon.value.value.toLowerCase(), newIconClass.value.value.toLowerCase()])
+    let response: VaunchResponse = await setIcon.execute([folderPath, newIcon.value.value.toLowerCase(), newIconClass.value.value.toLowerCase()])
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
   
   // If the folder position has changed, run set-pos
   if (newPos.value.value != props.folder.position) {
     let setPos = new VaunchSetPosition();
-    let response: VaunchResponse = setPos.execute([folderPath, newPos.value.value.toLowerCase()])
+    let response: VaunchResponse = await setPos.execute([folderPath, newPos.value.value.toLowerCase()])
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
 
@@ -76,7 +76,7 @@ const updateFolder = () => {
     let newFolderName = (newName.value.value as string).toLowerCase()
                                                     .replace(/\s+/g, '_');
     let mv = new VaunchMv();
-    let response: VaunchResponse = mv.execute([folderPath, newFolderName]);
+    let response: VaunchResponse = await mv.execute([folderPath, newFolderName]);
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
   // Once all edits are made, close the window

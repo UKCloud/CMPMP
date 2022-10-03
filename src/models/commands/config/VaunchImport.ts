@@ -79,7 +79,7 @@ export class VaunchImport extends VaunchCommand {
   }
   description = "Imports vaunch from a file";
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     const importElem = document.createElement("input");
     importElem.type = "file";
     importElem.click();

@@ -20,7 +20,7 @@ export abstract class VaunchCommand extends VaunchFile {
     return this.manual.parameters.length > 0;
   }
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     return this.makeResponse(ResponseType.Success, "");
   }
   getBaseName(): string {

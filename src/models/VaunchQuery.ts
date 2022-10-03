@@ -35,7 +35,7 @@ export class VaunchQuery extends VaunchUrlFile {
     return [this.fileName, this.prefix, ...this.aliases];
   }
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     // If no args are provided or ctrl clicking on the file, return the file's prefix
     if (args.length == 0 || args[0] == "_blank" || args[0] == "") {
       return this.makeResponse(ResponseType.UpdateInput, `${this.prefix}: `);

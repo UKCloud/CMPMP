@@ -59,7 +59,7 @@ export class VaunchExport extends VaunchCommand {
   }
   description = "Exports vaunch to a file";
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     const config = useConfigStore();
     const folders = useFolderStore();
 

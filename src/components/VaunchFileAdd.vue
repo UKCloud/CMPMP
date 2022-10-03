@@ -43,7 +43,7 @@ function missingFieldResponse(fields:string[]) {
   })
 }
 
-const createFile = () => {
+const createFile = async () => {
 
   // Ensure required fields are set
   let missingFields:string[] = [];
@@ -63,11 +63,11 @@ const createFile = () => {
   let filePath = `${props.folder.name}/${fileName}`
   let content:string = newContent.value.value
   if (state.fileType == "lnk") {
-    let response:VaunchResponse = touch.execute([filePath, content])
+    let response:VaunchResponse = await touch.execute([filePath, content])
     if (response.type == ResponseType.Error) return handleResponse(response);
   } else if (state.fileType == "qry") {
     let prefix:string = newPrefix.value.value
-    let response:VaunchResponse = touch.execute([filePath, prefix, content])
+    let response:VaunchResponse = await touch.execute([filePath, prefix, content])
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
 
@@ -75,21 +75,21 @@ const createFile = () => {
   // Edit the icon of the file
   if (newIcon.value.value != "" || newIconClass.value.value != "" ) {
     let setIcon = new VaunchSetIcon();
-    let response: VaunchResponse = setIcon.execute([filePath, newIcon.value.value.toLowerCase(), newIconClass.value.value.toLowerCase()])
+    let response: VaunchResponse = await setIcon.execute([filePath, newIcon.value.value.toLowerCase(), newIconClass.value.value.toLowerCase()])
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
 
   // Edit the description of the file
   if (newDescription.value.value != "") {
     let setDesc = new VaunchSetDescription();
-    let response: VaunchResponse = setDesc.execute([filePath, newDescription.value.value])
+    let response: VaunchResponse = await setDesc.execute([filePath, newDescription.value.value])
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
 
   // If the file position is set, run set-pos
   if (newPos.value.value) {
     let setPos = new VaunchSetPosition();
-    let response: VaunchResponse = setPos.execute([filePath, newPos.value.value.toLowerCase()])
+    let response: VaunchResponse = await setPos.execute([filePath, newPos.value.value.toLowerCase()])
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
 

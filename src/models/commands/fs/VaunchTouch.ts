@@ -54,7 +54,7 @@ export class VaunchTouch extends VaunchCommand {
   aliases: string[] = ["make-file"];
   description = "Creates new files";
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     const folders = useFolderStore();
     const newFileName: string = args[0];
 

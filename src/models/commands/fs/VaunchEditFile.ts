@@ -59,7 +59,7 @@ export class VaunchEditFile extends VaunchCommand {
   aliases: string[] = ["edit-file"];
   description = "Edits an existing file";
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     const folders = useFolderStore();
     const fullPath: string = args[0];
     // If fullPath is not defined, no path was passed

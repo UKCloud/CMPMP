@@ -38,7 +38,7 @@ export class VaunchSetDefaultSearch extends VaunchCommand {
   }
   description = "Sets the default Query file to execute";
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     const config = useConfigStore();
     let newQueryName = "none";
     if (!args[0] || args[0] == "none") {

@@ -21,7 +21,7 @@ export class VaunchToggleFuzzy extends VaunchCommand {
   }
   description = "Toggles if fuzzy search is enabled";
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     const config = useConfigStore();
     config.fuzzy = !config.fuzzy;
     return this.makeResponse(

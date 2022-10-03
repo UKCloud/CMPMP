@@ -16,8 +16,9 @@ const commandInputBox = ref();
 const hasArgs = props.file.hasArgs();
 
 const execute = (file:VaunchCommand, args:string[]) => {
-  let response = file.execute(args);
-  handleResponse(response);
+  file.execute(args).then((response) => {
+    handleResponse(response);
+  })
   // Clear the input for this command after executing
   if (hasArgs) {
     (commandInputBox.value as HTMLInputElement).value = "";

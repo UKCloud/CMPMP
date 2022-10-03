@@ -20,7 +20,7 @@ export class VaunchToggleCommands extends VaunchCommand {
   }
   description = "Toggles if the commands window is visible";
 
-  execute(args: string[]): VaunchResponse {
+  async execute(args: string[]): Promise<VaunchResponse> {
     const config = useConfigStore();
     config.showCommands = !config.showCommands;
     return this.makeResponse(

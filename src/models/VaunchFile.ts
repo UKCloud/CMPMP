@@ -55,7 +55,7 @@ export abstract class VaunchFile {
 
   // Abstract execution method, to be implemented by concrete classes
   // to define what happens when they are ran
-  abstract execute(args: string[]): VaunchResponse;
+  abstract execute(args: string[]): Promise<VaunchResponse>;
 
   makeResponse(type: ResponseType, message: string) {
     // Creates a VaunchResponse for this file, given a ResponseType and a message string
