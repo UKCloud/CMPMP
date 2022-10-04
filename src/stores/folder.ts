@@ -3,6 +3,7 @@ import { useStorage } from "@vueuse/core";
 
 import { VaunchFolder } from "@/models/VaunchFolder";
 import type { VaunchFile } from "@/models/VaunchFile";
+import { useSessionStore } from "./sessionState";
 
 export const useFolderStore: StoreDefinition = defineStore({
   id: "folder",
@@ -134,6 +135,14 @@ export const useFolderStore: StoreDefinition = defineStore({
           }
         }
       }
+    },
+    async getDashboard() {
+      const config = useSessionStore()
+      const response = await fetch(config.dashboardUrl, {
+        method: "GET",
+        mode: "cors",
+      });
+      const dashboard = await response.json();
     }
   },
 });

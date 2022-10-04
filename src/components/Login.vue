@@ -5,9 +5,11 @@ import { useSessionStore } from "@/stores/sessionState";
 import VaunchButton from "./VaunchButton.vue";
 import { useConfigStore } from "@/stores/config";
 import VaunchWindow from "./VaunchWindow.vue";
+import { useFolderStore } from "@/stores/folder";
 
 const retrievedData:Ref<Boolean> = ref(false);
 const config = useConfigStore();
+const folders = useFolderStore();
 const sessionConfig = useSessionStore();
 onMounted(() => {
   fetch(sessionConfig.users, {
@@ -17,6 +19,8 @@ onMounted(() => {
     .then(response => {
       sessionConfig.email = response.email;
       retrievedData.value = true;
+      // Get the dashboard from backend once logged in
+      folders.getDashboard();
     })
 })
 
