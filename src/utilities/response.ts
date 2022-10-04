@@ -14,6 +14,11 @@ export function handleResponse(response: VaunchResponse) {
       newInputValue = response.message;
       sessionConfig.showResponse = false;
       break;
+    case ResponseType.Success:
+      if (sessionConfig.showSuccess) {
+        sessionConfig.showResponse = true;
+      }
+      break;
     default:
       sessionConfig.showResponse = false;
   }

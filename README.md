@@ -4,6 +4,17 @@ A command-driven, customisable start-page.
 
 Vaunch can be accessed at: https://vaunch.kirimson.com, or you can host it yourself. See [Setting Up](#setting-up) for more information on how to self-host Vaunch
 
+## Environment Variables
+
+The following environment variables will be used when building the application:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| VITE_APP_BACKEND_URL | URL to the backend server to handle login/dashboard storage | None |
+| VITE_APP_VERSION | Version of the application, displayed on the About window | None |
+| VITE_APP_BUILD_DATE | Build date of the application, displayed on the About window | None |
+| VITE_APP_SHOW_SUCCESS | Shows successful responses from commands | False |
+
 ## Features
 
 - Folders to organise your links however you want
