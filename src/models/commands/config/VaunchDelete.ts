@@ -3,12 +3,11 @@ import type { Example } from "@/models/VaunchManual";
 import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useFolderStore } from "@/stores/folder";
 import { useSessionStore } from "@/stores/sessionState";
-import { stringifyDashboard } from "@/utilities/parser";
 
-export class VaunchSave extends VaunchCommand {
+export class VaunchDelete extends VaunchCommand {
   constructor() {
     const longDescription: string[] = [
-      "Saves the current dashboard to the backend. This dashboard will then be loaded by users that have access to it.",
+      "Deletes the current dashboard from the backend. Users that had access to this dashboard will no longer be able to use it.",
     ];
     const examples: Example[] = [
       {
@@ -18,31 +17,27 @@ export class VaunchSave extends VaunchCommand {
         ],
       },
     ];
-    super("save", longDescription, [], examples);
+    super("delete", longDescription, [], examples);
   }
-  aliases: string[] = ["save-dashboard"];
-  description = "Saves dashboard to remote";
+  aliases: string[] = ["delete-dashboard"];
+  description = "Deletes the dashboard on remote";
 
   async execute(args: string[]): Promise<VaunchResponse> {
     const sessionConfig = useSessionStore();
-    const folderStore = useFolderStore();
-    const dashboardPostUrl = new URL('/dashboard', sessionConfig.backendURL).href;
+    const dashboardPostUrl = new URL('/dashboard/1', sessionConfig.backendURL).href;
     const response = await fetch(dashboardPostUrl, {
       mode: "cors",
       credentials: "include",
-      method: "POST",
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        id: 1,
-        name: "main",
-        data: stringifyDashboard(folderStore.rawFolders)
-      })
     })
 
     if (response.status == 200) {
-      return this.makeResponse(ResponseType.Success, "Dashboard updated");
-    } else return this.makeResponse(ResponseType.Error, "Failed to save dashboard");
+      const folderStore = useFolderStore();
+      folderStore.getDashboard();
+      return this.makeResponse(ResponseType.Success, "Dashboard deleted");
+    } else return this.makeResponse(ResponseType.Error, "Failed to delete dashboard");
   }
 }

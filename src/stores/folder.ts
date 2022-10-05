@@ -131,7 +131,11 @@ export const useFolderStore: StoreDefinition = defineStore({
       });
       const dashboard = await response.json();
       if (dashboard) {
+        // Load the dashboard data from the remote
         this.rawFolders = parseDashboard(dashboard['data']);
+      } else {
+        // Dashboard does not exist, blank out the dashboard
+        this.rawFolders = new Map<string, VaunchFolder>();
       }
     },
   },
