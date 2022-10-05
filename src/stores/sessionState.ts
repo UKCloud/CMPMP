@@ -28,7 +28,8 @@ export const useSessionStore = defineStore("session", {
       login: new URL('/login', import.meta.env.VITE_APP_BACKEND_URL).href,
       logout: new URL('/logout', import.meta.env.VITE_APP_BACKEND_URL).href,
       users: new URL('/users', import.meta.env.VITE_APP_BACKEND_URL).href,
-      dashboardUrl: new URL('/dashboard/1', import.meta.env.VITE_APP_BACKEND_URL).href // Temporarily get dashboard 1
+      backendURL: new URL(import.meta.env.VITE_APP_BACKEND_URL).href,
+      showSuccess: Boolean(import.meta.env.VITE_APP_SHOW_SUCCESS || false),
     };
   },
 });

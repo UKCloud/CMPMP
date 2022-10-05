@@ -4,6 +4,7 @@ import { useStorage } from "@vueuse/core";
 import { VaunchFolder } from "@/models/VaunchFolder";
 import type { VaunchFile } from "@/models/VaunchFile";
 import { useSessionStore } from "./sessionState";
+import { parseDashboard, stringifyDashboard } from "@/utilities/parser";
 
 export const useFolderStore: StoreDefinition = defineStore({
   id: "folder",
@@ -19,26 +20,10 @@ export const useFolderStore: StoreDefinition = defineStore({
         // stored within localstorage
         serializer: {
           read(v: any) {
-            // Parse the read JSON from localstorage
-            const rawData = JSON.parse(v);
-            // Create a new map to return, matching the type of rawFolders
-            const map = new Map<string, VaunchFolder>();
-            for (const folder of rawData) {
-              // Parse each JSON representation as a VaunchFolder, and add it to the map
-              // using the folder name as the map key
-              const vaunchFolder = VaunchFolder.parse(folder);
-              map.set(vaunchFolder.name, vaunchFolder);
-            }
-            return map;
+            return parseDashboard(v);
           },
           write(v: Map<string, VaunchFolder>) {
-            // Convert all folders into a JSON compatible format and return the JSON string to store
-            const storeData: any[] = [];
-            for (const folder of v) {
-              // VaunchFolder.info() returns a JS Object representing the folder and its files
-              storeData.push(folder[1].info());
-            }
-            return JSON.stringify(storeData);
+            return stringifyDashboard(v);
           },
         },
       }
@@ -137,12 +122,16 @@ export const useFolderStore: StoreDefinition = defineStore({
       }
     },
     async getDashboard() {
-      const config = useSessionStore()
-      const response = await fetch(config.dashboardUrl, {
+      const sessionConfig = useSessionStore()
+      const dashboardIdUrl = new URL('/dashboard/1', sessionConfig.backendURL).href;
+      const response = await fetch(dashboardIdUrl, {
         method: "GET",
         mode: "cors",
       });
       const dashboard = await response.json();
-    }
+      if (dashboard) {
+        this.rawFolders = parseDashboard(dashboard['data']);
+      }
+    },
   },
 });
