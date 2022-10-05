@@ -13,7 +13,7 @@ export class VaunchDelete extends VaunchCommand {
       {
         args: [],
         description: [
-          "Overwrites the current dashboard stored on remote with the current local dashboard",
+          "Deletes the dashboard from the remote server, and will no longer be usable by other users",
         ],
       },
     ];
