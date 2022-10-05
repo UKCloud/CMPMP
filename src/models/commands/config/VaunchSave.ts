@@ -20,6 +20,7 @@ export class VaunchSave extends VaunchCommand {
     ];
     super("save", longDescription, [], examples);
   }
+  aliases: string[] = ["save-dashboard"];
   description = "Saves dashboard to remote";
 
   async execute(args: string[]): Promise<VaunchResponse> {
@@ -42,9 +43,6 @@ export class VaunchSave extends VaunchCommand {
 
     if (response.status == 200) {
       return this.makeResponse(ResponseType.Success, "Dashboard updated");
-    } else {
-      console.log(response);
-      return this.makeResponse(ResponseType.Error, "Failed to save dashboard");
-    }
+    } else return this.makeResponse(ResponseType.Error, "Failed to save dashboard");
   }
 }
