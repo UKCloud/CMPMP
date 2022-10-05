@@ -28,6 +28,7 @@ export class VaunchSave extends VaunchCommand {
     const dashboardPostUrl = new URL('/dashboard', sessionConfig.backendURL).href;
     const response = await fetch(dashboardPostUrl, {
       mode: "cors",
+      credentials: "include",
       method: "POST",
       headers: {
         "Content-Type": "application/json",

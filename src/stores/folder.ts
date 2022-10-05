@@ -125,6 +125,7 @@ export const useFolderStore: StoreDefinition = defineStore({
       const sessionConfig = useSessionStore()
       const dashboardIdUrl = new URL('/dashboard/1', sessionConfig.backendURL).href;
       const response = await fetch(dashboardIdUrl, {
+        credentials: "include",
         method: "GET",
         mode: "cors",
       });
