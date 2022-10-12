@@ -331,7 +331,7 @@ main {
 
 <template>
   <main id="main-container" :style="{ 'background-image': 'url(' + config.background + ')' }">
-    <Login />
+    <Login :context="dashboardStore.context" />
     <VaunchInput
       v-on:command="executeCommand"
       v-on:fuzzy="fuzzy"

@@ -39,7 +39,7 @@ onMounted(() => {
     <div v-if="sessionConfig.email && retrievedData" class="nav vaunch-window">
       <div id="nav-inner">
         <div id="context">
-          Current Content: {{props.context}}
+          Current Context: {{props.context}}
         </div>
         <div id="logout-section">
           <div>

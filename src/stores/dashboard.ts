@@ -1,7 +1,8 @@
 import { defineStore, type StoreDefinition } from "pinia";
-import type { Dashboard } from "@/models/Dashboard";
+import { Dashboard } from "@/models/Dashboard";
 import { useSessionStore } from "./sessionState";
 import { parseDashboard } from "@/utilities/parser";
+import { VaunchFolder } from "@/models/VaunchFolder";
 
 export const useDashboardStore: StoreDefinition = defineStore({
   id: "dashboard",
@@ -22,7 +23,11 @@ export const useDashboardStore: StoreDefinition = defineStore({
   },
   actions: {
     setContext(newContext: string) {
+      if (!this.dashboards.get(newContext)) this.addNewDashboard(newContext);
       this.context = newContext;
+    },
+    addNewDashboard(name: string) {
+      this.dashboards.set(name, new Dashboard(name, new Map<string, VaunchFolder>()))
     },
     addDashboard(name: string, dashboard: Dashboard) {
       this.dashboards.set(name, dashboard)
