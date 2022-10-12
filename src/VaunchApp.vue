@@ -40,7 +40,6 @@ let optionFolder:VaunchFolder = reactive(new VaunchFolder("default", ""));
 const data = reactive({
   optionFile,
   optionFolder,
-  action:"",
   optionX: 0,
   optionY: 0,
   guiContext: "",
@@ -316,7 +315,7 @@ main {
   cursor: pointer;
 }
 
-.dashboards {
+.dashboard {
   width: 100%;
 }
 
@@ -324,6 +323,12 @@ main {
   display: flex;
   flex-grow: 1;
   flex-wrap: wrap;
+}
+
+.dashboard-heading {
+  margin: 0 0.75rem;
+  font-size: 1.2rem;
+  padding: 0 0.75rem;
 }
 
 /* Scrollbar theming */
@@ -380,9 +385,10 @@ main {
           @click.right.prevent.self="showAppOption($event.clientX, $event.clientY)"
         >
 
-        <div class="dashboards" v-for="dashboard in (dashboardStore.allDashboards as Dashboard[])"
+        <div class="dashboard" v-for="dashboard in (dashboardStore.allDashboards as Dashboard[])"
           :key="dashboard.name">
-          <div>
+          <div class="vaunch-window dashboard-heading">
+          <i :class="['fa-solid', 'fa-bars-staggered']"></i>
             {{dashboard.name}}
           </div>
           <div class="dashboard-container" v-if="dashboard.rawFolders.size > 0">
