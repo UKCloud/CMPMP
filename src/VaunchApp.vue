@@ -369,17 +369,19 @@ main {
 
         <div v-for="dashboard in (dashboardStore.allDashboards as Dashboard[])"
           :key="dashboard.name">
-          <div>
-            {{dashboard.name}}
+          <div v-if="dashboard.rawFolders.size > 0">
+            <div>
+              {{dashboard.name}}
+            </div>
+  
+            <VaunchGuiFolder
+              v-for="folder in dashboard.sortedItems()"
+              :key="folder.name"
+              v-on:show-file-option="showFileOption"
+              v-on:show-folder-option="showFolderOption"
+              :folder="folder"
+            />
           </div>
-
-          <VaunchGuiFolder
-            v-for="folder in dashboard.sortedItems()"
-            :key="folder.name"
-            v-on:show-file-option="showFileOption"
-            v-on:show-folder-option="showFolderOption"
-            :folder="folder"
-          />
         </div>
 
         </div>

@@ -2,7 +2,7 @@ import { defineStore, type StoreDefinition } from "pinia";
 import { Dashboard } from "@/models/Dashboard";
 import { useSessionStore } from "./sessionState";
 import { parseDashboard } from "@/utilities/parser";
-import { VaunchFolder } from "@/models/VaunchFolder";
+import type { VaunchFolder } from "@/models/VaunchFolder";
 
 export const useDashboardStore: StoreDefinition = defineStore({
   id: "dashboard",
