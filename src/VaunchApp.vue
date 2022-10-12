@@ -316,6 +316,16 @@ main {
   cursor: pointer;
 }
 
+.dashboards {
+  width: 100%;
+}
+
+.dashboard-container {
+  display: flex;
+  flex-grow: 1;
+  flex-wrap: wrap;
+}
+
 /* Scrollbar theming */
 ::-webkit-scrollbar {
   width: 3px;
@@ -370,12 +380,12 @@ main {
           @click.right.prevent.self="showAppOption($event.clientX, $event.clientY)"
         >
 
-        <div v-for="dashboard in (dashboardStore.allDashboards as Dashboard[])"
+        <div class="dashboards" v-for="dashboard in (dashboardStore.allDashboards as Dashboard[])"
           :key="dashboard.name">
-          <div v-if="dashboard.rawFolders.size > 0">
-            <div>
-              {{dashboard.name}}
-            </div>
+          <div>
+            {{dashboard.name}}
+          </div>
+          <div class="dashboard-container" v-if="dashboard.rawFolders.size > 0">
   
             <VaunchGuiFolder
               v-for="folder in dashboard.sortedItems()"
