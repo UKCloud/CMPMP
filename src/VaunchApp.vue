@@ -245,11 +245,12 @@ const showFolderOption = (folder:VaunchFolder, xPos:number, yPos:number, action:
   sessionConfig.showAppOptions = false;
   sessionConfig.showFolderOptions = true;
 }
-const showAppOption = (xPos:number, yPos:number, action:string|null=null) => {
+const showAppOption = (xPos:number, yPos:number, action:string|null=null, context:string|null=null) => {
   // Opens the main Vaunch context menu, closing any other open context menu
   data.optionX = xPos;
   data.optionY = yPos;
   if (action) sessionConfig.action = action;
+  if (context) data.guiContext = context;
   sessionConfig.showFileOptions = false;
   sessionConfig.showFolderOptions = false;
   sessionConfig.showAppOptions = true;
@@ -383,13 +384,13 @@ main {
         <div
           v-if="config.showGUI"
           id="vaunch-folder-container"
-          @click.right.prevent.self="showAppOption($event.clientX, $event.clientY)"
         >
 
         <div class="dashboard" v-for="dashboard in (dashboardStore.allDashboards as Dashboard[])"
-          :key="dashboard.name">
+          :key="dashboard.name"
+          @click.right.prevent="showAppOption($event.clientX, $event.clientY, null, dashboard.name)">
           <div class="vaunch-window dashboard-heading">
-          <i :class="['fa-solid', 'fa-bars-staggered']"></i>
+            <i :class="['fa-solid', 'fa-bars-staggered']"></i>
             {{dashboard.name}}
           </div>
           <div class="dashboard-container" v-if="dashboard.rawFolders.size > 0">
@@ -423,7 +424,7 @@ main {
     <!-- Context menu components are at the app root to ensure there will be only one open at any one time -->
     <VaunchFileOption v-if="sessionConfig.showFileOptions" :context="data.guiContext" :file="data.optionFile" :x-pos="data.optionX" :y-pos="data.optionY"/>
     <VaunchFolderOption ref="folderOption" v-if="sessionConfig.showFolderOptions" :folder="data.optionFolder" :context="data.guiContext" :x-pos="data.optionX" :y-pos="data.optionY" />
-    <VaunchAppOption v-if="sessionConfig.showAppOptions" :x-pos="data.optionX" :y-pos="data.optionY"/>
+    <VaunchAppOption v-if="sessionConfig.showAppOptions" :x-pos="data.optionX" :y-pos="data.optionY" :context="data.guiContext"/>
   </main>
 </template>
 

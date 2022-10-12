@@ -9,7 +9,9 @@ import { handleResponse } from "@/utilities/response";
 import { VaunchMv } from "@/models/commands/fs/VaunchMv";
 import { VaunchMkdir } from "@/models/commands/fs/VaunchMkdir";
 import { VaunchSetPosition } from "@/models/commands/fs/VaunchSetPosition";
-const props = defineProps(['folder', 'addNew'])
+import { useDashboardStore } from "@/stores/dashboard";
+import { VaunchContext } from "@/models/commands/config/VaunchContext";
+const props = defineProps(['folder', 'context', 'addNew'])
 
 const emit = defineEmits(['closeEdit'])
 const config = useConfigStore();
@@ -25,6 +27,11 @@ const closeWindow = () => {
 }
 
 const createFolder = async () => {
+  // Switch to the correct context
+  const oldContext = useDashboardStore().context
+  const context = new VaunchContext();
+  context.execute([props.context]);
+
   // Create the folder
   let mkdir = new VaunchMkdir();
 
@@ -47,7 +54,8 @@ const createFolder = async () => {
   }
 
 
-  // Once the folder is made, close the window
+  // Once the folder is made, switch back to the old context and close the window
+  context.execute([oldContext]);
   closeWindow();
 }
 
