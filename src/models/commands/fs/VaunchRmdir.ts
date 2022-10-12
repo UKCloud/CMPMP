@@ -1,7 +1,8 @@
+import type { Dashboard } from "@/models/Dashboard";
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { Parameter, Example } from "@/models/VaunchManual";
 import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
-import { useFolderStore } from "@/stores/folder";
+import { useDashboardStore } from "@/stores/dashboard";
 
 export class VaunchRmdir extends VaunchCommand {
   constructor() {
@@ -50,23 +51,26 @@ export class VaunchRmdir extends VaunchCommand {
     if (args.length == 0) {
       return this.makeResponse(ResponseType.Error, "Not enough arguments");
     }
-    const folders = useFolderStore();
+    const currentDashboard: Dashboard = useDashboardStore().currentDashboard;
+
     let force = false;
     if (args[0] == "-f") {
       force = true;
       args.shift();
     }
     const failedToDelete: string[] = [];
-    const notEmpty:string[] = [];
+    const notEmpty: string[] = [];
     args.forEach((toDelete) => {
       // Strip slashes from folder names, if running from autocompleted value
       toDelete = toDelete.replace("/", "");
-      if (folders.getFolderByName(toDelete)) {
+      if (currentDashboard.getFolderByName(toDelete)) {
         // If force is set, delete no matter what. Otherwise, check the directory is empty first.
         if (force) {
-          folders.remove(toDelete);
-        } else if (folders.getFolderByName(toDelete).files.size == 0) {
-          folders.remove(toDelete);
+          currentDashboard.remove(toDelete);
+        } else if (
+          currentDashboard.getFolderByName(toDelete)?.files.size == 0
+        ) {
+          currentDashboard.remove(toDelete);
         } else {
           notEmpty.push(toDelete);
         }
@@ -77,22 +81,20 @@ export class VaunchRmdir extends VaunchCommand {
       const plural = failedToDelete.length > 1 ? true : false;
       return this.makeResponse(
         ResponseType.Error,
-        `The folder${plural ? "s" : ""}: ${failedToDelete.join(", ")} do${
-          plural ? "" : "es"
+        `The folder${plural ? "s" : ""}: ${failedToDelete.join(", ")} do${plural ? "" : "es"
         } not exist and ${plural ? "were" : "was"} not deleted`
       );
     } else if (notEmpty.length != 0) {
       const plural = notEmpty.length > 1 ? true : false;
       return this.makeResponse(
         ResponseType.Info,
-        `The folder${plural ? "s" : ""}: ${notEmpty.join(", ")} ${
-          plural ? "are" : "is"
+        `The folder${plural ? "s" : ""}: ${notEmpty.join(", ")} ${plural ? "are" : "is"
         } not empty and ${plural ? "were" : "was"} not deleted`
       );
     } else {
       // After deleting a folder, re-organise the folder positions, if
       // folders in the middle were deleted folder positions need to be updated
-      folders.organisePosition(folders.items);
+      currentDashboard.organisePosition(currentDashboard.getItems());
       return this.makeResponse(
         ResponseType.Success,
         `Deleted folder: ${args.join(", ")}`

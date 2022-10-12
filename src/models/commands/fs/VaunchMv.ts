@@ -1,10 +1,10 @@
+import type { Dashboard } from "@/models/Dashboard";
 import { VaunchCommand } from "@/models/VaunchCommand";
-import type { VaunchFile } from "@/models/VaunchFile";
 import type { VaunchFolder } from "@/models/VaunchFolder";
 import type { Parameter, Example } from "@/models/VaunchManual";
 import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import type { VaunchUrlFile } from "@/models/VaunchUrlFile";
-import { useFolderStore } from "@/stores/folder";
+import { useDashboardStore } from "@/stores/dashboard";
 
 export class VaunchMv extends VaunchCommand {
   constructor() {
@@ -52,7 +52,8 @@ export class VaunchMv extends VaunchCommand {
       return this.makeResponse(ResponseType.Error, "Not enough arguments");
     }
 
-    const folders = useFolderStore();
+    const currentDashboard: Dashboard = useDashboardStore().currentDashboard;
+
     const source: string = args[0];
     const dest: string = args[1];
 
@@ -65,7 +66,8 @@ export class VaunchMv extends VaunchCommand {
     let newFileName: string = destPath[1];
 
     // Always need a folder, so get it now
-    const folder: VaunchFolder = folders.getFolderByName(folderToMove);
+    const folder: VaunchFolder | undefined =
+      currentDashboard.getFolderByName(folderToMove);
 
     if (!folder) {
       return this.makeResponse(
@@ -78,18 +80,18 @@ export class VaunchMv extends VaunchCommand {
     // Remove the folder from the store, rename it, then add it back in
     // This is to update the underlying Maps key so we still get the folder with O(1)
     if (!fileToMove && folder) {
-
       // Check if a folder with that name already exists
-      let existingFolder:VaunchFolder = folders.getFolderByName(newFolderDest);
+      const existingFolder: VaunchFolder | undefined =
+        currentDashboard.getFolderByName(newFolderDest);
       if (existingFolder) {
         return this.makeResponse(
           ResponseType.Error,
           `Destination folder '${newFolderDest}' already exists`
         );
       }
-      folders.remove(folderToMove);
+      currentDashboard.remove(folderToMove);
       folder.name = newFolderDest;
-      folders.insert(folder);
+      currentDashboard.insertFolder(folder);
       return this.makeResponse(
         ResponseType.Success,
         `Renamed folder ${folderToMove} to ${newFolderDest}`
@@ -107,7 +109,8 @@ export class VaunchMv extends VaunchCommand {
       }
 
       // Get the new folder, and only continue if it exists
-      const newFolder: VaunchFolder = folders.getFolderByName(newFolderDest);
+      const newFolder: VaunchFolder | undefined =
+        currentDashboard.getFolderByName(newFolderDest);
       if (newFolder) {
         // If the new folder contains a file with the same name, return info that the dest file already exists
         if (newFolder.getFile(newFileName)) {

@@ -4,7 +4,7 @@ import VaunchGuiFolder from "./components/VaunchGuiFolder.vue";
 
 import { commands } from "@/stores/command";
 import { useConfigStore } from "@/stores/config";
-import { useFolderStore } from "@/stores/folder";
+import { useDashboardStore } from "@/stores/dashboard";
 import { VaunchFolder } from "./models/VaunchFolder";
 import type { VaunchFile } from "./models/VaunchFile";
 import { reactive, ref } from "vue";
@@ -24,10 +24,11 @@ import VaunchAppOption from "./components/VaunchAppOption.vue";
 import type { VaunchUrlFile } from "./models/VaunchUrlFile";
 import { handleResponse } from "./utilities/response";
 import Login from "./components/Login.vue";
+import type { Dashboard } from "./models/Dashboard";
 
 
 const config = useConfigStore();
-const folders = useFolderStore();
+const dashboards = useDashboardStore();
 const fuzzyFiles = useFuzzyStore();
 const sessionConfig = useSessionStore();
 
@@ -88,7 +89,7 @@ const executeCommand = (commandArgs: string[], newTab = false) => {
 
   // If no command was found, let's check if we're running a file
   if (operator.includes("/")) {
-    let file: VaunchFile = folders.getFileByPath(operator);
+    let file: VaunchFile = dashboards.getFileByPath(operator);
     if (file) {
       return file.execute(commandArgs).then((response) => {
         return handleResponse(response);
@@ -109,7 +110,7 @@ const executeCommand = (commandArgs: string[], newTab = false) => {
   let defaultFile: string = config.defaultFile;
   if (defaultFile) {
     commandArgs.unshift(operator);
-    let file: VaunchFile | undefined = folders.getFileByPath(defaultFile);
+    let file: VaunchFile | undefined = dashboards.getFileByPath(defaultFile);
     // If the default file is not a filepath, check if it's just the prefix
     if (!file) {
       file = findQryFile(defaultFile);
@@ -136,7 +137,7 @@ const findQryFile = (operator: string): VaunchFile | undefined => {
   if (operator.includes(":")) {
     operator = operator.split(":")[0];
   }
-  for (let folder of folders.items as VaunchFolder[]) {
+  for (let folder of dashboards.items as VaunchFolder[]) {
     for (let file of folder.getFiles()) {
       if (file.filetype == "VaunchQuery") {
         if (file.getNames().includes(operator)) {
@@ -151,10 +152,12 @@ const findQryFile = (operator: string): VaunchFile | undefined => {
 const fuzzy = (input: string) => {
   if (input.length > 0) {
     // If fuzzy is enabled, search for files matching
-    const folders = useFolderStore();
-    let matches: VaunchFile[] = folders.findFiles(input);
-    fuzzyFiles.setFuzzy(sortByHits(matches));
-    if (config.fuzzy) setInputIcon(matches[0]);
+    const dashboards = useDashboardStore();
+    dashboards.allDashboards.forEach((dashboard:Dashboard) => {
+      let matches: VaunchFile[] = dashboard.findFiles(input);
+      fuzzyFiles.setFuzzy(sortByHits(matches));
+      if (config.fuzzy) setInputIcon(matches[0]);
+    });
   } else {
     fuzzyFiles.clear();
   }
@@ -360,13 +363,22 @@ main {
           id="vaunch-folder-container"
           @click.right.prevent.self="showAppOption($event.clientX, $event.clientY)"
         >
+
+        <div v-for="dashboard in (dashboards.allDashboards as Dashboard[])"
+          :key="dashboard.name">
+          <div>
+            {{dashboard.name}}
+          </div>
+
           <VaunchGuiFolder
-            v-for="folder in folders.sortedItems()"
+            v-for="folder in dashboard.sortedItems()"
             :key="folder.name"
             v-on:show-file-option="showFileOption"
             v-on:show-folder-option="showFolderOption"
             :folder="folder"
           />
+        </div>
+
         </div>
       </div>
       <div class="mobile-only" id="option-buttons-container">

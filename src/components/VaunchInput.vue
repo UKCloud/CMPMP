@@ -3,17 +3,25 @@ import { onMounted, reactive, ref, watch } from "vue";
 import { commands } from "@/stores/command";
 import type { VaunchFile } from "@/models/VaunchFile";
 import type { VaunchFolder } from "@/models/VaunchFolder";
-import { useFolderStore } from "@/stores/folder";
+import { useDashboardStore } from "@/stores/dashboard";
 import { useSessionStore } from "@/stores/sessionState";
 import { useConfigStore } from "@/stores/config";
+import type { Dashboard } from "@/models/Dashboard";
 
-const folders = useFolderStore();
+const dashboardStore = useDashboardStore();
+
 const sessionConfig = useSessionStore();
 const config = useConfigStore();
 const inputBox = ref();
 
 defineProps(["prefixName", "prefixClass"]);
-const emit = defineEmits(["command","fuzzy","fuzzyIncrement","set-input-icon","query-check"]);
+const emit = defineEmits([
+  "command",
+  "fuzzy",
+  "fuzzyIncrement",
+  "set-input-icon",
+  "query-check",
+]);
 const data = reactive({
   vaunchInput: "",
   autocomplete: "",
@@ -25,13 +33,14 @@ onMounted(() => {
   (inputBox.value as HTMLInputElement).focus();
 });
 
-
-function isOverflown(element:HTMLElement) {
+function isOverflown(element: HTMLElement) {
   return element.scrollWidth > element.clientWidth;
 }
 
 const getInput = () => sessionConfig.vaunchInput;
 watch(getInput, (val: string) => {
+  const currentDashboard: Dashboard = dashboardStore.currentDashboard;
+
   // If traversing history, ignore this input. Otherwise continue on and reset the history index
   if (data.traversingHistory) {
     data.traversingHistory = false;
@@ -56,15 +65,12 @@ watch(getInput, (val: string) => {
   input.pop();
 
   // Set autocomplete to go up to before the half-typed word
-  data.autocomplete = val.substring(0, val.lastIndexOf(" ")+1);
+  data.autocomplete = val.substring(0, val.lastIndexOf(" ") + 1);
 
   // Search through the valid commands to autocomplete this word with
   // Only do this on the first "word", as commands will always be the first word
   if (lastWord.length > 0 && input.length == 0) {
-    let commandMatches: string[] = getAutocompleteFile(
-      lastWord,
-      commands
-    );
+    let commandMatches: string[] = getAutocompleteFile(lastWord, commands);
     matches.push(...commandMatches);
   }
 
@@ -77,13 +83,14 @@ watch(getInput, (val: string) => {
       let fileName = pathSplit[1];
       if (fileName.length > 0) {
         // Search for a file, using fileName as a semi complete filename
-        let folder: VaunchFolder = folders.getFolderByName(folderName);
+        let folder: VaunchFolder | undefined =
+          currentDashboard.getFolderByName(folderName);
         if (folder) {
           let fileMatches: string[] = getAutocompleteFile(
             fileName,
             folder.getFiles(),
             false
-          ).map((file:any) => folderName + "/" + file);
+          ).map((file: string) => folderName + "/" + file);
           matches.push(...fileMatches);
         }
       }
@@ -91,7 +98,7 @@ watch(getInput, (val: string) => {
       // If on the second+ word, check folder names/files to autocomplete
       let folderMatches: string[] = getAutocompleteFolder(
         lastWord,
-        folders.folderNames
+        currentDashboard.getFolderNames()
       );
       matches.push(...folderMatches);
     }
@@ -117,26 +124,30 @@ watch(getInput, (val: string) => {
   }
 
   // If the input box is overflowing, clear the autocomplete text
-  if (isOverflown(inputBox.value)) data.autocomplete = ""; 
+  if (isOverflown(inputBox.value)) data.autocomplete = "";
 
   // Check if the final input matches a file, if it does, set the icon to it
-  let file = folders.getFileByPath(val.trim());
+  let file = currentDashboard.getFileByPath(val.trim());
   if (file) emit("set-input-icon", file);
-})
+});
 
 const complete = () => {
   // Only complete if there is something to complete
   if (data.autocomplete.length > sessionConfig.vaunchInput.length) {
-    sessionConfig.vaunchInput = data.autocomplete + (data.isAutocompletePartial || data.autocomplete.endsWith("/") ? "" : " ");
+    sessionConfig.vaunchInput =
+      data.autocomplete +
+      (data.isAutocompletePartial || data.autocomplete.endsWith("/")
+        ? ""
+        : " ");
   }
-}
+};
 
 const sendCommand = (newTab = false) => {
   // Trim leading/trailing spaces, and compact multiple spaces into one
   let trimmedInput = sessionConfig.vaunchInput.trim();
-  trimmedInput = trimmedInput.replace(/\s+/g," ");
+  trimmedInput = trimmedInput.replace(/\s+/g, " ");
   emit("command", trimmedInput.split(" "), newTab);
-}
+};
 
 const getAutocompleteFolder = (input: string, folders: string[]) => {
   let matches: string[] = [];
@@ -148,9 +159,13 @@ const getAutocompleteFolder = (input: string, folders: string[]) => {
   // If there's only one potential match, append a slash and return
   if (matches.length == 1) return [matches[0] + "/"];
   return matches;
-}
+};
 
-const getAutocompleteFile = ( input: string, files: VaunchFile[], includeAiliases = true) => {
+const getAutocompleteFile = (
+  input: string,
+  files: VaunchFile[],
+  includeAiliases = true
+) => {
   let matches: string[] = [];
   for (let file of files) {
     if (includeAiliases) {
@@ -160,14 +175,15 @@ const getAutocompleteFile = ( input: string, files: VaunchFile[], includeAiliase
     } else if (file.fileName.startsWith(input)) matches.push(file.fileName);
   }
   return matches;
-}
+};
 
 const downKeyAction = () => {
   // If current input is either blank, or the same as what the current history entry is, go to the previous history entry
   let currentHistoryEntry: string =
     sessionConfig.history[sessionConfig.historyIndex];
   if (
-    (sessionConfig.vaunchInput == "" || sessionConfig.vaunchInput == currentHistoryEntry) &&
+    (sessionConfig.vaunchInput == "" ||
+      sessionConfig.vaunchInput == currentHistoryEntry) &&
     sessionConfig.historyIndex != -1
   ) {
     sessionConfig.historyIndex--;
@@ -175,32 +191,31 @@ const downKeyAction = () => {
     if (sessionConfig.historyIndex == -1) {
       sessionConfig.vaunchInput = "";
     } else {
-      let wantedEntry =
-        sessionConfig.history[sessionConfig.historyIndex];
+      let wantedEntry = sessionConfig.history[sessionConfig.historyIndex];
       sessionConfig.vaunchInput = wantedEntry;
     }
   }
   emit("fuzzyIncrement", true);
-}
+};
 
 const upKeyAction = () => {
   // If current input is either blank, or the same as what the current history entry is, go to the next history entry
   let currentHistoryEntry: string =
     sessionConfig.history[sessionConfig.historyIndex];
   if (
-    (sessionConfig.vaunchInput == "" || sessionConfig.vaunchInput == currentHistoryEntry) &&
+    (sessionConfig.vaunchInput == "" ||
+      sessionConfig.vaunchInput == currentHistoryEntry) &&
     sessionConfig.historyIndex < sessionConfig.history.length - 1
   ) {
     sessionConfig.historyIndex++;
     data.traversingHistory = true;
-    let wantedEntry =
-      sessionConfig.history[sessionConfig.historyIndex];
+    let wantedEntry = sessionConfig.history[sessionConfig.historyIndex];
     sessionConfig.vaunchInput = wantedEntry;
   }
   emit("fuzzyIncrement", false);
-}
+};
 
-const getCommonStartString =(matches: string[]) => {
+const getCommonStartString = (matches: string[]) => {
   let sortedMatches = matches.sort();
   // Get the first and second indx of the sorted match list
   let item1 = sortedMatches[0];
@@ -224,7 +239,6 @@ const getCommonStartString =(matches: string[]) => {
   position: relative;
   width: 75vw;
 }
-
 
 #vaunch-input {
   background: none;
