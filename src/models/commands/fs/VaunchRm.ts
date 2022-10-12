@@ -1,8 +1,9 @@
+import type { Dashboard } from "@/models/Dashboard";
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { VaunchFolder } from "@/models/VaunchFolder";
 import type { Parameter, Example } from "@/models/VaunchManual";
 import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
-import { useFolderStore } from "@/stores/folder";
+import { useDashboardStore } from "@/stores/dashboard";
 
 export class VaunchRm extends VaunchCommand {
   constructor() {
@@ -39,20 +40,22 @@ export class VaunchRm extends VaunchCommand {
     if (args.length == 0) {
       return this.makeResponse(ResponseType.Error, "Not enough arguments");
     }
-    const folders = useFolderStore();
+    const currentDashboard: Dashboard = useDashboardStore().currentDashboard;
+
     const failedToDelete: string[] = [];
     for (const filepath of args) {
       const filePath = filepath.split("/");
       const folderName: string = filePath[0];
       const fileToDelete: string = filePath[1];
-      const folder: VaunchFolder = folders.getFolderByName(folderName);
+      const folder: VaunchFolder | undefined =
+        currentDashboard.getFolderByName(folderName);
       if (folder) {
-        let deleted = folder.removeFile(fileToDelete);
-        if (!deleted) failedToDelete.push(filePath.join('/'));
+        const deleted = folder.removeFile(fileToDelete);
+        if (!deleted) failedToDelete.push(filePath.join("/"));
         // After deleting the file, re-organise the file's positions
         // to update them after a deletion
         folder.organiseFiles(folder.getFiles());
-      } else failedToDelete.push(filePath.join('/'));
+      } else failedToDelete.push(filePath.join("/"));
     }
 
     if (failedToDelete.length == 0) {
@@ -64,9 +67,9 @@ export class VaunchRm extends VaunchCommand {
       const plural = failedToDelete.length > 1 ? true : false;
       return this.makeResponse(
         ResponseType.Error,
-        `The file${plural ? "s" : ""}: ${failedToDelete.join(", ")} do${
-          plural ? "" : "es"
-        } not exist and ${plural ? "were" : "was"} not deleted`
+        `The file${plural ? "s" : ""}: 
+          ${failedToDelete.join(", ")} do${plural ? "" : "es"} not exist and ${plural ? "were" : "was"
+        } not deleted`
       );
     }
   }

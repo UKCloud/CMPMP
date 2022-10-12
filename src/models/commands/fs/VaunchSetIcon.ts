@@ -1,8 +1,9 @@
+import type { Dashboard } from "@/models/Dashboard";
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { VaunchFolder } from "@/models/VaunchFolder";
 import type { Parameter, Example } from "@/models/VaunchManual";
 import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
-import { useFolderStore } from "@/stores/folder";
+import { useDashboardStore } from "@/stores/dashboard";
 
 export class VaunchSetIcon extends VaunchCommand {
   constructor() {
@@ -54,7 +55,8 @@ export class VaunchSetIcon extends VaunchCommand {
   description = "Changes the icon of an existing file/folder";
 
   async execute(args: string[]): Promise<VaunchResponse> {
-    const folders = useFolderStore();
+    const currentDashboard: Dashboard = useDashboardStore().currentDashboard;
+
     const fullPath: string = args[0];
     const newIcon: string = args[1];
     const newIconClass: string = args[2];
@@ -62,7 +64,8 @@ export class VaunchSetIcon extends VaunchCommand {
 
     const folderName: string = splitPath[0];
     const fileName: string = splitPath[1];
-    const folder: VaunchFolder = folders.getFolderByName(folderName);
+    const folder: VaunchFolder | undefined =
+      currentDashboard.getFolderByName(folderName);
 
     if (folder && fileName) {
       const file = folder.getFile(fileName);

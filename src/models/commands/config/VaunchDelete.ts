@@ -1,7 +1,7 @@
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { Example } from "@/models/VaunchManual";
 import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
-import { useFolderStore } from "@/stores/folder";
+import { useDashboardStore } from "@/stores/dashboard";
 import { useSessionStore } from "@/stores/sessionState";
 
 export class VaunchDelete extends VaunchCommand {
@@ -24,7 +24,8 @@ export class VaunchDelete extends VaunchCommand {
 
   async execute(args: string[]): Promise<VaunchResponse> {
     const sessionConfig = useSessionStore();
-    const dashboardPostUrl = new URL('/dashboard/1', sessionConfig.backendURL).href;
+    const dashboardPostUrl = new URL("/dashboard/1", sessionConfig.backendURL)
+      .href;
     const response = await fetch(dashboardPostUrl, {
       mode: "cors",
       credentials: "include",
@@ -32,12 +33,16 @@ export class VaunchDelete extends VaunchCommand {
       headers: {
         "Content-Type": "application/json",
       },
-    })
+    });
 
     if (response.status == 200) {
-      const folderStore = useFolderStore();
-      folderStore.getDashboard();
+      const dashboardStore = useDashboardStore();
+      dashboardStore.getDashboard();
       return this.makeResponse(ResponseType.Success, "Dashboard deleted");
-    } else return this.makeResponse(ResponseType.Error, "Failed to delete dashboard");
+    } else
+      return this.makeResponse(
+        ResponseType.Error,
+        "Failed to delete dashboard"
+      );
   }
 }

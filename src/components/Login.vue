@@ -5,12 +5,20 @@ import { useSessionStore } from "@/stores/sessionState";
 import VaunchButton from "./VaunchButton.vue";
 import { useConfigStore } from "@/stores/config";
 import VaunchWindow from "./VaunchWindow.vue";
-import { useFolderStore } from "@/stores/folder";
+import { useDashboardStore } from "@/stores/dashboard";
 
 const retrievedData:Ref<Boolean> = ref(false);
 const config = useConfigStore();
-const folders = useFolderStore();
+const dashboards = useDashboardStore();
 const sessionConfig = useSessionStore();
+
+const props = defineProps({
+  context: {
+    type: String,
+    default: ""
+  }
+})
+
 onMounted(() => {
   fetch(sessionConfig.users, {
     credentials: "include"
@@ -20,7 +28,7 @@ onMounted(() => {
       sessionConfig.email = response.email;
       retrievedData.value = true;
       // Get the dashboard from backend once logged in
-      folders.getDashboard();
+      dashboards.getDashboard();
     })
 })
 
@@ -30,12 +38,17 @@ onMounted(() => {
 <template>
     <div v-if="sessionConfig.email && retrievedData" class="nav vaunch-window">
       <div id="nav-inner">
-        <div>
-          {{sessionConfig.email}}
+        <div id="context">
+          Current Context: {{props.context}}
         </div>
-        <a :href="sessionConfig.logout">
-          <VaunchButton text="Log Out" />
-        </a>
+        <div id="logout-section">
+          <div>
+            {{sessionConfig.email}}
+          </div>
+          <a :href="sessionConfig.logout">
+            <VaunchButton text="Log Out" />
+          </a>
+        </div>
       </div>
     </div>
 
@@ -66,7 +79,7 @@ a {
 #nav-inner {
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   max-height: 3em;
@@ -84,6 +97,15 @@ a {
   align-items: center;
   justify-content: center;
   flex-grow: 1;
+}
+
+#context {
+  padding-left: 1rem;
+}
+
+#logout-section {
+  display: flex;
+  align-items: center;
 }
 
 .vaunch-window>#login {

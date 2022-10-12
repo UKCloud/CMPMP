@@ -19,6 +19,7 @@ import { VaunchSetPosition } from "@/models/commands/fs/VaunchSetPosition";
 import { VaunchTouch } from "@/models/commands/fs/VaunchTouch";
 import { VaunchSave } from "@/models/commands/config/VaunchSave";
 import { VaunchDelete } from "@/models/commands/config/VaunchDelete";
+import { VaunchContext } from "@/models/commands/config/VaunchContext";
 
 // Load in all available commands into Vaunch
 export const commands = [
@@ -43,4 +44,5 @@ export const commands = [
   new VaunchHelp(),
   new VaunchSave(),
   new VaunchDelete(),
+  new VaunchContext(),
 ];

@@ -7,7 +7,7 @@ import VaunchOption from './VaunchOption.vue';
 import VaunchFolderEdit from './VaunchFolderEdit.vue';
 import VaunchFileAdd from './VaunchFileAdd.vue';
 
-const props = defineProps(['folder', 'xPos', 'yPos'])
+const props = defineProps(['folder', 'context', 'xPos', 'yPos'])
 const optionContainer = ref()
 const sessionConfig = useSessionStore();
 
@@ -74,7 +74,7 @@ const shortenTitle = (title:string, maxLength=12) => {
 
   <template v-slot:windows>
     <VaunchFolderEdit v-if="state.showEdit" :folder="folder" v-on:close-edit="setWindow('edit', false)"/>
-    <VaunchFileAdd v-if="state.showAdd" :folder="folder" v-on:close-add="setWindow('add', false)"/>
+    <VaunchFileAdd v-if="state.showAdd" :folder="folder" :context="context" v-on:close-add="setWindow('add', false)"/>
     <VaunchConfirm v-if="state.showDelete"
       v-on:close-window="setWindow('delete', false)" 
       v-on:answer-yes="deleteFolder()"

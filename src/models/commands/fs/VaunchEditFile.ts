@@ -1,8 +1,9 @@
+import type { Dashboard } from "@/models/Dashboard";
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { VaunchFolder } from "@/models/VaunchFolder";
 import type { Parameter, Example } from "@/models/VaunchManual";
 import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
-import { useFolderStore } from "@/stores/folder";
+import { useDashboardStore } from "@/stores/dashboard";
 
 export class VaunchEditFile extends VaunchCommand {
   constructor() {
@@ -60,7 +61,8 @@ export class VaunchEditFile extends VaunchCommand {
   description = "Edits an existing file";
 
   async execute(args: string[]): Promise<VaunchResponse> {
-    const folders = useFolderStore();
+    const currentDashboard: Dashboard = useDashboardStore().currentDashboard;
+
     const fullPath: string = args[0];
     // If fullPath is not defined, no path was passed
     if (!fullPath)
@@ -71,7 +73,8 @@ export class VaunchEditFile extends VaunchCommand {
     const filePath = fullPath.split("/");
     const folderName: string = filePath[0];
     const fileName: string = filePath[1];
-    const folder: VaunchFolder = folders.getFolderByName(folderName);
+    const folder: VaunchFolder | undefined =
+      currentDashboard.getFolderByName(folderName);
     if (folder) {
       const file = folder.getFile(fileName);
       if (file) {

@@ -1,7 +1,8 @@
+import type { Dashboard } from "@/models/Dashboard";
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { Example } from "@/models/VaunchManual";
 import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
-import { useFolderStore } from "@/stores/folder";
+import { useDashboardStore } from "@/stores/dashboard";
 import { useSessionStore } from "@/stores/sessionState";
 import { stringifyDashboard } from "@/utilities/parser";
 
@@ -25,8 +26,12 @@ export class VaunchSave extends VaunchCommand {
 
   async execute(args: string[]): Promise<VaunchResponse> {
     const sessionConfig = useSessionStore();
-    const folderStore = useFolderStore();
-    const dashboardPostUrl = new URL('/dashboard', sessionConfig.backendURL).href;
+    const dashboardStore = useDashboardStore();
+    // Get the current dashboard for this context
+    const currentDashboard: Dashboard = dashboardStore.currentDashboard;
+
+    const dashboardPostUrl = new URL("/dashboard", sessionConfig.backendURL)
+      .href;
     const response = await fetch(dashboardPostUrl, {
       mode: "cors",
       credentials: "include",
@@ -37,12 +42,13 @@ export class VaunchSave extends VaunchCommand {
       body: JSON.stringify({
         id: 1,
         name: "main",
-        data: stringifyDashboard(folderStore.rawFolders)
-      })
-    })
+        data: stringifyDashboard(currentDashboard.rawFolders),
+      }),
+    });
 
     if (response.status == 200) {
       return this.makeResponse(ResponseType.Success, "Dashboard updated");
-    } else return this.makeResponse(ResponseType.Error, "Failed to save dashboard");
+    } else
+      return this.makeResponse(ResponseType.Error, "Failed to save dashboard");
   }
 }

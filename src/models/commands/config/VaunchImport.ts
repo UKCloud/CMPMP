@@ -1,9 +1,10 @@
+import type { Dashboard } from "@/models/Dashboard";
 import { VaunchCommand } from "@/models/VaunchCommand";
 import { VaunchFolder } from "@/models/VaunchFolder";
 import type { Parameter, Example } from "@/models/VaunchManual";
 import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useConfigStore } from "@/stores/config";
-import { useFolderStore } from "@/stores/folder";
+import { useDashboardStore } from "@/stores/dashboard";
 import { readImportFile } from "@/utilities/exporter";
 
 export class VaunchImport extends VaunchCommand {
@@ -99,35 +100,35 @@ export class VaunchImport extends VaunchCommand {
       args.length == 0 || args.includes("files") ? true : false;
     const importConfig: boolean = args.includes("config") ? true : false;
 
-    const folders = useFolderStore();
+    const dashboards = useDashboardStore();
+    const currentDashboard: Dashboard = dashboards.currentDashboard;
     importElem.addEventListener("change", function () {
       if (this.files) {
         importReader(this.files[0]).then(function (importData) {
           const config = useConfigStore();
 
           // Delete all folders if -f is supplied to import
-          if (overwrite) folders.removeAll();
+          if (overwrite) currentDashboard.removeAll();
 
           // Only import files/folders if importConfig is true
           if (importFolders) {
             for (const folder of (importData as any).folders) {
               // Set position to -1 to send all imported folders to the end if not overwriting
-              if (!overwrite) folder['position'] = -1;
-              const folderToImport: VaunchFolder = VaunchFolder.parse(folder);
+              if (!overwrite) folder["position"] = -1;
+              const folderToImport: VaunchFolder = VaunchFolder.parse(currentDashboard.name, folder);
               // If this folder doesn't exist, import it. If overwriting, all folders will be gone by now
-              if (!folders.getFolderByName(folderToImport.name)) {
-                folders.insert(folderToImport);
+              if (!currentDashboard.getFolderByName(folderToImport.name)) {
+                currentDashboard.insertFolder(folderToImport);
                 importedComponents.push(folderToImport.name);
               } else if (mergeFiles) {
                 // If the folder already exists, try and merge files into it
                 importedComponents.push(`${folderToImport.name} (merged)`);
                 for (const fileToImport of folderToImport.getFiles()) {
                   // Set position to -1 to send all imported files to the end if not overwriting
-                  if (!overwrite) fileToImport['position'] = -1;
-                  const existingFolder: VaunchFolder = folders.getFolderByName(
-                    folderToImport.name
-                  );
-                  existingFolder.addFile(fileToImport);
+                  if (!overwrite) fileToImport["position"] = -1;
+                  const existingFolder: VaunchFolder | undefined =
+                    currentDashboard.getFolderByName(folderToImport.name);
+                  existingFolder?.addFile(fileToImport);
                 }
               }
             }
@@ -142,7 +143,7 @@ export class VaunchImport extends VaunchCommand {
       }
     });
     // After importing re-organise the folders so all positions definitely match up
-    folders.organisePosition(folders.items);
+    currentDashboard.organisePosition(currentDashboard.getItems());
     return this.makeResponse(
       ResponseType.Success,
       `Imported Vaunch components: ${importedComponents.join(", ")}`

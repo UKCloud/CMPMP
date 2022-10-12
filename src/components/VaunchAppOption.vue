@@ -11,7 +11,7 @@ import { VaunchImport } from '@/models/commands/config/VaunchImport';
 import VaunchConfirm from './VaunchConfirm.vue';
 import VaunchAbout from './VaunchAbout.vue';
 
-const props = defineProps(['folder', 'xPos', 'yPos'])
+const props = defineProps(['folder', 'context', 'xPos', 'yPos'])
 const optionContainer = ref()
 const sessionConfig = useSessionStore();
 
@@ -96,7 +96,7 @@ const importVaunch = () => {
     </template>
 
     <template v-slot:windows>
-      <VaunchFolderEdit v-if="state.showAdd" :add-new="true" v-on:close-edit="setWindow('add', false)" />
+      <VaunchFolderEdit v-if="state.showAdd" :context="context" :add-new="true" v-on:close-edit="setWindow('add', false)" />
       <VaunchAppEdit v-if="state.showEdit" :add-new="true" v-on:close-edit="setWindow('edit', false)" />
       <VaunchConfirm v-if="state.showExport" v-on:close-window="setWindow('export', false)"
         v-on:answer-yes="exportVaunch" v-on:answer-no="setWindow('export', false)" title="Export Vaunch Settings?"

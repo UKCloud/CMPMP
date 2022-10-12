@@ -1,7 +1,8 @@
+import type { Dashboard } from "@/models/Dashboard";
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { Parameter, Example } from "@/models/VaunchManual";
 import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
-import { useFolderStore } from "@/stores/folder";
+import { useDashboardStore } from "@/stores/dashboard";
 
 export class VaunchMkdir extends VaunchCommand {
   constructor() {
@@ -28,20 +29,27 @@ export class VaunchMkdir extends VaunchCommand {
   aliases: string[] = ["make-folder"];
 
   async execute(args: string[]): Promise<VaunchResponse> {
-    const folder = useFolderStore();
-    let existingFolders:string[] = []
+    const currentDashboard: Dashboard = useDashboardStore().currentDashboard;
+
+    const existingFolders: string[] = [];
     args.forEach((newFolder) => {
       // Strip any trailing slashes from the foldername
-      newFolder = newFolder.replace('/', ''); 
-      if (newFolder.length > 0 && !folder.folderNames.includes(newFolder)) {
-        folder.add(newFolder);
-      } else existingFolders.push(newFolder)
+      newFolder = newFolder.replace("/", "");
+      if (
+        newFolder.length > 0 &&
+        !currentDashboard.getFolderNames().includes(newFolder)
+      ) {
+        currentDashboard.addFolder(newFolder);
+      } else existingFolders.push(newFolder);
     });
     if (existingFolders.length != 0) {
-      let plural = existingFolders.length > 1;
+      const plural = existingFolders.length > 1;
       return this.makeResponse(
         ResponseType.Info,
-        `The folder${plural ? 's':''} ${existingFolders.join(", ")} already exist${plural ? '' : 's'} and ${plural ? 'were' : 'was'} not made.`
+        `The folder${plural ? "s" : ""} ${existingFolders.join(
+          ", "
+        )} already exist${plural ? "" : "s"} and ${plural ? "were" : "was"
+        } not made.`
       );
     }
     return this.makeResponse(

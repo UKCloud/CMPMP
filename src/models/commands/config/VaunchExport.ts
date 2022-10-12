@@ -1,9 +1,10 @@
+import type { Dashboard } from "@/models/Dashboard";
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { VaunchFolder } from "@/models/VaunchFolder";
 import type { Parameter, Example } from "@/models/VaunchManual";
 import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
 import { useConfigStore } from "@/stores/config";
-import { useFolderStore } from "@/stores/folder";
+import { useDashboardStore } from "@/stores/dashboard";
 import { exportVaunch } from "@/utilities/exporter";
 
 export class VaunchExport extends VaunchCommand {
@@ -61,7 +62,9 @@ export class VaunchExport extends VaunchCommand {
 
   async execute(args: string[]): Promise<VaunchResponse> {
     const config = useConfigStore();
-    const folders = useFolderStore();
+    const dashboards = useDashboardStore();
+    // Get the current dashboard for this context
+    const currentDashboard: Dashboard = dashboards.currentDashboard;
 
     const componentsExported: string[] = [];
 
@@ -92,7 +95,8 @@ export class VaunchExport extends VaunchCommand {
     if (exportSetFolders) {
       for (const name of args) {
         const folderName: string = name.split("/")[0];
-        const folder: VaunchFolder = folders.getFolderByName(folderName);
+        const folder: VaunchFolder | undefined =
+          currentDashboard.getFolderByName(folderName);
         if (folder) {
           foldersToExport.push(folder);
           componentsExported.push(folderName);
@@ -100,7 +104,7 @@ export class VaunchExport extends VaunchCommand {
       }
     } else {
       componentsExported.push("all folders");
-      foldersToExport = folders.items;
+      foldersToExport = currentDashboard.getItems();
     }
 
     const exportedConfig: string = exportVaunch(

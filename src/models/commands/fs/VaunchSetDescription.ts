@@ -1,9 +1,10 @@
+import type { Dashboard } from "@/models/Dashboard";
 import { VaunchCommand } from "@/models/VaunchCommand";
 import type { VaunchFile } from "@/models/VaunchFile";
 import type { VaunchFolder } from "@/models/VaunchFolder";
 import type { Parameter, Example } from "@/models/VaunchManual";
 import { ResponseType, type VaunchResponse } from "@/models/VaunchResponse";
-import { useFolderStore } from "@/stores/folder";
+import { useDashboardStore } from "@/stores/dashboard";
 
 export class VaunchSetDescription extends VaunchCommand {
   constructor() {
@@ -37,7 +38,8 @@ export class VaunchSetDescription extends VaunchCommand {
   description = "Sets the description of a file's tooltip";
 
   async execute(args: string[]): Promise<VaunchResponse> {
-    const folders = useFolderStore();
+    const currentDashboard: Dashboard = useDashboardStore().currentDashboard;
+
     const fullPath: string | undefined = args.shift();
     if (!fullPath)
       return this.makeResponse(ResponseType.Error, `Please provide a file`);
@@ -45,7 +47,8 @@ export class VaunchSetDescription extends VaunchCommand {
     const filePath = fullPath.split("/");
     const folderName: string = filePath[0];
     const fileName: string = filePath[1];
-    const folder: VaunchFolder = folders.getFolderByName(folderName);
+    const folder: VaunchFolder | undefined =
+      currentDashboard.getFolderByName(folderName);
 
     if (folder) {
       const file: VaunchFile | undefined = folder.getFile(fileName);
@@ -57,7 +60,7 @@ export class VaunchSetDescription extends VaunchCommand {
           `The file ${fullPath} does not exist`
         );
       }
-      
+
       return this.makeResponse(
         ResponseType.Success,
         `Edited description of file ${filePath}`

@@ -4,7 +4,7 @@ import VaunchGuiFolder from "./components/VaunchGuiFolder.vue";
 
 import { commands } from "@/stores/command";
 import { useConfigStore } from "@/stores/config";
-import { useFolderStore } from "@/stores/folder";
+import { useDashboardStore } from "@/stores/dashboard";
 import { VaunchFolder } from "./models/VaunchFolder";
 import type { VaunchFile } from "./models/VaunchFile";
 import { reactive, ref } from "vue";
@@ -24,10 +24,11 @@ import VaunchAppOption from "./components/VaunchAppOption.vue";
 import type { VaunchUrlFile } from "./models/VaunchUrlFile";
 import { handleResponse } from "./utilities/response";
 import Login from "./components/Login.vue";
+import type { Dashboard } from "./models/Dashboard";
 
 
 const config = useConfigStore();
-const folders = useFolderStore();
+const dashboardStore = useDashboardStore();
 const fuzzyFiles = useFuzzyStore();
 const sessionConfig = useSessionStore();
 
@@ -35,18 +36,20 @@ const vaunchInput = ref();
 const folderOption = ref();
 
 let optionFile:VaunchFile = reactive(new VaunchLink("default", "default"));
-let optionFolder:VaunchFolder = reactive(new VaunchFolder("default"));
+let optionFolder:VaunchFolder = reactive(new VaunchFolder("default", ""));
 const data = reactive({
   optionFile,
   optionFolder,
-  action:"",
   optionX: 0,
   optionY: 0,
+  guiContext: "",
   prefixName: config.prefix.name,
   prefixClass: config.prefix.class,
 });
 
 const executeCommand = (commandArgs: string[], newTab = false) => {
+  const currentDashboard:Dashboard = dashboardStore.currentDashboard;
+
   // Before all else, push this command to Vaunch's history
   sessionConfig.history.unshift(commandArgs.join(" "));
   let operator = commandArgs[0];
@@ -88,7 +91,7 @@ const executeCommand = (commandArgs: string[], newTab = false) => {
 
   // If no command was found, let's check if we're running a file
   if (operator.includes("/")) {
-    let file: VaunchFile = folders.getFileByPath(operator);
+    let file: VaunchFile|undefined = currentDashboard.getFileByPath(operator);
     if (file) {
       return file.execute(commandArgs).then((response) => {
         return handleResponse(response);
@@ -109,7 +112,7 @@ const executeCommand = (commandArgs: string[], newTab = false) => {
   let defaultFile: string = config.defaultFile;
   if (defaultFile) {
     commandArgs.unshift(operator);
-    let file: VaunchFile | undefined = folders.getFileByPath(defaultFile);
+    let file: VaunchFile | undefined = currentDashboard.getFileByPath(defaultFile);
     // If the default file is not a filepath, check if it's just the prefix
     if (!file) {
       file = findQryFile(defaultFile);
@@ -133,10 +136,11 @@ const executeCommand = (commandArgs: string[], newTab = false) => {
 }
 
 const findQryFile = (operator: string): VaunchFile | undefined => {
+  const currentDashboard:Dashboard = dashboardStore.currentDashboard;
   if (operator.includes(":")) {
     operator = operator.split(":")[0];
   }
-  for (let folder of folders.items as VaunchFolder[]) {
+  for (let folder of currentDashboard.getItems()) {
     for (let file of folder.getFiles()) {
       if (file.filetype == "VaunchQuery") {
         if (file.getNames().includes(operator)) {
@@ -151,8 +155,11 @@ const findQryFile = (operator: string): VaunchFile | undefined => {
 const fuzzy = (input: string) => {
   if (input.length > 0) {
     // If fuzzy is enabled, search for files matching
-    const folders = useFolderStore();
-    let matches: VaunchFile[] = folders.findFiles(input);
+    const dashboards = useDashboardStore();
+    let matches: VaunchFile[] = [];
+    dashboards.allDashboards.forEach((dashboard:Dashboard) => {
+       matches.push(...dashboard.findFiles(input));
+    });
     fuzzyFiles.setFuzzy(sortByHits(matches));
     if (config.fuzzy) setInputIcon(matches[0]);
   } else {
@@ -219,6 +226,7 @@ const showFileOption = (file:VaunchUrlFile, xPos:number, yPos:number, action:str
   data.optionFile = file;
   data.optionX = xPos;
   data.optionY = yPos;
+  if (file.parent) data.guiContext = file.parent.context;
   if (action) sessionConfig.action = action;
   // TODO: this could be improved, only having one context menu component which can adapt its content
   // rather than the file context menu closing all other context menu types
@@ -231,16 +239,18 @@ const showFolderOption = (folder:VaunchFolder, xPos:number, yPos:number, action:
   data.optionFolder = folder;
   data.optionX = xPos;
   data.optionY = yPos;
+  data.guiContext= folder.context;
   if (action) sessionConfig.action = action;
   sessionConfig.showFileOptions = false;
   sessionConfig.showAppOptions = false;
   sessionConfig.showFolderOptions = true;
 }
-const showAppOption = (xPos:number, yPos:number, action:string|null=null) => {
+const showAppOption = (xPos:number, yPos:number, action:string|null=null, context:string|null=null) => {
   // Opens the main Vaunch context menu, closing any other open context menu
   data.optionX = xPos;
   data.optionY = yPos;
   if (action) sessionConfig.action = action;
+  if (context) data.guiContext = context;
   sessionConfig.showFileOptions = false;
   sessionConfig.showFolderOptions = false;
   sessionConfig.showAppOptions = true;
@@ -307,6 +317,22 @@ main {
   cursor: pointer;
 }
 
+.dashboard {
+  width: 100%;
+}
+
+.dashboard-container {
+  display: flex;
+  flex-grow: 1;
+  flex-wrap: wrap;
+}
+
+.dashboard-heading {
+  margin: 0 0.75rem;
+  font-size: 1.2rem;
+  padding: 0 0.75rem;
+}
+
 /* Scrollbar theming */
 ::-webkit-scrollbar {
   width: 3px;
@@ -325,7 +351,7 @@ main {
 
 <template>
   <main id="main-container" :style="{ 'background-image': 'url(' + config.background + ')' }">
-    <Login />
+    <Login :context="dashboardStore.context" />
     <VaunchInput
       v-on:command="executeCommand"
       v-on:fuzzy="fuzzy"
@@ -358,15 +384,27 @@ main {
         <div
           v-if="config.showGUI"
           id="vaunch-folder-container"
-          @click.right.prevent.self="showAppOption($event.clientX, $event.clientY)"
         >
-          <VaunchGuiFolder
-            v-for="folder in folders.sortedItems()"
-            :key="folder.name"
-            v-on:show-file-option="showFileOption"
-            v-on:show-folder-option="showFolderOption"
-            :folder="folder"
-          />
+
+        <div class="dashboard" v-for="dashboard in (dashboardStore.allDashboards as Dashboard[])"
+          :key="dashboard.name"
+          @click.right.prevent="showAppOption($event.clientX, $event.clientY, null, dashboard.name)">
+          <div class="vaunch-window dashboard-heading">
+            <i :class="['fa-solid', 'fa-bars-staggered']"></i>
+            {{dashboard.titleCase()}}
+          </div>
+          <div class="dashboard-container" v-if="dashboard.rawFolders.size > 0">
+  
+            <VaunchGuiFolder
+              v-for="folder in dashboard.sortedItems()"
+              :key="folder.name"
+              v-on:show-file-option="showFileOption"
+              v-on:show-folder-option="showFolderOption"
+              :folder="folder"
+            />
+          </div>
+        </div>
+
         </div>
       </div>
       <div class="mobile-only" id="option-buttons-container">
@@ -384,9 +422,9 @@ main {
     <VaunchMan v-if="sessionConfig.showHelp" :commands="commands" />
 
     <!-- Context menu components are at the app root to ensure there will be only one open at any one time -->
-    <VaunchFileOption v-if="sessionConfig.showFileOptions" :file="data.optionFile" :x-pos="data.optionX" :y-pos="data.optionY"/>
-    <VaunchFolderOption ref="folderOption" v-if="sessionConfig.showFolderOptions" :folder="data.optionFolder" :x-pos="data.optionX" :y-pos="data.optionY" />
-    <VaunchAppOption v-if="sessionConfig.showAppOptions" :x-pos="data.optionX" :y-pos="data.optionY"/>
+    <VaunchFileOption v-if="sessionConfig.showFileOptions" :context="data.guiContext" :file="data.optionFile" :x-pos="data.optionX" :y-pos="data.optionY"/>
+    <VaunchFolderOption ref="folderOption" v-if="sessionConfig.showFolderOptions" :folder="data.optionFolder" :context="data.guiContext" :x-pos="data.optionX" :y-pos="data.optionY" />
+    <VaunchAppOption v-if="sessionConfig.showAppOptions" :x-pos="data.optionX" :y-pos="data.optionY" :context="data.guiContext"/>
   </main>
 </template>
 
