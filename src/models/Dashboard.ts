@@ -10,6 +10,17 @@ export class Dashboard {
     this.rawFolders = folders;
   }
 
+  titleCase(): string {
+    const prettyString = this.name.replace(/[-_]/g, " ");
+    return prettyString
+      .toLowerCase()
+      .split(" ")
+      .map(function (word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(" ");
+  }
+
   getItems(): VaunchFolder[] {
     return Array.from(this.rawFolders.values());
   }

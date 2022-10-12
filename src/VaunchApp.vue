@@ -391,7 +391,7 @@ main {
           @click.right.prevent="showAppOption($event.clientX, $event.clientY, null, dashboard.name)">
           <div class="vaunch-window dashboard-heading">
             <i :class="['fa-solid', 'fa-bars-staggered']"></i>
-            {{dashboard.name}}
+            {{dashboard.titleCase()}}
           </div>
           <div class="dashboard-container" v-if="dashboard.rawFolders.size > 0">
   
