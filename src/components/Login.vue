@@ -11,6 +11,14 @@ const retrievedData:Ref<Boolean> = ref(false);
 const config = useConfigStore();
 const dashboards = useDashboardStore();
 const sessionConfig = useSessionStore();
+
+const props = defineProps({
+  context: {
+    type: String,
+    default: ""
+  }
+})
+
 onMounted(() => {
   fetch(sessionConfig.users, {
     credentials: "include"
@@ -30,12 +38,17 @@ onMounted(() => {
 <template>
     <div v-if="sessionConfig.email && retrievedData" class="nav vaunch-window">
       <div id="nav-inner">
-        <div>
-          {{sessionConfig.email}}
+        <div id="context">
+          Current Content: {{props.context}}
         </div>
-        <a :href="sessionConfig.logout">
-          <VaunchButton text="Log Out" />
-        </a>
+        <div id="logout-section">
+          <div>
+            {{sessionConfig.email}}
+          </div>
+          <a :href="sessionConfig.logout">
+            <VaunchButton text="Log Out" />
+          </a>
+        </div>
       </div>
     </div>
 
@@ -66,7 +79,7 @@ a {
 #nav-inner {
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   max-height: 3em;
@@ -84,6 +97,15 @@ a {
   align-items: center;
   justify-content: center;
   flex-grow: 1;
+}
+
+#context {
+  padding-left: 1rem;
+}
+
+#logout-section {
+  display: flex;
+  align-items: center;
 }
 
 .vaunch-window>#login {

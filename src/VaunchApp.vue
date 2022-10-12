@@ -28,7 +28,7 @@ import type { Dashboard } from "./models/Dashboard";
 
 
 const config = useConfigStore();
-const dashboards = useDashboardStore();
+const dashboardStore = useDashboardStore();
 const fuzzyFiles = useFuzzyStore();
 const sessionConfig = useSessionStore();
 
@@ -48,6 +48,8 @@ const data = reactive({
 });
 
 const executeCommand = (commandArgs: string[], newTab = false) => {
+  const currentDashboard:Dashboard = dashboardStore.currentDashboard;
+
   // Before all else, push this command to Vaunch's history
   sessionConfig.history.unshift(commandArgs.join(" "));
   let operator = commandArgs[0];
@@ -89,7 +91,7 @@ const executeCommand = (commandArgs: string[], newTab = false) => {
 
   // If no command was found, let's check if we're running a file
   if (operator.includes("/")) {
-    let file: VaunchFile = dashboards.getFileByPath(operator);
+    let file: VaunchFile|undefined = currentDashboard.getFileByPath(operator);
     if (file) {
       return file.execute(commandArgs).then((response) => {
         return handleResponse(response);
@@ -110,7 +112,7 @@ const executeCommand = (commandArgs: string[], newTab = false) => {
   let defaultFile: string = config.defaultFile;
   if (defaultFile) {
     commandArgs.unshift(operator);
-    let file: VaunchFile | undefined = dashboards.getFileByPath(defaultFile);
+    let file: VaunchFile | undefined = currentDashboard.getFileByPath(defaultFile);
     // If the default file is not a filepath, check if it's just the prefix
     if (!file) {
       file = findQryFile(defaultFile);
@@ -134,10 +136,11 @@ const executeCommand = (commandArgs: string[], newTab = false) => {
 }
 
 const findQryFile = (operator: string): VaunchFile | undefined => {
+  const currentDashboard:Dashboard = dashboardStore.currentDashboard;
   if (operator.includes(":")) {
     operator = operator.split(":")[0];
   }
-  for (let folder of dashboards.items as VaunchFolder[]) {
+  for (let folder of currentDashboard.getItems()) {
     for (let file of folder.getFiles()) {
       if (file.filetype == "VaunchQuery") {
         if (file.getNames().includes(operator)) {
@@ -364,7 +367,7 @@ main {
           @click.right.prevent.self="showAppOption($event.clientX, $event.clientY)"
         >
 
-        <div v-for="dashboard in (dashboards.allDashboards as Dashboard[])"
+        <div v-for="dashboard in (dashboardStore.allDashboards as Dashboard[])"
           :key="dashboard.name">
           <div>
             {{dashboard.name}}
