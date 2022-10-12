@@ -36,13 +36,14 @@ const vaunchInput = ref();
 const folderOption = ref();
 
 let optionFile:VaunchFile = reactive(new VaunchLink("default", "default"));
-let optionFolder:VaunchFolder = reactive(new VaunchFolder("default"));
+let optionFolder:VaunchFolder = reactive(new VaunchFolder("default", ""));
 const data = reactive({
   optionFile,
   optionFolder,
   action:"",
   optionX: 0,
   optionY: 0,
+  guiContext: "",
   prefixName: config.prefix.name,
   prefixClass: config.prefix.class,
 });
@@ -225,6 +226,7 @@ const showFileOption = (file:VaunchUrlFile, xPos:number, yPos:number, action:str
   data.optionFile = file;
   data.optionX = xPos;
   data.optionY = yPos;
+  if (file.parent) data.guiContext = file.parent.context;
   if (action) sessionConfig.action = action;
   // TODO: this could be improved, only having one context menu component which can adapt its content
   // rather than the file context menu closing all other context menu types
@@ -237,6 +239,7 @@ const showFolderOption = (folder:VaunchFolder, xPos:number, yPos:number, action:
   data.optionFolder = folder;
   data.optionX = xPos;
   data.optionY = yPos;
+  data.guiContext= folder.context;
   if (action) sessionConfig.action = action;
   sessionConfig.showFileOptions = false;
   sessionConfig.showAppOptions = false;
@@ -401,8 +404,8 @@ main {
     <VaunchMan v-if="sessionConfig.showHelp" :commands="commands" />
 
     <!-- Context menu components are at the app root to ensure there will be only one open at any one time -->
-    <VaunchFileOption v-if="sessionConfig.showFileOptions" :file="data.optionFile" :x-pos="data.optionX" :y-pos="data.optionY"/>
-    <VaunchFolderOption ref="folderOption" v-if="sessionConfig.showFolderOptions" :folder="data.optionFolder" :x-pos="data.optionX" :y-pos="data.optionY" />
+    <VaunchFileOption v-if="sessionConfig.showFileOptions" :context="data.guiContext" :file="data.optionFile" :x-pos="data.optionX" :y-pos="data.optionY"/>
+    <VaunchFolderOption ref="folderOption" v-if="sessionConfig.showFolderOptions" :folder="data.optionFolder" :context="data.guiContext" :x-pos="data.optionX" :y-pos="data.optionY" />
     <VaunchAppOption v-if="sessionConfig.showAppOptions" :x-pos="data.optionX" :y-pos="data.optionY"/>
   </main>
 </template>

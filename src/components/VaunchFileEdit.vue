@@ -10,9 +10,11 @@ import { VaunchSetDescription } from "@/models/commands/fs/VaunchSetDescription"
 import { useConfigStore } from "@/stores/config";
 import { handleResponse } from "@/utilities/response";
 import { VaunchSetPosition } from "@/models/commands/fs/VaunchSetPosition";
-const props = defineProps(['file'])
+import { VaunchContext } from "@/models/commands/config/VaunchContext";
+import { useDashboardStore } from "@/stores/dashboard";
+const props = defineProps(['file', 'context'])
 
-const emit = defineEmits(['closeEdit'])
+const emit = defineEmits(['closeEdit', 'context'])
 const config = useConfigStore();
 
 const newName = ref();
@@ -32,6 +34,10 @@ const closeWindow = () => {
 const saveFile = async () => {
   // .value.value is used here to get the .value of the reference,
   // a HTMLInputElement, which itself has a .value property
+  // Switch to the correct context
+  const oldContext = useDashboardStore().context
+  const context = new VaunchContext();
+  context.execute([props.context]);
 
   let originalPath = props.file.getFilePath();
 
@@ -89,7 +95,8 @@ const saveFile = async () => {
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
 
-  // Once all edits are made, close the window
+  // Once all edits are made, switch to the old context and close the window
+  context.execute([oldContext]);
   closeWindow();
 }
 </script>

@@ -115,7 +115,7 @@ export class VaunchImport extends VaunchCommand {
             for (const folder of (importData as any).folders) {
               // Set position to -1 to send all imported folders to the end if not overwriting
               if (!overwrite) folder["position"] = -1;
-              const folderToImport: VaunchFolder = VaunchFolder.parse(folder);
+              const folderToImport: VaunchFolder = VaunchFolder.parse(currentDashboard.name, folder);
               // If this folder doesn't exist, import it. If overwriting, all folders will be gone by now
               if (!currentDashboard.getFolderByName(folderToImport.name)) {
                 currentDashboard.insertFolder(folderToImport);

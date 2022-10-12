@@ -9,7 +9,7 @@ export function parseDashboard(name:string, data:string):Dashboard {
   for (const folder of rawData) {
     // Parse each JSON representation as a VaunchFolder, and add it to the map
     // using the folder name as the map key
-    const vaunchFolder = VaunchFolder.parse(folder);
+    const vaunchFolder = VaunchFolder.parse(name, folder);
     folders.set(vaunchFolder.name, vaunchFolder);
   }
 

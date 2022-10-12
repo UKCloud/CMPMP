@@ -29,7 +29,7 @@ export class Dashboard {
 
   addFolder(name: string) {
     const nextPos: number = this.rawFolders.size + 1;
-    const newFolder = new VaunchFolder(name);
+    const newFolder = new VaunchFolder(name, this.name);
     newFolder.position = nextPos;
     this.rawFolders.set(name, newFolder);
   }

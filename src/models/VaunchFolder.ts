@@ -9,13 +9,15 @@ export class VaunchFolder {
   icon: string;
   iconClass: string;
   position: number;
-
-  constructor(name: string, icon = "folder", iconClass = "solid", position = -1) {
+  context: string;
+  
+  constructor(name: string, context:string, icon = "folder", iconClass = "solid", position = -1) {
     this.name = name;
     this.files = new Map<string, VaunchFile>();
     this.icon = icon;
     this.iconClass = iconClass;
     this.position = position;
+    this.context = context
   }
 
   public addFile(newFile: VaunchFile): boolean {
@@ -150,8 +152,8 @@ export class VaunchFolder {
 
   // Parse a VaunchFolder from serialized JSON data
   // Also creates VaunchFiles that belong to the folder
-  static parse(data: any): VaunchFolder {
-    const folder = new VaunchFolder(data.name, data.icon, data.iconClass, data.position);
+  static parse(context:string, data: any): VaunchFolder {
+    const folder = new VaunchFolder(data.name, context, data.icon, data.iconClass, data.position);
     for (const fileData of data.files) {
       let file: VaunchFile | undefined = undefined;
       if (fileData.type == "VaunchLink") {

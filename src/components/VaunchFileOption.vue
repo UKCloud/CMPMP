@@ -8,7 +8,7 @@ import { useSessionStore } from '@/stores/sessionState';
 import { focusVaunchInput } from '@/utilities/inputUtils';
 import VaunchOption from './VaunchOption.vue';
 
-const props = defineProps(['file', 'xPos', 'yPos'])
+const props = defineProps(['file', 'context', 'xPos', 'yPos'])
 const optionContainer = ref()
 const sessionConfig = useSessionStore();
 
@@ -91,7 +91,7 @@ const setWindow = (window:string, show:boolean) => {
   </template>
 
   <template v-slot:windows>
-    <VaunchFileEdit v-if="state.showEdit" :file="file" v-on:close-edit="setWindow('edit', false)"/>
+    <VaunchFileEdit v-if="state.showEdit" :file="file" :context="context" v-on:close-edit="setWindow('edit', false)"/>
     <VaunchConfirm v-if="state.showDelete"
       v-on:close-window="setWindow('delete', false)"
       v-on:answer-yes="deleteFile()"

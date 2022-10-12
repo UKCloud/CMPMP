@@ -9,7 +9,9 @@ import { useConfigStore } from "@/stores/config";
 import { handleResponse } from "@/utilities/response";
 import { VaunchTouch } from "@/models/commands/fs/VaunchTouch";
 import { VaunchSetPosition } from "@/models/commands/fs/VaunchSetPosition";
-const props = defineProps(['folder'])
+import { VaunchContext } from "@/models/commands/config/VaunchContext";
+import { useDashboardStore } from "@/stores/dashboard";
+const props = defineProps(['folder', 'context'])
 
 const emit = defineEmits(['closeAdd'])
 const config = useConfigStore();
@@ -44,6 +46,11 @@ function missingFieldResponse(fields:string[]) {
 }
 
 const createFile = async () => {
+
+  // Switch to the correct context
+  const oldContext = useDashboardStore().context
+  const context = new VaunchContext();
+  context.execute([props.context]);
 
   // Ensure required fields are set
   let missingFields:string[] = [];
@@ -93,7 +100,8 @@ const createFile = async () => {
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
 
-  // Once the file is created, close the window
+  // Once the file is created, swap back to the old context and close the window
+  context.execute([oldContext]);
   closeWindow();
 }
 </script>

@@ -49,8 +49,6 @@ export const useDashboardStore: StoreDefinition = defineStore({
         if (this.dashboards.size == 1) {
           this.setContext(dashboard['dashboard']['name'])
         }
-        console.log(this.context);
-        console.log(this.currentDashboard);
       }
     },
   },
