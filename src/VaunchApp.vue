@@ -156,11 +156,12 @@ const fuzzy = (input: string) => {
   if (input.length > 0) {
     // If fuzzy is enabled, search for files matching
     const dashboards = useDashboardStore();
+    let matches: VaunchFile[] = [];
     dashboards.allDashboards.forEach((dashboard:Dashboard) => {
-      let matches: VaunchFile[] = dashboard.findFiles(input);
-      fuzzyFiles.setFuzzy(sortByHits(matches));
-      if (config.fuzzy) setInputIcon(matches[0]);
+       matches.push(...dashboard.findFiles(input));
     });
+    fuzzyFiles.setFuzzy(sortByHits(matches));
+    if (config.fuzzy) setInputIcon(matches[0]);
   } else {
     fuzzyFiles.clear();
   }
