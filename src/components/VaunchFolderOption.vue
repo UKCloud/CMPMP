@@ -73,7 +73,7 @@ const shortenTitle = (title:string, maxLength=12) => {
   </template>
 
   <template v-slot:windows>
-    <VaunchFolderEdit v-if="state.showEdit" :folder="folder" v-on:close-edit="setWindow('edit', false)"/>
+    <VaunchFolderEdit v-if="state.showEdit" :folder="folder" :context="context" v-on:close-edit="setWindow('edit', false)"/>
     <VaunchFileAdd v-if="state.showAdd" :folder="folder" :context="context" v-on:close-add="setWindow('add', false)"/>
     <VaunchConfirm v-if="state.showDelete"
       v-on:close-window="setWindow('delete', false)" 

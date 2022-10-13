@@ -63,6 +63,10 @@ const updateFolder = async () => {
   // .value.value is used here to get the .value of the reference,
   // a HTMLInputElement, which itself has a .value property
   let folderPath:string = props.folder.name;
+  // Switch to the correct context
+  const oldContext = useDashboardStore().context
+  const context = new VaunchContext();
+  context.execute([props.context]);
 
   // Edit the icon of the folder
   if (newIcon.value.value != props.folder.icon || newIconClass.value.value != props.folder.iconClass) {
@@ -87,7 +91,8 @@ const updateFolder = async () => {
     let response: VaunchResponse = await mv.execute([folderPath, newFolderName]);
     if (response.type == ResponseType.Error) return handleResponse(response);
   }
-  // Once all edits are made, close the window
+  // Once all edits are made, switch back to the old context and close the window
+  context.execute([oldContext]);
   closeWindow();
 }
 
